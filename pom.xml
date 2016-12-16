@@ -45,6 +45,7 @@
                 <configuration>
                     <port>8080</port>
                     <path>/</path>
+                    <protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
                 </configuration>
             </plugin>
         </plugins>
