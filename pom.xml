@@ -1,0 +1,7 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0">
+    <modelVersion>4.0.0</modelVersion>
+    <name>Radioteria Web Service</name>
+    <groupId>com.radioteria</groupId>
+    <artifactId>web-service</artifactId>
+    <version>1.0</version>
+</project>
