@@ -10,9 +10,26 @@
     <groupId>com.radioteria</groupId>
     <artifactId>radioteria</artifactId>
     <version>1.0</version>
+
     <properties>
         <spring.version>4.3.4.RELEASE</spring.version>
     </properties>
+
+    <profiles>
+        <profile>
+            <id>Local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>Development</id>
+        </profile>
+        <profile>
+            <id>Production</id>
+        </profile>
+    </profiles>
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/junit/junit -->
         <dependency>
