@@ -8,18 +8,18 @@
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <import resource="classpath:spring-db.xml" />
-
     <!-- Context Configuration -->
-    <context:property-placeholder location="classpath:radioteria.properties,classpath:env/*.properties"/>
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:radioteria.properties,classpath:env/*.properties" />
     <context:annotation-config/>
     <context:component-scan base-package="com.radioteria">
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
 
     <!-- MVC Configuration -->
     <mvc:default-servlet-handler />
     <mvc:annotation-driven />
-    <mvc:resources location="WEB-INF/static" mapping="**"  />
+    <mvc:resources location="static" mapping="**" />
+
+    <import resource="classpath:spring-db.xml" />
 
 </beans>

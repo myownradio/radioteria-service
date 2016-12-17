@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <artifactId>radioteria</artifactId>
         <groupId>com.radioteria</groupId>
@@ -95,4 +96,16 @@
             <version>1.0</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>log4j2.properties</include>
+                    <include>radioteria.properties</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>
