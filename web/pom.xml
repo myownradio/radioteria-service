@@ -14,48 +14,6 @@
     <packaging>war</packaging>
 
 
-    <profiles>
-        <profile>
-            <id>Local</id>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <includes>
-                            <include>env/local.properties</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>Development</id>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <includes>
-                            <include>env/dev.properties</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-        <profile>
-            <id>Production</id>
-            <build>
-                <resources>
-                    <resource>
-                        <directory>src/main/resources</directory>
-                        <includes>
-                            <include>env/prod.properties</include>
-                        </includes>
-                    </resource>
-                </resources>
-            </build>
-        </profile>
-    </profiles>
-
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
         <dependency>
@@ -95,6 +53,12 @@
             <artifactId>db</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.radioteria</groupId>
+            <artifactId>base</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
