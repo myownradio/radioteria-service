@@ -6,6 +6,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>web</module>
+        <module>db</module>
     </modules>
     <groupId>com.radioteria</groupId>
     <artifactId>radioteria</artifactId>
@@ -13,6 +14,9 @@
 
     <properties>
         <spring.version>4.3.4.RELEASE</spring.version>
+        <hibernate.version>5.2.5.Final</hibernate.version>
+        <dbcp.version>1.4</dbcp.version>
+        <mysql.connector.version>5.1.6</mysql.connector.version>
     </properties>
 
     <profiles>
