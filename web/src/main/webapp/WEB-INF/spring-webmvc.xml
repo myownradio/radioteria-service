@@ -16,9 +16,8 @@
     </context:component-scan>
 
     <!-- MVC Configuration -->
-    <mvc:default-servlet-handler />
     <mvc:annotation-driven />
-    <mvc:resources location="static" mapping="**" />
+    <mvc:resources location="/" mapping="**" order="0" />
 
     <import resource="classpath:spring-db.xml" />
 
