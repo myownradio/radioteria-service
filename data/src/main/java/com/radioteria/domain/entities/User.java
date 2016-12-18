@@ -3,9 +3,11 @@ package com.radioteria.domain.entities;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
+@Table(name = "users")
 public class User extends Identifiable<Long> implements Serializable {
 
     @Id
@@ -16,12 +18,15 @@ public class User extends Identifiable<Long> implements Serializable {
 
     private String password;
 
+    private String name;
+
     public User() {
     }
 
-    public User(String email, String password) {
+    public User(String email, String password, String name) {
         this.email = email;
         this.password = password;
+        this.name = name;
     }
 
     public Long getId() {
@@ -48,4 +53,11 @@ public class User extends Identifiable<Long> implements Serializable {
         this.password = password;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
