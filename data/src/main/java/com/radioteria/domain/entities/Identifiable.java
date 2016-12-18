@@ -1,4 +1,4 @@
-package com.radioteria.domain;
+package com.radioteria.domain.entities;
 
 abstract class Identifiable {
 

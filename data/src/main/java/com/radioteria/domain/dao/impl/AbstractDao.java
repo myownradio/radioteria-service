@@ -1,10 +1,9 @@
-package com.radioteria.domain.dap;
+package com.radioteria.domain.dao.impl;
 
-import org.hibernate.Criteria;
+import com.radioteria.domain.utils.CriteriaCallback;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import javax.persistence.TypedQuery;
@@ -13,7 +12,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 @Repository
@@ -55,36 +53,41 @@ abstract class AbstractDao<P extends Serializable, E> {
     }
 
     public E find(P primaryKey) {
-        return  (E) getCurrentSession().get(getEntityClass(), primaryKey);
+        return getCurrentSession().get(getEntityClass(), primaryKey);
     }
 
     public E findByPropertyValue(String propertyName, String propertyValue) {
-        return findByCriteria(criteriaBuilder -> {
-            CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClass);
-            Root<E> entityRoot = criteriaQuery.from(entityClass);
+        return findByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
             criteriaQuery.select(entityRoot);
             criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
-            return criteriaQuery;
+
+            return getCurrentSession().createQuery(criteriaQuery);
         });
     }
 
-    public E findByCriteria(Function<CriteriaBuilder, CriteriaQuery<E>> criteriaCallback) {
+    public E findByCriteria(CriteriaCallback<E> criteriaCallback) {
         return getTypedQueryByCriteria(criteriaCallback).getSingleResult();
     }
 
-    public List<E> getListByCriteria(Function<CriteriaBuilder, CriteriaQuery<E>> criteriaCallback) {
+    public List<E> listByPropertyValue(String propertyName, String propertyValue) {
+        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
+            criteriaQuery.select(entityRoot);
+            criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
+
+            return getCurrentSession().createQuery(criteriaQuery);
+        });
+    }
+
+    public List<E> listByCriteria(CriteriaCallback<E> criteriaCallback) {
         return getTypedQueryByCriteria(criteriaCallback).getResultList();
     }
 
-    private TypedQuery<E> getTypedQueryByCriteria(Function<CriteriaBuilder, CriteriaQuery<E>> criteriaCallback) {
+    private TypedQuery<E> getTypedQueryByCriteria(CriteriaCallback<E> criteriaCallback) {
         CriteriaBuilder criteriaBuilder = getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClass);
+        Root<E> entityRoot = criteriaQuery.from(entityClass);
 
-        CriteriaQuery<E> query = criteriaCallback.apply(criteriaBuilder);
-
-        Root<E> from = query.from(entityClass);
-        query.select(from);
-
-        return getCurrentSession().createQuery(query);
+        return criteriaCallback.call(criteriaBuilder, criteriaQuery, entityRoot);
     }
 
 }
