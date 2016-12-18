@@ -1,12 +1,15 @@
 package com.radioteria.domain.entities;
 
-abstract class Identifiable {
+abstract public class Identifiable<K> {
 
-    abstract Long getId();
+    abstract public K getId();
 
     @Override
     public int hashCode() {
-        return Long.hashCode(getId());
+        if (getId() == null) {
+            return 0;
+        }
+        return getId().hashCode();
     }
 
     @Override

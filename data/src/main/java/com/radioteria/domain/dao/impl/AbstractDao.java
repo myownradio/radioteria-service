@@ -1,6 +1,8 @@
 package com.radioteria.domain.dao.impl;
 
 import com.radioteria.domain.utils.CriteriaCallback;
+import com.radioteria.domain.entities.Identifiable;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -12,19 +14,18 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
-import java.util.function.Function;
 
 @Repository
-abstract class AbstractDao<P extends Serializable, E> {
+abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
 
-    private Class<P> primaryKeyClass;
+    private Class<P> idClass;
     private Class<E> entityClass;
 
     @Resource
     private SessionFactory sessionFactory;
 
-    public AbstractDao(Class<P> primaryKeyClass, Class<E> entityClass) {
-        this.primaryKeyClass = primaryKeyClass;
+    public AbstractDao(Class<P> idClass, Class<E> entityClass) {
+        this.idClass = idClass;
         this.entityClass = entityClass;
     }
 
@@ -32,8 +33,8 @@ abstract class AbstractDao<P extends Serializable, E> {
         return sessionFactory.getCurrentSession();
     }
 
-    public Class<P> getPrimaryKeyClass() {
-        return primaryKeyClass;
+    public Class<P> getIdClass() {
+        return idClass;
     }
 
     public Class<E> getEntityClass() {
@@ -52,8 +53,8 @@ abstract class AbstractDao<P extends Serializable, E> {
         getCurrentSession().delete(entity);
     }
 
-    public E find(P primaryKey) {
-        return getCurrentSession().get(getEntityClass(), primaryKey);
+    public E find(P id) {
+        return getCurrentSession().get(getEntityClass(), id);
     }
 
     public E findByPropertyValue(String propertyName, String propertyValue) {
@@ -82,6 +83,15 @@ abstract class AbstractDao<P extends Serializable, E> {
         return getTypedQueryByCriteria(criteriaCallback).getResultList();
     }
 
+    public P findIdByPropertyValue(String propertyName, String propertyValue) {
+        E entity = findByPropertyValue(propertyName, propertyValue);
+        if (entity == null) {
+            return null;
+        }
+        return entity.getId();
+    }
+
+    // todo: http://www.objectdb.com/java/jpa/query/jpql/structure
     private TypedQuery<E> getTypedQueryByCriteria(CriteriaCallback<E> criteriaCallback) {
         CriteriaBuilder criteriaBuilder = getCurrentSession().getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClass);

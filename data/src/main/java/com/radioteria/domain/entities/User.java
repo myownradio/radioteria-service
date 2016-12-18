@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 @Entity
-public class User extends Identifiable implements Serializable {
+public class User extends Identifiable<Long> implements Serializable {
 
     @Id
     @GeneratedValue
@@ -17,7 +17,11 @@ public class User extends Identifiable implements Serializable {
     private String password;
 
     public User() {
+    }
 
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
