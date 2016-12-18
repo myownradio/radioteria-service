@@ -17,8 +17,6 @@
 
     <!-- MVC Configuration -->
     <mvc:annotation-driven />
-    <mvc:resources location="/" mapping="**" order="0" />
-
-    <import resource="classpath:spring-db.xml" />
+    <mvc:resources location="WEB-INF/.." mapping="**" order="0" />
 
 </beans>
