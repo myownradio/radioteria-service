@@ -49,10 +49,6 @@ public class User extends Identifiable<Long> implements Serializable {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -103,4 +99,12 @@ public class User extends Identifiable<Long> implements Serializable {
             channels.remove(channel);
         }
     }
+
+    @PostRemove
+    public void beforeDelete() {
+        if (getAvatarFile() != null) {
+            getAvatarFile().decreaseLinks();
+        }
+    }
+
 }
