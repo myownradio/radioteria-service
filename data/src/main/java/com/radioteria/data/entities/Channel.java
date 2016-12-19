@@ -25,10 +25,9 @@ public class Channel extends Identifiable<Long> {
     public Channel() {
     }
 
-    public Channel(String name, String description, User owner) {
+    public Channel(String name, String description) {
         this.name = name;
         this.description = description;
-        this.user = owner;
     }
 
     public Long getId() {

@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.*;
 
@@ -33,14 +33,15 @@ public class ChannelDaoTest {
     @Before
     public void initUser() {
         user = new User("foo@bar.com", null, "Foo Bar");
-        userDao.saveOrUpdate(user);
+        userDao.save(user);
+        userDao.flush();
     }
 
     @Test
     public void testAddFreeChannelToRepository() {
-        Channel channel = new Channel("Foo Bar", "", null);
+        Channel channel = new Channel("Foo Bar", "");
 
-        channelDao.saveOrUpdate(channel);
+        channelDao.save(channel);
         channelDao.flush();
 
         assertNotNull(channel.getId());
@@ -48,16 +49,34 @@ public class ChannelDaoTest {
 
     @Test
     public void testAddChannelToRepository() {
-        Channel channel1 = new Channel("Channel 1", "", user);
-        Channel channel2 = new Channel("Channel 2", "", user);
+        Channel channel1 = new Channel("Channel 1", "");
+        Channel channel2 = new Channel("Channel 2", "");
 
-        channelDao.saveOrUpdate(channel1);
-        channelDao.saveOrUpdate(channel2);
+        user.addChannel(channel1);
+        user.addChannel(channel2);
 
-        List<Channel> channels = user.getChannels();
+        userDao.save(user);
+        userDao.flush();
 
-        assertNotNull(channels);
+        Set<Channel> channels = user.getChannels();
+
         assertEquals(2, channels.size());
+
+        user.getChannels().remove(channel1);
+
+        assertEquals(1, channels.size());
+
+        channel2.setDescription("Updated description.");
+
+        userDao.save(user);
+        userDao.flush();
+
+        user.getChannels().clear();
+
+        userDao.save(user);
+        userDao.flush();
+
+        assertEquals(0, channels.size());
     }
 
 }

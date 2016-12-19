@@ -5,7 +5,10 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -27,11 +30,11 @@ public class User extends Identifiable<Long> implements Serializable {
     private String name;
 
     @ManyToOne(targetEntity = File.class)
-    @JoinColumn(name = "file_id")
+    @JoinColumn(name = "avatar_file_id")
     private File avatarFile;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Channel> channels;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Channel> channels = new HashSet<>();
 
     public User() {
     }
@@ -74,11 +77,11 @@ public class User extends Identifiable<Long> implements Serializable {
         this.name = name;
     }
 
-    public List<Channel> getChannels() {
+    public Set<Channel> getChannels() {
         return channels;
     }
 
-    public void setChannels(List<Channel> channels) {
+    public void setChannels(Set<Channel> channels) {
         this.channels = channels;
     }
 
@@ -88,5 +91,16 @@ public class User extends Identifiable<Long> implements Serializable {
 
     public void setAvatarFile(File avatarFile) {
         this.avatarFile = avatarFile;
+    }
+
+    public void addChannel(Channel channel) {
+        channel.setUser(this);
+        channels.add(channel);
+    }
+
+    public void removeChannel(Channel channel) {
+        if (channels != null) {
+            channels.remove(channel);
+        }
     }
 }
