@@ -1,19 +1,23 @@
-package com.radioteria.domain.entities;
+package com.radioteria.data.entities;
 
+import org.hibernate.annotations.*;
+
+import javax.persistence.*;
+import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "users")
+@Access(AccessType.FIELD)
 public class User extends Identifiable<Long> implements Serializable {
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(unique = true)
     private String email;
 
     private String password;

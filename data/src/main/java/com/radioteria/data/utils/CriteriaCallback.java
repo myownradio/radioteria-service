@@ -1,4 +1,4 @@
-package com.radioteria.domain.utils;
+package com.radioteria.data.utils;
 
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;

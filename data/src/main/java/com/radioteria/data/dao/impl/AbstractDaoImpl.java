@@ -1,8 +1,10 @@
-package com.radioteria.domain.dao.impl;
+package com.radioteria.data.dao.impl;
 
-import com.radioteria.domain.utils.CriteriaCallback;
-import com.radioteria.domain.entities.Identifiable;
+import com.radioteria.data.dao.api.AbstractDao;
+import com.radioteria.data.utils.CriteriaCallback;
+import com.radioteria.data.entities.Identifiable;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
@@ -13,10 +15,11 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
-abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
+abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>> implements AbstractDao<P, E> {
 
     private Class<P> idClass;
     private Class<E> entityClass;
@@ -24,7 +27,7 @@ abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
     @Resource
     private SessionFactory sessionFactory;
 
-    public AbstractDao(Class<P> idClass, Class<E> entityClass) {
+    public AbstractDaoImpl(Class<P> idClass, Class<E> entityClass) {
         this.idClass = idClass;
         this.entityClass = entityClass;
     }
@@ -33,11 +36,11 @@ abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
         return sessionFactory.getCurrentSession();
     }
 
-    public Class<P> getIdClass() {
+    protected Class<P> getIdClass() {
         return idClass;
     }
 
-    public Class<E> getEntityClass() {
+    protected Class<E> getEntityClass() {
         return entityClass;
     }
 
@@ -45,12 +48,20 @@ abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
         return sessionFactory;
     }
 
-    public void save(E entity) {
-        getCurrentSession().saveOrUpdate(entity);
+    public void persist(E entity) {
+        getCurrentSession().persist(entity);
+    }
+
+    public void update(E entity) {
+        getCurrentSession().update(entity);
     }
 
     public void delete(E entity) {
         getCurrentSession().delete(entity);
+    }
+
+    public void flush() {
+        getCurrentSession().flush();
     }
 
     public E find(P id) {
@@ -77,6 +88,12 @@ abstract class AbstractDao<P extends Serializable, E extends Identifiable<P>> {
 
             return getCurrentSession().createQuery(criteriaQuery);
         });
+    }
+
+    public List<E> list() {
+        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) ->
+            getCurrentSession().createQuery(criteriaQuery)
+        );
     }
 
     public List<E> listByCriteria(CriteriaCallback<E> criteriaCallback) {
