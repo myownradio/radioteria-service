@@ -98,8 +98,8 @@ public class UserDaoTest {
         User user = new User("foo@bar.com", "", "");
 
         user.setChannels(new ArrayList<Channel>() {{
-            this.add(new Channel("First Channel", user));
-            this.add(new Channel("Second Channel", user));
+            this.add(new Channel("First Channel", "", user));
+            this.add(new Channel("Second Channel", "", user));
         }});
 
         userDao.saveOrUpdate(user);

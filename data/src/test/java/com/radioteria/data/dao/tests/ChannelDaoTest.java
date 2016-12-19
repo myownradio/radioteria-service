@@ -26,7 +26,7 @@ public class ChannelDaoTest {
 
     @Test
     public void testCreateChannel() {
-        Channel channel = new Channel("Foo Bar", null);
+        Channel channel = new Channel("Foo Bar", "", null);
 
         channelDao.saveOrUpdate(channel);
         channelDao.flush();

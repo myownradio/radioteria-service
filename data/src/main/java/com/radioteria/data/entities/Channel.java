@@ -15,6 +15,9 @@ public class Channel extends Identifiable<Long> {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "description", nullable = false)
+    private String description;
+
     @ManyToOne(targetEntity = User.class)
     @JoinColumn(name = "user_id")
     private User user;
@@ -22,8 +25,9 @@ public class Channel extends Identifiable<Long> {
     public Channel() {
     }
 
-    public Channel(String name, User owner) {
+    public Channel(String name, String description, User owner) {
         this.name = name;
+        this.description = description;
         this.user = owner;
     }
 
@@ -41,6 +45,14 @@ public class Channel extends Identifiable<Long> {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public User getUser() {
