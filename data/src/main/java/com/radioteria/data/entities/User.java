@@ -26,6 +26,10 @@ public class User extends Identifiable<Long> implements Serializable {
     @Column(name = "name")
     private String name;
 
+    @ManyToOne(targetEntity = File.class)
+    @JoinColumn(name = "file_id")
+    private File avatarFile;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Channel> channels;
 
@@ -78,4 +82,11 @@ public class User extends Identifiable<Long> implements Serializable {
         this.channels = channels;
     }
 
+    public File getAvatarFile() {
+        return avatarFile;
+    }
+
+    public void setAvatarFile(File avatarFile) {
+        this.avatarFile = avatarFile;
+    }
 }

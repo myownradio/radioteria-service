@@ -94,6 +94,11 @@ public class UserDaoTest {
     }
 
     @Test
+    public void testNotExistentUserReturnsNull() {
+        assertNull(userDao.find(1000L));
+    }
+
+    @Test
     public void testUserChannelsList() {
         User user = new User("foo@bar.com", "", "");
 
