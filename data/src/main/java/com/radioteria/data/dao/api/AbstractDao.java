@@ -5,9 +5,8 @@ import com.radioteria.data.utils.CriteriaCallback;
 import java.util.List;
 
 public interface AbstractDao<P, E> {
-    void persist(E entity);
 
-    void update(E entity);
+    void saveOrUpdate(E entity);
 
     void delete(E entity);
 
@@ -26,4 +25,5 @@ public interface AbstractDao<P, E> {
     List<E> listByCriteria(CriteriaCallback<E> criteriaCallback);
 
     P findIdByPropertyValue(String propertyName, String propertyValue);
+
 }

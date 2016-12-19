@@ -1,12 +1,11 @@
 package com.radioteria.data.entities;
 
-import org.hibernate.annotations.*;
-
 import javax.persistence.*;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -14,15 +13,21 @@ import java.io.Serializable;
 public class User extends Identifiable<Long> implements Serializable {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "email", unique = true)
     private String email;
 
+    @Column(name = "password")
     private String password;
 
+    @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Channel> channels;
 
     public User() {
     }
@@ -64,4 +69,13 @@ public class User extends Identifiable<Long> implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<Channel> getChannels() {
+        return channels;
+    }
+
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
+    }
+
 }

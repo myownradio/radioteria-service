@@ -48,12 +48,8 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return sessionFactory;
     }
 
-    public void persist(E entity) {
-        getCurrentSession().persist(entity);
-    }
-
-    public void update(E entity) {
-        getCurrentSession().update(entity);
+    public void saveOrUpdate(E entity) {
+        getCurrentSession().saveOrUpdate(entity);
     }
 
     public void delete(E entity) {
