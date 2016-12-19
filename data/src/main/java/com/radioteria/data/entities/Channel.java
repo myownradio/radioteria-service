@@ -5,14 +5,14 @@ import javax.persistence.*;
 @Entity
 @Table(name = "channels")
 @Access(AccessType.FIELD)
-public class Channel {
+public class Channel extends Identifiable<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @ManyToOne(targetEntity = User.class)
