@@ -58,7 +58,7 @@ public class Channel extends Identifiable<Long> {
         return user;
     }
 
-    public void assignUser(User user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
