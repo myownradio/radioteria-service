@@ -1,5 +1,7 @@
 package com.radioteria.data.entities;
 
+import com.radioteria.data.enumerations.UserState;
+
 import javax.persistence.*;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
@@ -17,6 +19,7 @@ public class User extends Identifiable<Long> implements Serializable {
     final public static String EMAIL = "email";
     final public static String PASSWORD = "password";
     final public static String NAME = "name";
+    final public static String STATE = "state";
     final public static String AVATAR_FILE_ID = "avatar_file_id";
 
     @Id
@@ -32,6 +35,10 @@ public class User extends Identifiable<Long> implements Serializable {
 
     @Column(name = NAME, nullable = false)
     private String name;
+
+    @Enumerated
+    @Column(name = STATE)
+    private UserState state;
 
     @ManyToOne(targetEntity = File.class)
     @JoinColumn(name = AVATAR_FILE_ID)
@@ -83,6 +90,14 @@ public class User extends Identifiable<Long> implements Serializable {
 
     public void setChannels(Set<Channel> channels) {
         this.channels = channels;
+    }
+
+    public UserState getState() {
+        return state;
+    }
+
+    public void setState(UserState state) {
+        this.state = state;
     }
 
     public File getAvatarFile() {
