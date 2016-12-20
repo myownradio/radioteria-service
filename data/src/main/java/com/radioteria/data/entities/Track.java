@@ -7,26 +7,33 @@ import javax.persistence.*;
 @Table(name = "tracks")
 public class Track extends Identifiable<Long> {
 
+    final public static String ID = "id";
+    final public static String TITLE = "title";
+    final public static String ARTIST = "artist";
+    final public static String DURATION = "duration";
+    final public static String TRACK_FILE_ID = "track_file_id";
+    final public static String CHANNEL_ID = "channel_id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = TITLE, nullable = false)
     private String title;
 
-    @Column(name = "artist", nullable = false)
+    @Column(name = ARTIST, nullable = false)
     private String artist;
 
-    @Column(name = "duration", nullable = false)
+    @Column(name = DURATION, nullable = false)
     private Long duration;
 
     @ManyToOne(targetEntity = File.class)
-    @JoinColumn(name = "track_file_id", nullable = false)
+    @JoinColumn(name = TRACK_FILE_ID, nullable = false)
     private File trackFile;
 
     @ManyToOne(targetEntity = Channel.class)
-    @JoinColumn(name = "channel_id", nullable = false)
+    @JoinColumn(name = CHANNEL_ID, nullable = false)
     private Channel channel;
 
     public Long getId() {

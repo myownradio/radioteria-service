@@ -6,12 +6,15 @@ import javax.persistence.*;
 @Table(name = "files")
 public class File extends Identifiable<Long> {
 
+    final public static String ID = "id";
+    final public static String LINKS_COUNT = "links_count";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "links_count", nullable = false)
+    @Column(name = LINKS_COUNT, nullable = false)
     private Long linksCount = 0L;
 
     @Override

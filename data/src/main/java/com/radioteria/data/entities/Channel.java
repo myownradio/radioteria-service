@@ -7,23 +7,29 @@ import javax.persistence.*;
 @Access(AccessType.FIELD)
 public class Channel extends Identifiable<Long> {
 
+    final public static String ID = "id";
+    final public static String NAME = "name";
+    final public static String DESCRIPTION = "description";
+    final public static String USER_ID = "user_id";
+    final public static String ARTWORK_FILE_ID = "artwork_file_id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = NAME, nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = DESCRIPTION, nullable = false)
     private String description;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = USER_ID, nullable = false)
     private User user;
 
     @ManyToOne(targetEntity = File.class)
-    @JoinColumn(name = "artwork_file_id")
+    @JoinColumn(name = ARTWORK_FILE_ID)
     private File artworkFile;
 
     public Channel() {

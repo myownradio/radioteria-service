@@ -13,7 +13,7 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
 
     @Override
     public User findByEmail(String email) {
-        return this.findByPropertyValue("email", email);
+        return this.findByPropertyValue(User.EMAIL, email);
     }
 
 }

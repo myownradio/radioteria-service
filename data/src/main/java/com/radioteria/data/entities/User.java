@@ -13,22 +13,28 @@ import java.util.Set;
 @Access(AccessType.FIELD)
 public class User extends Identifiable<Long> implements Serializable {
 
+    final public static String ID = "id";
+    final public static String EMAIL = "email";
+    final public static String PASSWORD = "password";
+    final public static String NAME = "name";
+    final public static String AVATAR_FILE_ID = "avatar_file_id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = EMAIL, nullable = false, unique = true)
     private String email;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = PASSWORD, nullable = false)
     private String password;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = NAME, nullable = false)
     private String name;
 
     @ManyToOne(targetEntity = File.class)
-    @JoinColumn(name = "avatar_file_id")
+    @JoinColumn(name = AVATAR_FILE_ID)
     private File avatarFile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
