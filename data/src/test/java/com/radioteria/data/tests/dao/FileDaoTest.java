@@ -64,7 +64,7 @@ public class FileDaoTest {
         File avatar = new File();
         fileDao.persist(avatar);
 
-        User user = new User("foo@example.com", "", "");
+        User user = new User("foo@example.com");
         userDao.persist(user);
 
         user.setAvatarFile(avatar);
@@ -77,7 +77,7 @@ public class FileDaoTest {
 
     @Test
     public void testChannelArtwork() {
-        User owner = new User("foo@example.com", "", "");
+        User owner = new User("foo@example.com");
         userDao.persist(owner);
 
         File artwork = new File();

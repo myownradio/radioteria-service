@@ -30,10 +30,10 @@ public class User extends Identifiable<Long> implements Serializable {
     @Column(name = EMAIL, nullable = false, unique = true)
     private String email;
 
-    @Column(name = PASSWORD, nullable = false)
+    @Column(name = PASSWORD)
     private String password;
 
-    @Column(name = NAME, nullable = false)
+    @Column(name = NAME)
     private String name;
 
     @Enumerated
@@ -50,10 +50,8 @@ public class User extends Identifiable<Long> implements Serializable {
     public User() {
     }
 
-    public User(String email, String password, String name) {
+    public User(String email) {
         this.email = email;
-        this.password = password;
-        this.name = name;
     }
 
     public Long getId() {

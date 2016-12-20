@@ -23,10 +23,11 @@ public class UserDaoTest {
 
     @Test
     public void testAddUserToRepository() {
-        User newUser = new User("foo@exambple.com", "password", "Foo Bar");
+        User newUser = new User("foo@exambple.com");
         assertNull(newUser.getId());
 
         userDao.persist(newUser);
+
         Long newId = newUser.getId();
         assertNotNull(newId);
 
@@ -42,7 +43,7 @@ public class UserDaoTest {
     public void testDeleteUserFromRepo() {
         assertEquals(0, userDao.list().size());
 
-        User newUser = new User("abc@foo.com", "pass", "Abc");
+        User newUser = new User("abc@foo.com");
         userDao.persist(newUser);
 
         assertNotNull(newUser.getId());
@@ -57,7 +58,7 @@ public class UserDaoTest {
     public void testDeleteUserFromRepoByKey() {
         assertEquals(0, userDao.list().size());
 
-        User user = new User("abc@foo.com", "pass", "Abc");
+        User user = new User("abc@foo.com");
         userDao.persist(user);
         userDao.flush();
 
@@ -71,7 +72,7 @@ public class UserDaoTest {
 
     @Test
     public void testFindUserByEmail() {
-        userDao.persist(new User("abc@foo.com", "pass", "Abc"));
+        userDao.persist(new User("abc@foo.com"));
 
         User foundUser = userDao.findByEmail("abc@foo.com");
 
@@ -81,7 +82,7 @@ public class UserDaoTest {
 
     @Test
     public void testUpdateUserDetails() {
-        User user = new User("foo@bar.com", "baz", "");
+        User user = new User("foo@bar.com");
 
         userDao.persist(user);
 
@@ -98,8 +99,8 @@ public class UserDaoTest {
 
     @Test(expected = PersistenceException.class)
     public void testUserEmailConstraint() {
-        userDao.persist(new User("foo@bar.com", "baz", "Foo Bar"));
-        userDao.persist(new User("foo@bar.com", "baz2", "Foo Bar 2"));
+        userDao.persist(new User("foo@bar.com"));
+        userDao.persist(new User("foo@bar.com"));
         userDao.flush();
     }
 
