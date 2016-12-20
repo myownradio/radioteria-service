@@ -30,6 +30,9 @@ public class UserDaoTest {
         Long newId = newUser.getId();
         assertNotNull(newId);
 
+        userDao.flush();
+        userDao.clear();
+
         User fetchedUser = userDao.find(newId);
         assertNotNull(fetchedUser);
         assertEquals(newId, fetchedUser.getId());

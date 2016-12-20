@@ -141,4 +141,8 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return criteriaCallback.call(criteriaBuilder, criteriaQuery, entityRoot);
     }
 
+    public void clear() {
+        getCurrentSession().clear();
+    }
+
 }

@@ -34,4 +34,6 @@ public interface AbstractDao<P, E> {
 
     P findIdByPropertyValue(String propertyName, String propertyValue);
 
+    void clear();
+
 }
