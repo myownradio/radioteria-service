@@ -51,6 +51,11 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         getCurrentSession().persist(entity);
     }
 
+    @SuppressWarnings("unchecked")
+    public E merge(E entity) {
+        return (E) getCurrentSession().merge(entity);
+    }
+
     public void delete(E entity) {
         getCurrentSession().delete(entity);
     }

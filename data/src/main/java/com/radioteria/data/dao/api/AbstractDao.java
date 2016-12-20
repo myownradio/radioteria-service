@@ -8,6 +8,8 @@ public interface AbstractDao<P, E> {
 
     void persist(E entity);
 
+    E merge(E entity);
+
     void delete(E entity);
 
     void deleteByKey(P key);
