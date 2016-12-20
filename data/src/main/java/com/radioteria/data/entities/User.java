@@ -90,20 +90,13 @@ public class User extends Identifiable<Long> implements Serializable {
     }
 
     public void addChannel(Channel channel) {
-        channel.setUser(this);
+        channel.assignUser(this);
         channels.add(channel);
     }
 
     public void removeChannel(Channel channel) {
         if (channels != null) {
             channels.remove(channel);
-        }
-    }
-
-    @PostRemove
-    public void beforeDelete() {
-        if (getAvatarFile() != null) {
-            getAvatarFile().decreaseLinks();
         }
     }
 

@@ -1,4 +1,4 @@
-package com.radioteria.data.dao.tests;
+package com.radioteria.data.tests.dao;
 
 import com.radioteria.data.dao.api.ChannelDao;
 import com.radioteria.data.dao.api.UserDao;

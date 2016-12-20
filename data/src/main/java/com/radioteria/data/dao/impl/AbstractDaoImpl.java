@@ -60,6 +60,10 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         getCurrentSession().flush();
     }
 
+    public E load(P id) {
+        return getCurrentSession().load(getEntityClass(), id);
+    }
+
     public E find(P id) {
         return getCurrentSession().get(getEntityClass(), id);
     }

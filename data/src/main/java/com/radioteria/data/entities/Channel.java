@@ -22,6 +22,10 @@ public class Channel extends Identifiable<Long> {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne(targetEntity = File.class)
+    @JoinColumn(name = "artwork_file_id")
+    private File artworkFile;
+
     public Channel() {
     }
 
@@ -54,8 +58,16 @@ public class Channel extends Identifiable<Long> {
         return user;
     }
 
-    public void setUser(User user) {
+    public void assignUser(User user) {
         this.user = user;
+    }
+
+    public File getArtworkFile() {
+        return artworkFile;
+    }
+
+    public void setArtworkFile(File artworkFile) {
+        this.artworkFile = artworkFile;
     }
 
 }

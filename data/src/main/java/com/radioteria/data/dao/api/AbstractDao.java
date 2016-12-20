@@ -12,6 +12,8 @@ public interface AbstractDao<P, E> {
 
     void flush();
 
+    E load(P id);
+
     E find(P id);
 
     E findByPropertyValue(String propertyName, String propertyValue);
