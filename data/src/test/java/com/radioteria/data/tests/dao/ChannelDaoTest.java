@@ -32,19 +32,9 @@ public class ChannelDaoTest {
 
     @Before
     public void initUser() {
-        user = new User("foo@bar.com", null, "Foo Bar");
+        user = new User("foo@bar.com", "", "Foo Bar");
         userDao.save(user);
         userDao.flush();
-    }
-
-    @Test
-    public void testAddFreeChannelToRepository() {
-        Channel channel = new Channel("Foo Bar", "");
-
-        channelDao.save(channel);
-        channelDao.flush();
-
-        assertNotNull(channel.getId());
     }
 
     @Test
@@ -56,7 +46,6 @@ public class ChannelDaoTest {
         user.addChannel(channel2);
 
         userDao.save(user);
-        userDao.flush();
 
         Set<Channel> channels = user.getChannels();
 
@@ -64,17 +53,13 @@ public class ChannelDaoTest {
 
         user.getChannels().remove(channel1);
 
-        assertEquals(1, channels.size());
-
         channel2.setDescription("Updated description.");
 
         userDao.save(user);
-        userDao.flush();
 
         user.getChannels().clear();
 
         userDao.save(user);
-        userDao.flush();
 
         assertEquals(0, channels.size());
     }

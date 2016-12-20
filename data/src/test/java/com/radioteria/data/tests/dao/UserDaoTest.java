@@ -41,7 +41,7 @@ public class UserDaoTest {
     }
 
     @Test
-    public void testDeleteUserFromRepository() {
+    public void testDeleteUserFromRepo() {
         assertEquals(0, userDao.list().size());
 
         User newUser = new User("abc@foo.com", "pass", "Abc");
@@ -54,6 +54,22 @@ public class UserDaoTest {
 
         assertEquals(0, userDao.list().size());
     }
+
+    @Test
+    public void testDeleteUserFromRepoByKey() {
+        assertEquals(0, userDao.list().size());
+
+        User user = new User("abc@foo.com", "pass", "Abc");
+        userDao.save(user);
+        userDao.flush();
+
+        assertEquals(1, userDao.list().size());
+
+        userDao.deleteByKey(user.getId());
+
+        assertEquals(0, userDao.list().size());
+    }
+
 
     @Test
     public void testFindUserByEmail() {
@@ -93,4 +109,5 @@ public class UserDaoTest {
     public void testNotExistentUserReturnsNull() {
         assertNull(userDao.find(1000L));
     }
+
 }

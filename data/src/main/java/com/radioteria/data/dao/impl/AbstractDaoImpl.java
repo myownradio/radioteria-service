@@ -7,6 +7,7 @@ import com.radioteria.data.entities.Identifiable;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -32,15 +33,15 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         this.entityClass = entityClass;
     }
 
-    protected Session getCurrentSession() {
+    private Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
 
-    protected Class<P> getIdClass() {
+    private Class<P> getIdClass() {
         return idClass;
     }
 
-    protected Class<E> getEntityClass() {
+    private Class<E> getEntityClass() {
         return entityClass;
     }
 
@@ -54,6 +55,11 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
 
     public void delete(E entity) {
         getCurrentSession().delete(entity);
+    }
+
+    public void deleteByKey(P key) {
+        E entity = load(key);
+        delete(entity);
     }
 
     public void flush() {
@@ -94,6 +100,17 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) ->
             getCurrentSession().createQuery(criteriaQuery)
         );
+    }
+
+    public List<E> list(int offset, Integer limit) {
+        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
+            Query<E> query = getCurrentSession().createQuery(criteriaQuery);
+            query.setFirstResult(offset);
+            if (limit != null) {
+                query.setMaxResults(limit);
+            }
+            return query;
+        });
     }
 
     public List<E> listByCriteria(CriteriaCallback<E> criteriaCallback) {

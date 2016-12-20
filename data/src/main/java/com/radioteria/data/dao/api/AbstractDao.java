@@ -10,6 +10,8 @@ public interface AbstractDao<P, E> {
 
     void delete(E entity);
 
+    void deleteByKey(P key);
+
     void flush();
 
     E load(P id);
