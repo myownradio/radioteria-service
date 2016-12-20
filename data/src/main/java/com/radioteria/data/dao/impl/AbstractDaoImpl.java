@@ -33,15 +33,15 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         this.entityClass = entityClass;
     }
 
-    private Session getCurrentSession() {
+    protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
 
-    private Class<P> getIdClass() {
+    protected Class<P> getIdClass() {
         return idClass;
     }
 
-    private Class<E> getEntityClass() {
+    protected Class<E> getEntityClass() {
         return entityClass;
     }
 

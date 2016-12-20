@@ -24,19 +24,14 @@ public class UserDaoTest {
     @Test
     public void testAddUserToRepository() {
         User newUser = new User("foo@exambple.com", "password", "Foo Bar");
-
         assertNull(newUser.getId());
 
         userDao.save(newUser);
-
         Long newId = newUser.getId();
-
         assertNotNull(newId);
 
         User fetchedUser = userDao.find(newId);
-
         assertNotNull(fetchedUser);
-
         assertEquals(newId, fetchedUser.getId());
     }
 
@@ -91,11 +86,11 @@ public class UserDaoTest {
 
         user.setName("Foo Bar");
 
-        userDao.save(user);
-
         User updatedUser = userDao.find(user.getId());
 
         assertEquals("Foo Bar", updatedUser.getName());
+
+        userDao.flush();
     }
 
     @Test(expected = PersistenceException.class)

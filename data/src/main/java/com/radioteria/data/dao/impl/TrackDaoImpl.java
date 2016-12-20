@@ -10,8 +10,8 @@ import java.util.List;
 @Repository
 public class TrackDaoImpl extends AbstractDaoImpl<Long, Track> implements TrackDao {
 
-    public TrackDaoImpl(Class<Long> idClass, Class<Track> entityClass) {
-        super(idClass, entityClass);
+    public TrackDaoImpl() {
+        super(Long.class, Track.class);
     }
 
     public List<Track> findByChannel(Channel channel) {

@@ -38,10 +38,11 @@ public class FileDaoTest {
         assertEquals(1, fileDao.list().size());
     }
 
-
+    @Test
     public void changeFileLinks() {
         File file = new File();
         fileDao.save(file);
+        assertEquals(new Long(0), file.getLinksCount());
 
         fileDao.increaseLinksCount(file);
         assertEquals(new Long(1), file.getLinksCount());
@@ -52,8 +53,10 @@ public class FileDaoTest {
         fileDao.decreaseLinksCount(file);
         assertEquals(new Long(1), file.getLinksCount());
 
-        fileDao.decreaseLinksCount(file);
-        assertEquals(new Long(0), file.getLinksCount());
+//        fileDao.decreaseLinksCount(file);
+//        assertEquals(new Long(0), file.getLinksCount());
+
+        fileDao.flush();
     }
 
     @Test
