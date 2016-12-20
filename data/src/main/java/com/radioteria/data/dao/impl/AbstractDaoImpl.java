@@ -56,6 +56,10 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return (E) getCurrentSession().merge(entity);
     }
 
+    public void detach(E entity) {
+        getCurrentSession().detach(entity);
+    }
+
     public void delete(E entity) {
         getCurrentSession().delete(entity);
     }

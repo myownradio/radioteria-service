@@ -10,6 +10,8 @@ public interface AbstractDao<P, E> {
 
     E merge(E entity);
 
+    void detach(E entity);
+
     void delete(E entity);
 
     void deleteByKey(P key);
