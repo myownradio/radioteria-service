@@ -33,7 +33,7 @@ public class ChannelDaoTest {
     @Before
     public void initUser() {
         user = new User("foo@bar.com", "", "Foo Bar");
-        userDao.save(user);
+        userDao.persist(user);
         userDao.flush();
     }
 
@@ -45,7 +45,7 @@ public class ChannelDaoTest {
         user.addChannel(channel1);
         user.addChannel(channel2);
 
-        userDao.save(user);
+        userDao.persist(user);
 
         Set<Channel> channels = user.getChannels();
 
@@ -55,11 +55,11 @@ public class ChannelDaoTest {
 
         channel2.setDescription("Updated description.");
 
-        userDao.save(user);
+        userDao.persist(user);
 
         user.getChannels().clear();
 
-        userDao.save(user);
+        userDao.persist(user);
 
         assertEquals(0, channels.size());
     }

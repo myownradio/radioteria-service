@@ -4,7 +4,6 @@ import com.radioteria.data.dao.api.AbstractDao;
 import com.radioteria.data.utils.CriteriaCallback;
 import com.radioteria.data.entities.Identifiable;
 
-import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -16,7 +15,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -49,8 +47,8 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return sessionFactory;
     }
 
-    public void save(E entity) {
-        getCurrentSession().save(entity);
+    public void persist(E entity) {
+        getCurrentSession().persist(entity);
     }
 
     public void delete(E entity) {

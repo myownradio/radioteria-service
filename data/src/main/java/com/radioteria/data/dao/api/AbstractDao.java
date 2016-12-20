@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AbstractDao<P, E> {
 
-    void save(E entity);
+    void persist(E entity);
 
     void delete(E entity);
 

@@ -33,7 +33,7 @@ public class FileDaoTest {
     @Test
     public void testFileCreate() {
         File file = new File();
-        fileDao.save(file);
+        fileDao.persist(file);
 
         assertEquals(1, fileDao.list().size());
     }
@@ -41,7 +41,7 @@ public class FileDaoTest {
     @Test
     public void changeFileLinks() {
         File file = new File();
-        fileDao.save(file);
+        fileDao.persist(file);
         assertEquals(new Long(0), file.getLinksCount());
 
         fileDao.increaseLinksCount(file);
@@ -53,8 +53,8 @@ public class FileDaoTest {
         fileDao.decreaseLinksCount(file);
         assertEquals(new Long(1), file.getLinksCount());
 
-//        fileDao.decreaseLinksCount(file);
-//        assertEquals(new Long(0), file.getLinksCount());
+        fileDao.decreaseLinksCount(file);
+        assertEquals(new Long(0), file.getLinksCount());
 
         fileDao.flush();
     }
@@ -62,13 +62,13 @@ public class FileDaoTest {
     @Test
     public void testMakeUserAvatar() {
         File avatar = new File();
-        fileDao.save(avatar);
+        fileDao.persist(avatar);
 
         User user = new User("foo@example.com", "", "");
-        userDao.save(user);
+        userDao.persist(user);
 
         user.setAvatarFile(avatar);
-        userDao.save(user);
+        userDao.persist(user);
 
         userDao.flush();
 
@@ -78,17 +78,17 @@ public class FileDaoTest {
     @Test
     public void testChannelArtwork() {
         User owner = new User("foo@example.com", "", "");
-        userDao.save(owner);
+        userDao.persist(owner);
 
         File artwork = new File();
-        fileDao.save(artwork);
+        fileDao.persist(artwork);
 
         Channel channel = new Channel("Channel 1", "");
         owner.addChannel(channel);
-        channelDao.save(channel);
+        channelDao.persist(channel);
 
         channel.setArtworkFile(artwork);
-        channelDao.save(channel);
+        channelDao.persist(channel);
 
         channelDao.flush();
 

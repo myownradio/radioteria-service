@@ -26,7 +26,7 @@ public class UserDaoTest {
         User newUser = new User("foo@exambple.com", "password", "Foo Bar");
         assertNull(newUser.getId());
 
-        userDao.save(newUser);
+        userDao.persist(newUser);
         Long newId = newUser.getId();
         assertNotNull(newId);
 
@@ -40,7 +40,7 @@ public class UserDaoTest {
         assertEquals(0, userDao.list().size());
 
         User newUser = new User("abc@foo.com", "pass", "Abc");
-        userDao.save(newUser);
+        userDao.persist(newUser);
 
         assertNotNull(newUser.getId());
         assertEquals(1, userDao.list().size());
@@ -55,7 +55,7 @@ public class UserDaoTest {
         assertEquals(0, userDao.list().size());
 
         User user = new User("abc@foo.com", "pass", "Abc");
-        userDao.save(user);
+        userDao.persist(user);
         userDao.flush();
 
         assertEquals(1, userDao.list().size());
@@ -68,7 +68,7 @@ public class UserDaoTest {
 
     @Test
     public void testFindUserByEmail() {
-        userDao.save(new User("abc@foo.com", "pass", "Abc"));
+        userDao.persist(new User("abc@foo.com", "pass", "Abc"));
 
         User foundUser = userDao.findByEmail("abc@foo.com");
 
@@ -80,7 +80,7 @@ public class UserDaoTest {
     public void testUpdateUserDetails() {
         User user = new User("foo@bar.com", "baz", "");
 
-        userDao.save(user);
+        userDao.persist(user);
 
         assertEquals("", user.getName());
 
@@ -95,8 +95,8 @@ public class UserDaoTest {
 
     @Test(expected = PersistenceException.class)
     public void testUserEmailConstraint() {
-        userDao.save(new User("foo@bar.com", "baz", "Foo Bar"));
-        userDao.save(new User("foo@bar.com", "baz2", "Foo Bar 2"));
+        userDao.persist(new User("foo@bar.com", "baz", "Foo Bar"));
+        userDao.persist(new User("foo@bar.com", "baz2", "Foo Bar 2"));
         userDao.flush();
     }
 
