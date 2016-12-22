@@ -14,4 +14,6 @@
 
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
+    <bean id="eventPublisher" class="org.springframework.context.ApplicationEventPublisher"></bean>
+
 </beans>

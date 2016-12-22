@@ -1,19 +1,18 @@
 package com.radioteria.tests.business;
 
+import com.radioteria.business.events.UserRegisteredEvent;
 import com.radioteria.business.services.auth.api.UserRegistrationService;
 import com.radioteria.business.services.auth.impl.UserRegistrationServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
-import com.radioteria.data.enumerations.UserState;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 
@@ -30,15 +29,22 @@ public class TestUserRegistrationService {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
+
     @Captor
     private ArgumentCaptor<User> userCaptor;
+
+    @Captor
+    private ArgumentCaptor<UserRegisteredEvent> eventCaptor;
+
 
     private UserRegistrationService userRegistrationService;
 
     @Before
     public void setUp() {
 
-        userRegistrationService = new UserRegistrationServiceImpl(userDao, passwordEncoder);
+        userRegistrationService = new UserRegistrationServiceImpl(userDao, passwordEncoder, eventPublisher);
 
         when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
 
@@ -49,15 +55,44 @@ public class TestUserRegistrationService {
 
         userRegistrationService.register("foo@bar.com", "baz", "Foo Bar");
 
-        verify(userDao, only()).persist(isA(User.class));
+        verifyThatMethodsCalledAsExpected();
+        captureTheArgumentsOrMethodCalls();
+
+        verifyThatUserRegisteredAsExpected();
+        verifyThatEventContainsRegisteredUser();
+
+    }
+
+    private void captureTheArgumentsOrMethodCalls() {
 
         verify(userDao).persist(userCaptor.capture());
+        verify(eventPublisher).publishEvent(eventCaptor.capture());
 
-        User capturedUser = userCaptor.getValue();
+    }
 
-        assertEquals("foo@bar.com", capturedUser.getEmail());
-        assertEquals("Foo Bar", capturedUser.getName());
-        assertEquals("encoded-password", capturedUser.getPassword());
+    private void verifyThatMethodsCalledAsExpected() {
+
+        verify(userDao, only()).persist(isA(User.class));
+        verify(eventPublisher, only()).publishEvent(isA(UserRegisteredEvent.class));
+
+    }
+
+    private void verifyThatUserRegisteredAsExpected() {
+
+        User registeredUser = userCaptor.getValue();
+
+        assertEquals("foo@bar.com", registeredUser.getEmail());
+        assertEquals("Foo Bar", registeredUser.getName());
+        assertEquals("encoded-password", registeredUser.getPassword());
+
+    }
+
+    private void verifyThatEventContainsRegisteredUser() {
+
+        User registeredUser = userCaptor.getValue();
+        UserRegisteredEvent capturedEvent = eventCaptor.getValue();
+
+        assertSame(registeredUser, capturedEvent.getUser());
 
     }
 
