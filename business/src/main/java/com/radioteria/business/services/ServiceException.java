@@ -1,6 +1,6 @@
 package com.radioteria.business.services;
 
-public class ServiceException extends Exception {
+public class ServiceException extends RuntimeException {
 
     public ServiceException() {
         super();

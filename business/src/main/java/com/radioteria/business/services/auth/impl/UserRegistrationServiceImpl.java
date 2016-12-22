@@ -24,9 +24,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void register(String email, String plainPassword, String name) throws UserExistsAuthServiceException {
-
-        throwExceptionIfEmailExists(email);
+    public void register(String email, String plainPassword, String name) {
 
         String encodedPassword = passwordEncoder.encode(plainPassword);
 
@@ -42,35 +40,11 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     }
 
-    public void confirm(String email) throws UserNotFoundAuthServiceException {
+    public void confirm(String email) {
 
         User user = userDao.findByEmail(email);
 
-        throwErrorIfNoUser(user, email);
-
         user.setState(UserState.ACTIVE);
-
-    }
-
-    private void throwErrorIfNoUser(User user, String email) throws UserNotFoundAuthServiceException {
-
-        if (user != null) {
-            return;
-        }
-
-        throw new UserNotFoundAuthServiceException(
-                String.format("User with email '%s' not found", email)
-        );
-
-    }
-
-    private void throwExceptionIfEmailExists(String email) throws UserExistsAuthServiceException {
-
-        if (userDao.isEmailAlreadyUsed(email)) {
-            throw new UserExistsAuthServiceException(
-                    String.format("User with email '%s' already exists", email)
-            );
-        }
 
     }
 
