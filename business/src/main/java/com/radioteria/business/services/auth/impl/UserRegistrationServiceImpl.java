@@ -6,6 +6,7 @@ import com.radioteria.business.services.auth.exceptions.UserNotFoundAuthServiceE
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
     public UserRegistrationServiceImpl(UserDao userDao, PasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
