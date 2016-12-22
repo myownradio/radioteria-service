@@ -15,11 +15,11 @@ public class TrackDaoImpl extends AbstractDaoImpl<Long, Track> implements TrackD
     }
 
     public List<Track> findByChannel(Channel channel) {
-        return findByChannel(channel.getId());
+        return findByChannelId(channel.getId());
     }
 
-    public List<Track> findByChannel(Long channelId) {
-        return listByPropertyValue(Track.CHANNEL_ID, Long.toString(channelId));
+    public List<Track> findByChannelId(Long channelId) {
+        return listByPropertyValue(Track.CHANNEL_ID, channelId);
     }
 
 }

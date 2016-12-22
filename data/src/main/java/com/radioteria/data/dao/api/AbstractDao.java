@@ -22,11 +22,11 @@ public interface AbstractDao<P, E> {
 
     E find(P id);
 
-    E findByPropertyValue(String propertyName, String propertyValue);
+    <V> E findByPropertyValue(String propertyName, V propertyValue);
 
     E findByCriteria(CriteriaCallback<E> criteriaCallback);
 
-    List<E> listByPropertyValue(String propertyName, String propertyValue);
+    <V> List<E> listByPropertyValue(String propertyName, V propertyValue);
 
     List<E> list();
 

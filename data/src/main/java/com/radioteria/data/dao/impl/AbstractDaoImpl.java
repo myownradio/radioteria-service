@@ -75,7 +75,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return getEntityManager().find(getEntityClass(), id);
     }
 
-    public E findByPropertyValue(String propertyName, String propertyValue) {
+    public <V> E findByPropertyValue(String propertyName, V propertyValue) {
         return findByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
             criteriaQuery.select(entityRoot);
             criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
@@ -88,7 +88,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return getTypedQueryByCriteria(criteriaCallback).getSingleResult();
     }
 
-    public List<E> listByPropertyValue(String propertyName, String propertyValue) {
+    public <V> List<E> listByPropertyValue(String propertyName, V propertyValue) {
         return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
             criteriaQuery.select(entityRoot);
             criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));

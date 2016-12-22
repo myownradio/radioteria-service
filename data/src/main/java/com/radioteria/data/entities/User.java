@@ -7,7 +7,9 @@ import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -45,7 +47,7 @@ public class User extends Identifiable<Long> implements Serializable {
     private File avatarFile;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Channel> channels = new HashSet<>();
+    private List<Channel> channels = new ArrayList<>();
 
     public User() {
     }
@@ -82,14 +84,6 @@ public class User extends Identifiable<Long> implements Serializable {
         this.name = name;
     }
 
-    public Set<Channel> getChannels() {
-        return channels;
-    }
-
-    public void setChannels(Set<Channel> channels) {
-        this.channels = channels;
-    }
-
     public UserState getState() {
         return state;
     }
@@ -106,15 +100,11 @@ public class User extends Identifiable<Long> implements Serializable {
         this.avatarFile = avatarFile;
     }
 
+    public List<Channel> getChannels() { return channels; }
+
     public void addChannel(Channel channel) {
         channel.setUser(this);
-        channels.add(channel);
-    }
-
-    public void removeChannel(Channel channel) {
-        if (channels != null) {
-            channels.remove(channel);
-        }
+        getChannels().add(channel);
     }
 
 }

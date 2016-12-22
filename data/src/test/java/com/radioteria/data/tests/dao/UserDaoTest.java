@@ -2,6 +2,8 @@ package com.radioteria.data.tests.dao;
 
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
+import com.radioteria.data.enumerations.UserState;
+import com.radioteria.data.tests.utils.TestEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,10 +23,13 @@ public class UserDaoTest {
     @Resource
     UserDao userDao;
 
+    @Resource
+    TestEntityFactory entityFactory;
+
     @Test
     @Transactional
     public void testAddUser() {
-        User newUser = new User("foo@exambple.com");
+        User newUser = entityFactory.createUser("foo@exambple.com");
 
         userDao.persist(newUser);
 
@@ -34,7 +39,7 @@ public class UserDaoTest {
     @Test
     @Transactional
     public void testDeleteUserFromRepo() {
-        User newUser = new User("abc@foo.com");
+        User newUser = entityFactory.createUser("abc@foo.com");
 
         userDao.persist(newUser);
         userDao.delete(newUser);
@@ -45,7 +50,7 @@ public class UserDaoTest {
     @Test
     @Transactional
     public void testFindUserByEmail() {
-        userDao.persist(new User("abc@foo.com"));
+        userDao.persist(entityFactory.createUser("abc@foo.com"));
 
         User foundUser = userDao.findByEmail("abc@foo.com");
 
@@ -55,10 +60,10 @@ public class UserDaoTest {
     @Test
     @Transactional
     public void testUpdateUserDetails() {
-        User user = new User("foo@bar.com");
+        User user = entityFactory.createUser("foo@bar.com");
         userDao.persist(user);
 
-        assertEquals(null, userDao.list().get(0).getName());
+        assertEquals("Default Name", userDao.list().get(0).getName());
 
         user.setName("Foo Bar");
 
@@ -68,8 +73,8 @@ public class UserDaoTest {
     @Test(expected = PersistenceException.class)
     @Transactional
     public void testUserEmailConstraint() {
-        userDao.persist(new User("foo@bar.com"));
-        userDao.persist(new User("foo@bar.com"));
+        userDao.persist(entityFactory.createUser("foo@bar.com"));
+        userDao.persist(entityFactory.createUser("foo@bar.com"));
         userDao.flush();
     }
 

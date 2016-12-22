@@ -6,6 +6,7 @@ import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.File;
 import com.radioteria.data.entities.User;
+import com.radioteria.data.tests.utils.TestEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -29,10 +30,13 @@ public class FileDaoTest {
     @Resource
     private ChannelDao channelDao;
 
+    @Resource
+    TestEntityFactory entityFactory;
+
     @Test
     @Transactional
     public void testFileCreate() {
-        File file = new File();
+        File file = entityFactory.createFile();
         fileDao.persist(file);
 
         assertEquals(file.getId(), fileDao.list().get(0).getId());
@@ -41,7 +45,7 @@ public class FileDaoTest {
     @Test
     @Transactional
     public void changeFileLinks() {
-        File file = new File();
+        File file = entityFactory.createFile();
         fileDao.persist(file);
         assertEquals(new Long(0), file.getLinksCount());
 
@@ -63,10 +67,10 @@ public class FileDaoTest {
     @Test
     @Transactional
     public void testMakeUserAvatar() {
-        File avatar = new File();
+        File avatar = entityFactory.createFile();
         fileDao.persist(avatar);
 
-        User user = new User("foo@example.com");
+        User user = entityFactory.createUser("foo@example.com");
         userDao.persist(user);
 
         user.setAvatarFile(avatar);
@@ -79,20 +83,19 @@ public class FileDaoTest {
     @Test
     @Transactional
     public void testChannelArtwork() {
-        User owner = new User("foo@example.com");
+        User owner = entityFactory.createUser("foo@example.com");
         userDao.persist(owner);
 
-        File artwork = new File();
+        File artwork = entityFactory.createFile();
         fileDao.persist(artwork);
 
-        Channel channel = new Channel("Channel 1", "");
-        channelDao.persist(channel);
+        Channel channel = entityFactory.createChannel("Channel 1");
 
         owner.addChannel(channel);
 
         channel.setArtworkFile(artwork);
 
-        assertSame(channel.getArtworkFile(), artwork);
+        assertEquals(channel.getArtworkFile().getId(), artwork.getId());
 
         channelDao.flush();
     }

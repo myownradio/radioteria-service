@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface TrackDao extends AbstractDao<Long, Track> {
     List<Track> findByChannel(Channel channel);
-    List<Track> findByChannel(Long channelId);
+    List<Track> findByChannelId(Long channelId);
 }

@@ -29,7 +29,7 @@ public class Track extends Identifiable<Long> {
     private Long duration;
 
     @ManyToOne(targetEntity = File.class)
-    @JoinColumn(name = TRACK_FILE_ID, nullable = false)
+    @JoinColumn(name = TRACK_FILE_ID)
     private File trackFile;
 
     @ManyToOne(targetEntity = Channel.class)

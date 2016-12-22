@@ -15,7 +15,7 @@ public class File extends Identifiable<Long> {
     private Long id;
 
     @Column(name = LINKS_COUNT, nullable = false)
-    private Long linksCount = 0L;
+    private Long linksCount;
 
     @Override
     public Long getId() {
@@ -26,12 +26,7 @@ public class File extends Identifiable<Long> {
         return linksCount;
     }
 
-    public void increaseLinks() {
-        linksCount ++;
+    public void setLinksCount(Long linksCount) {
+        this.linksCount = linksCount;
     }
-
-    public void decreaseLinks() {
-        linksCount --;
-    }
-
 }

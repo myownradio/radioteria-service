@@ -9,7 +9,6 @@
 
     <modules>
         <module>web</module>
-        <module>db</module>
         <module>base</module>
         <module>data</module>
     </modules>
@@ -93,6 +92,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-security</artifactId>
                 <version>${spring.version}</version>
             </dependency>
 

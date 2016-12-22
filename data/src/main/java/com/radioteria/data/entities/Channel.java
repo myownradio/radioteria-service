@@ -1,6 +1,10 @@
 package com.radioteria.data.entities;
 
+import com.radioteria.data.enumerations.ChannelState;
+
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "channels")
@@ -10,6 +14,8 @@ public class Channel extends Identifiable<Long> {
     final public static String ID = "id";
     final public static String NAME = "name";
     final public static String DESCRIPTION = "description";
+    final public static String STATE = "state";
+    final public static String STARTED_AT = "started_at";
     final public static String USER_ID = "user_id";
     final public static String ARTWORK_FILE_ID = "artwork_file_id";
 
@@ -24,13 +30,23 @@ public class Channel extends Identifiable<Long> {
     @Column(name = DESCRIPTION, nullable = false)
     private String description;
 
+    @Enumerated
+    @Column(name = STATE, nullable = false)
+    private ChannelState channelState;
+
+    @Column(name = STARTED_AT)
+    private Long startedAt;
+
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = USER_ID)
+    @JoinColumn(name = USER_ID, nullable = false)
     private User user;
 
     @ManyToOne(targetEntity = File.class)
     @JoinColumn(name = ARTWORK_FILE_ID)
     private File artworkFile;
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Track> tracks = new ArrayList<>();
 
     public Channel() {
     }
@@ -60,6 +76,22 @@ public class Channel extends Identifiable<Long> {
         this.description = description;
     }
 
+    public ChannelState getChannelState() {
+        return channelState;
+    }
+
+    public void setChannelState(ChannelState channelState) {
+        this.channelState = channelState;
+    }
+
+    public Long getStartedAt() {
+        return startedAt;
+    }
+
+    public void setStartedAt(Long startedAt) {
+        this.startedAt = startedAt;
+    }
+
     public User getUser() {
         return user;
     }
@@ -74,6 +106,10 @@ public class Channel extends Identifiable<Long> {
 
     public void setArtworkFile(File artworkFile) {
         this.artworkFile = artworkFile;
+    }
+
+    public List<Track> getTracks() {
+        return tracks;
     }
 
 }

@@ -4,6 +4,7 @@ import com.radioteria.data.dao.api.ChannelDao;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.User;
+import com.radioteria.data.tests.utils.TestEntityFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
-import java.util.Set;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -27,11 +28,14 @@ public class ChannelDaoTest {
     @Resource
     UserDao userDao;
 
+    @Resource
+    TestEntityFactory entityFactory;
+
     private User user;
 
     @Before
     public void initUser() {
-        user = new User("foo@bar.com");
+        user = entityFactory.createUser("foo@bar.com");
         userDao.persist(user);
         userDao.flush();
     }
@@ -39,15 +43,15 @@ public class ChannelDaoTest {
     @Test
     @Transactional
     public void testAddChannelToRepository() {
-        Channel channel1 = new Channel("Channel 1", "");
-        Channel channel2 = new Channel("Channel 2", "");
+        Channel channel1 = entityFactory.createChannel("Channel 1");
+        Channel channel2 = entityFactory.createChannel("Channel 2");
 
         user.addChannel(channel1);
         user.addChannel(channel2);
 
         userDao.flush();
 
-        Set<Channel> channels = user.getChannels();
+        List<Channel> channels = user.getChannels();
 
         assertEquals(2, channels.size());
 
