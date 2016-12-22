@@ -18,7 +18,7 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
     }
 
     public void increaseLinksCount(File file) {
-        CriteriaBuilder cb = getSessionFactory().getCriteriaBuilder();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
         CriteriaUpdate<File> update = cb.createCriteriaUpdate(File.class);
         Root<File> root = update.from(File.class);
@@ -28,16 +28,16 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
         update.set(root.<Long>get("linksCount"), sum);
         update.where(cb.equal(root.get("id"), cb.parameter(Long.class, "id")));
 
-        Query query = getCurrentSession().createQuery(update);
+        Query query = getEntityManager().createQuery(update);
 
         query.setParameter("id", file.getId());
         query.executeUpdate();
 
-        getCurrentSession().refresh(file);
+        getEntityManager().refresh(file);
     }
 
     public synchronized void decreaseLinksCount(File file) {
-        CriteriaBuilder cb = getSessionFactory().getCriteriaBuilder();
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
         CriteriaUpdate<File> update = cb.createCriteriaUpdate(File.class);
         Root<File> root = update.from(File.class);
@@ -47,12 +47,12 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
         update.set(root.<Long>get("linksCount"), diff);
         update.where(cb.equal(root.get("id"), cb.parameter(Long.class, "id")));
 
-        Query query = getCurrentSession().createQuery(update);
+        Query query = getEntityManager().createQuery(update);
 
         query.setParameter("id", file.getId());
         query.executeUpdate();
 
-        getCurrentSession().refresh(file);
+        getEntityManager().refresh(file);
     }
 
 }

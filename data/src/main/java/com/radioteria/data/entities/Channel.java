@@ -25,7 +25,7 @@ public class Channel extends Identifiable<Long> {
     private String description;
 
     @ManyToOne(targetEntity = User.class)
-    @JoinColumn(name = USER_ID, nullable = false)
+    @JoinColumn(name = USER_ID)
     private User user;
 
     @ManyToOne(targetEntity = File.class)

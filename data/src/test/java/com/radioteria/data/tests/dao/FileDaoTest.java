@@ -16,7 +16,6 @@ import javax.annotation.Resource;
 
 import static org.junit.Assert.*;
 
-@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/META-INF/spring/test-context.xml")
 public class FileDaoTest {
@@ -31,14 +30,16 @@ public class FileDaoTest {
     private ChannelDao channelDao;
 
     @Test
+    @Transactional
     public void testFileCreate() {
         File file = new File();
         fileDao.persist(file);
 
-        assertEquals(1, fileDao.list().size());
+        assertEquals(file.getId(), fileDao.list().get(0).getId());
     }
 
     @Test
+    @Transactional
     public void changeFileLinks() {
         File file = new File();
         fileDao.persist(file);
@@ -60,6 +61,7 @@ public class FileDaoTest {
     }
 
     @Test
+    @Transactional
     public void testMakeUserAvatar() {
         File avatar = new File();
         fileDao.persist(avatar);
@@ -68,14 +70,14 @@ public class FileDaoTest {
         userDao.persist(user);
 
         user.setAvatarFile(avatar);
-        userDao.persist(user);
+
+        assertSame(user.getAvatarFile().getId(), avatar.getId());
 
         userDao.flush();
-
-        assertSame(user.getAvatarFile(), avatar);
     }
 
     @Test
+    @Transactional
     public void testChannelArtwork() {
         User owner = new User("foo@example.com");
         userDao.persist(owner);
@@ -84,14 +86,14 @@ public class FileDaoTest {
         fileDao.persist(artwork);
 
         Channel channel = new Channel("Channel 1", "");
-        owner.addChannel(channel);
         channelDao.persist(channel);
+
+        owner.addChannel(channel);
 
         channel.setArtworkFile(artwork);
-        channelDao.persist(channel);
-
-        channelDao.flush();
 
         assertSame(channel.getArtworkFile(), artwork);
+
+        channelDao.flush();
     }
 }

@@ -1,15 +1,13 @@
 package com.radioteria.data.dao.impl;
 
 import com.radioteria.data.dao.api.AbstractDao;
-import com.radioteria.data.utils.CriteriaCallback;
 import com.radioteria.data.entities.Identifiable;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
+import com.radioteria.data.utils.CriteriaCallback;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -23,16 +21,12 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
     private Class<P> idClass;
     private Class<E> entityClass;
 
-    @Resource
-    private SessionFactory sessionFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public AbstractDaoImpl(Class<P> idClass, Class<E> entityClass) {
         this.idClass = idClass;
         this.entityClass = entityClass;
-    }
-
-    protected Session getCurrentSession() {
-        return sessionFactory.getCurrentSession();
     }
 
     protected Class<P> getIdClass() {
@@ -43,25 +37,25 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return entityClass;
     }
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public EntityManager getEntityManager() {
+        return entityManager;
     }
 
     public void persist(E entity) {
-        getCurrentSession().persist(entity);
+        getEntityManager().persist(entity);
     }
 
     @SuppressWarnings("unchecked")
     public E merge(E entity) {
-        return (E) getCurrentSession().merge(entity);
+        return (E) getEntityManager().merge(entity);
     }
 
     public void detach(E entity) {
-        getCurrentSession().detach(entity);
+        getEntityManager().detach(entity);
     }
 
     public void delete(E entity) {
-        getCurrentSession().delete(entity);
+        getEntityManager().remove(entity);
     }
 
     public void deleteByKey(P key) {
@@ -70,15 +64,15 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
     }
 
     public void flush() {
-        getCurrentSession().flush();
+        getEntityManager().flush();
     }
 
     public E load(P id) {
-        return getCurrentSession().load(getEntityClass(), id);
+        return getEntityManager().getReference(getEntityClass(), id);
     }
 
     public E find(P id) {
-        return getCurrentSession().get(getEntityClass(), id);
+        return getEntityManager().find(getEntityClass(), id);
     }
 
     public E findByPropertyValue(String propertyName, String propertyValue) {
@@ -86,7 +80,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
             criteriaQuery.select(entityRoot);
             criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
 
-            return getCurrentSession().createQuery(criteriaQuery);
+            return getEntityManager().createQuery(criteriaQuery);
         });
     }
 
@@ -99,19 +93,17 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
             criteriaQuery.select(entityRoot);
             criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
 
-            return getCurrentSession().createQuery(criteriaQuery);
+            return getEntityManager().createQuery(criteriaQuery);
         });
     }
 
     public List<E> list() {
-        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) ->
-            getCurrentSession().createQuery(criteriaQuery)
-        );
+        return listByCriteria((cb, cq, er) -> getEntityManager().createQuery(cq));
     }
 
     public List<E> list(int offset, Integer limit) {
         return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
-            Query<E> query = getCurrentSession().createQuery(criteriaQuery);
+            TypedQuery<E> query = getEntityManager().createQuery(criteriaQuery);
             query.setFirstResult(offset);
             if (limit != null) {
                 query.setMaxResults(limit);
@@ -134,7 +126,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
 
     // todo: http://www.objectdb.com/java/jpa/query/jpql/structure
     private TypedQuery<E> getTypedQueryByCriteria(CriteriaCallback<E> criteriaCallback) {
-        CriteriaBuilder criteriaBuilder = getCurrentSession().getCriteriaBuilder();
+        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClass);
         Root<E> entityRoot = criteriaQuery.from(entityClass);
 
@@ -142,7 +134,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
     }
 
     public void clear() {
-        getCurrentSession().clear();
+        getEntityManager().clear();
     }
 
 }

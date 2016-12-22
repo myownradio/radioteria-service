@@ -17,7 +17,6 @@ import java.util.Set;
 
 import static org.junit.Assert.*;
 
-@Transactional
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/META-INF/spring/test-context.xml")
 public class ChannelDaoTest {
@@ -38,6 +37,7 @@ public class ChannelDaoTest {
     }
 
     @Test
+    @Transactional
     public void testAddChannelToRepository() {
         Channel channel1 = new Channel("Channel 1", "");
         Channel channel2 = new Channel("Channel 2", "");
