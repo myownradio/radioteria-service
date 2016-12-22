@@ -4,4 +4,4 @@ pipelines:
   default:
     - step:
         script:
-          mvn test -pl data
+          - mvn test -pl data
