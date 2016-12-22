@@ -2,13 +2,11 @@ package com.radioteria.data.tests.dao;
 
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
-import com.radioteria.data.enumerations.UserState;
 import com.radioteria.data.tests.utils.TestEntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
@@ -17,7 +15,7 @@ import javax.persistence.PersistenceException;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:/META-INF/spring/test-context.xml")
+@ContextConfiguration(locations = "classpath:/META-INF/spring/test-data-context.xml")
 public class UserDaoTest {
 
     @Resource

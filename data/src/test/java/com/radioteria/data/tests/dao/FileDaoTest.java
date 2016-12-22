@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:/META-INF/spring/test-context.xml")
+@ContextConfiguration(locations = "classpath:/META-INF/spring/test-data-context.xml")
 public class FileDaoTest {
 
     @Resource

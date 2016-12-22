@@ -4,4 +4,5 @@ import com.radioteria.data.entities.User;
 
 public interface UserDao extends AbstractDao<Long, User> {
     User findByEmail(String email);
+    boolean isEmailAlreadyUsed(String email);
 }

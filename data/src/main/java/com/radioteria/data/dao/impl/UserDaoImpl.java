@@ -16,4 +16,9 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
         return this.findByPropertyValue(User.EMAIL, email);
     }
 
+    @Override
+    public boolean isEmailAlreadyUsed(String email) {
+        return findByEmail(email) == null;
+    }
+
 }

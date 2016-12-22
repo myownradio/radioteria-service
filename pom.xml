@@ -11,6 +11,7 @@
         <module>web</module>
         <module>base</module>
         <module>data</module>
+        <module>business</module>
     </modules>
 
     <groupId>com.radioteria</groupId>
@@ -19,6 +20,7 @@
 
     <properties>
         <spring.version>4.3.4.RELEASE</spring.version>
+        <spring.security.version>4.2.0.RELEASE</spring.security.version>
         <hibernate.version>5.2.5.Final</hibernate.version>
         <dbcp.version>1.4</dbcp.version>
         <mysql.connector.version>5.1.6</mysql.connector.version>
@@ -95,9 +97,14 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-security</artifactId>
-                <version>${spring.version}</version>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-web</artifactId>
+                <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.security</groupId>
+                <artifactId>spring-security-config</artifactId>
+                <version>${spring.security.version}</version>
             </dependency>
 
             <!-- Persistence -->
