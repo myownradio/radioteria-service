@@ -4,6 +4,7 @@ import com.radioteria.business.services.auth.api.UserRegistrationService;
 import com.radioteria.business.services.auth.impl.UserRegistrationServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
+import com.radioteria.data.enumerations.UserState;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
