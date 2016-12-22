@@ -1,6 +1,6 @@
 # Radioteria Web Service
 
-### Run:
+### To run type:
 ```shell
-mvn clean install run
+make run
 ```
