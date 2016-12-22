@@ -36,13 +36,15 @@ public class TestUserRegistrationService {
 
     @Before
     public void setUp() {
-        this.userRegistrationService = new UserRegistrationServiceImpl(userDao, passwordEncoder);
+
+        userRegistrationService = new UserRegistrationServiceImpl(userDao, passwordEncoder);
+
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
+
     }
 
     @Test
     public void testUserRegistration() {
-
-        when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
 
         userRegistrationService.register("foo@bar.com", "baz", "Foo Bar");
 
@@ -55,5 +57,7 @@ public class TestUserRegistrationService {
         assertEquals("foo@bar.com", capturedUser.getEmail());
         assertEquals("Foo Bar", capturedUser.getName());
         assertEquals("encoded-password", capturedUser.getPassword());
+
     }
+
 }
