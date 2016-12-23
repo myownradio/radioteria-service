@@ -1,11 +1,13 @@
 package com.radioteria.business.services.auth.impl;
 
+import com.radioteria.business.events.UserConfirmedEvent;
 import com.radioteria.business.events.UserRegisteredEvent;
 import com.radioteria.business.services.auth.api.UserRegistrationService;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +23,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    private boolean emailVerifyEnabled;
+
     @Autowired
     public UserRegistrationServiceImpl(UserDao userDao,
                                        PasswordEncoder passwordEncoder,
@@ -28,6 +32,11 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
+    }
+
+    @Value("${auth.email.verify.enabled}")
+    public void setEmailVerifyEnabled(boolean emailVerifyEnabled) {
+        this.emailVerifyEnabled = emailVerifyEnabled;
     }
 
     public void register(String email, String plainPassword, String name) {
@@ -39,20 +48,12 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         user.setEmail(email);
         user.setPassword(encodedPassword);
         user.setName(name);
-        user.setState(UserState.ACTIVE);
+        user.setState(emailVerifyEnabled ? UserState.INACTIVE : UserState.ACTIVE);
         user.setAvatarFile(null);
 
         userDao.persist(user);
 
         publishEventAboutUserRegistered(user);
-
-    }
-
-    private void publishEventAboutUserRegistered(User registeredUser) {
-
-        ApplicationEvent event = new UserRegisteredEvent(this, registeredUser);
-
-        eventPublisher.publishEvent(event);
 
     }
 
@@ -62,6 +63,23 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
         user.setState(UserState.ACTIVE);
 
+        publishEventAboutUserConfirmed(user);
+
     }
 
+    private void publishEventAboutUserRegistered(User user) {
+
+        ApplicationEvent event = new UserRegisteredEvent(this, user);
+
+        eventPublisher.publishEvent(event);
+
+    }
+
+    private void publishEventAboutUserConfirmed(User user) {
+
+        ApplicationEvent event = new UserConfirmedEvent(this, user);
+
+        eventPublisher.publishEvent(event);
+
+    }
 }
