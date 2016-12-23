@@ -1,5 +1,6 @@
 package com.radioteria.business.services.auth.impl;
 
+import com.radioteria.business.services.auth.events.PasswordChangedEvent;
 import com.radioteria.business.services.auth.events.UserConfirmedEvent;
 import com.radioteria.business.services.auth.events.UserRegisteredEvent;
 import com.radioteria.business.services.auth.api.UserService;
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     private final ApplicationEventPublisher eventPublisher;
 
+    @Value("${registration.email.verify.enabled}")
     private boolean emailVerifyEnabled = true;
 
     @Autowired
@@ -38,16 +40,15 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Value("${registration.email.verify.enabled}")
-    public void setEmailVerifyEnabled(boolean emailVerifyEnabled) {
+    public boolean passwordMatches(User user, String plainPassword) {
 
-        this.emailVerifyEnabled = emailVerifyEnabled;
+        return passwordEncoder.matches(plainPassword, user.getPassword());
 
     }
 
     public void register(String email, String plainPassword, String name) {
 
-        throwErrorIfEmailIsUsed(email);
+        throwErrorIfEmailNotAvailable(email);
 
         String encodedPassword = passwordEncoder.encode(plainPassword);
 
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public void confirm(String email) {
+    public void activateByEmail(String email) {
 
         User user = userDao.findByEmail(email);
 
@@ -79,9 +80,33 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private void throwErrorIfEmailIsUsed(String email) {
+    public void changePassword(User user, String newPlainPassword) {
 
-        if (userDao.isEmailAlreadyUsed(email)) {
+        String encodedPassword = passwordEncoder.encode(newPlainPassword);
+
+        user.setPassword(encodedPassword);
+
+        publishEventAboutChangedPassword(user);
+
+    }
+
+    public void deactivate(User user) {
+
+        user.setState(UserState.DELETED);
+
+        publishEventAboutUserDeleted(user);
+
+    }
+
+    public void delete(User user) {
+
+        throw new IllegalStateException("No, God! Please, No!");
+
+    }
+
+    private void throwErrorIfEmailNotAvailable(String email) {
+
+        if (!userDao.isEmailAvailable(email)) {
             throw new UserExistsException(String.format("User with email \"%s\" already exists", email));
         }
 
@@ -98,6 +123,22 @@ public class UserServiceImpl implements UserService {
     private void publishEventAboutUserConfirmed(User user) {
 
         ApplicationEvent event = new UserConfirmedEvent(this, user);
+
+        eventPublisher.publishEvent(event);
+
+    }
+
+    private void publishEventAboutUserDeleted(User user) {
+
+        ApplicationEvent event = new UserConfirmedEvent(this, user);
+
+        eventPublisher.publishEvent(event);
+
+    }
+
+    private void publishEventAboutChangedPassword(User user) {
+
+        ApplicationEvent event = new PasswordChangedEvent(this, user);
 
         eventPublisher.publishEvent(event);
 

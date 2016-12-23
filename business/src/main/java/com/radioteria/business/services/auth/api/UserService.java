@@ -1,9 +1,12 @@
 package com.radioteria.business.services.auth.api;
 
-import com.radioteria.business.services.auth.exceptions.UserExistsException;
-import com.radioteria.business.services.auth.exceptions.UserNotFoundException;
+import com.radioteria.data.entities.User;
 
 public interface UserService {
-    void register(String email, String plainPassword, String name) throws UserExistsException;
-    void confirm(String email) throws UserNotFoundException;
+    boolean passwordMatches(User user, String plainPassword);
+    void register(String email, String plainPassword, String name);
+    void activateByEmail(String email);
+    void changePassword(User user, String newPlainPassword);
+    void deactivate(User user);
+    void delete(User user);
 }

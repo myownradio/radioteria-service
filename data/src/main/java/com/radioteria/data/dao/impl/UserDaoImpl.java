@@ -17,8 +17,8 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
     }
 
     @Override
-    public boolean isEmailAlreadyUsed(String email) {
-        return findByEmail(email) == null;
+    public boolean isEmailAvailable(String email) {
+        return findByEmail(email) != null;
     }
 
 }
