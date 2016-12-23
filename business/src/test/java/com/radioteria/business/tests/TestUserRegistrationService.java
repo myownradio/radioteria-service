@@ -1,4 +1,4 @@
-package com.radioteria.tests.business;
+package com.radioteria.business.tests;
 
 import com.radioteria.business.services.auth.events.UserRegisteredEvent;
 import com.radioteria.business.services.auth.api.UserService;
@@ -7,7 +7,6 @@ import com.radioteria.business.services.auth.impl.UserServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -41,19 +40,17 @@ public class TestUserRegistrationService {
     private ArgumentCaptor<UserRegisteredEvent> eventCaptor;
 
     @Test
-    public void testUserRegistration() {
-
-        when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
-
-        when(userDao.isEmailAlreadyUsed(anyString())).thenReturn(false);
+    public void testNewUserRegistration() {
 
         UserService userRegistrationService = new UserServiceImpl(userDao, passwordEncoder, eventPublisher);
+
+        when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
+        when(userDao.isEmailAlreadyUsed(anyString())).thenReturn(false);
 
         userRegistrationService.register("foo@bar.com", "baz", "Foo Bar");
 
         verifyThatMethodsCalledAsExpected();
         captureTheArgumentsOrMethodCalls();
-
         verifyThatUserIsRegistered();
         verifyThatEventContainsRegisteredUser();
 
@@ -62,9 +59,9 @@ public class TestUserRegistrationService {
     @Test(expected = UserExistsException.class)
     public void testUserRegistrationWhenUserExists() {
 
-        when(userDao.isEmailAlreadyUsed(anyString())).thenReturn(true);
-
         UserService userRegistrationService = new UserServiceImpl(userDao, passwordEncoder, eventPublisher);
+
+        when(userDao.isEmailAlreadyUsed(anyString())).thenReturn(true);
 
         userRegistrationService.register("foo@bar.com", "baz", "Foo Bar");
 

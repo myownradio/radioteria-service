@@ -1,4 +1,4 @@
-package com.radioteria.tests.business;
+package com.radioteria.business.tests;
 
 import com.radioteria.business.services.auth.events.UserConfirmedEvent;
 import com.radioteria.business.services.auth.api.UserService;
