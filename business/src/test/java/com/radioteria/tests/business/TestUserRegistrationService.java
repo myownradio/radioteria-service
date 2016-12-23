@@ -1,10 +1,11 @@
 package com.radioteria.tests.business;
 
 import com.radioteria.business.events.UserRegisteredEvent;
-import com.radioteria.business.services.auth.api.UserRegistrationService;
-import com.radioteria.business.services.auth.impl.UserRegistrationServiceImpl;
+import com.radioteria.business.services.auth.api.UserService;
+import com.radioteria.business.services.auth.impl.UserServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
+import com.radioteria.data.enumerations.UserState;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,12 +40,8 @@ public class TestUserRegistrationService {
     private ArgumentCaptor<UserRegisteredEvent> eventCaptor;
 
 
-    private UserRegistrationService userRegistrationService;
-
     @Before
     public void setUp() {
-
-        userRegistrationService = new UserRegistrationServiceImpl(userDao, passwordEncoder, eventPublisher);
 
         when(passwordEncoder.encode(anyString())).thenReturn("encoded-password");
 
@@ -53,12 +50,14 @@ public class TestUserRegistrationService {
     @Test
     public void testUserRegistration() {
 
+        UserService userRegistrationService = new UserServiceImpl(userDao, passwordEncoder, eventPublisher);
+
         userRegistrationService.register("foo@bar.com", "baz", "Foo Bar");
 
         verifyThatMethodsCalledAsExpected();
         captureTheArgumentsOrMethodCalls();
 
-        verifyThatUserRegisteredAsExpected();
+        verifyThatUserIsRegistered();
         verifyThatEventContainsRegisteredUser();
 
     }
@@ -77,13 +76,14 @@ public class TestUserRegistrationService {
 
     }
 
-    private void verifyThatUserRegisteredAsExpected() {
+    private void verifyThatUserIsRegistered() {
 
         User registeredUser = userCaptor.getValue();
 
         assertEquals("foo@bar.com", registeredUser.getEmail());
         assertEquals("Foo Bar", registeredUser.getName());
         assertEquals("encoded-password", registeredUser.getPassword());
+        assertEquals(UserState.INACTIVE, registeredUser.getState());
 
     }
 

@@ -2,7 +2,7 @@ package com.radioteria.business.services.auth.impl;
 
 import com.radioteria.business.events.UserConfirmedEvent;
 import com.radioteria.business.events.UserRegisteredEvent;
-import com.radioteria.business.services.auth.api.UserRegistrationService;
+import com.radioteria.business.services.auth.api.UserService;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class UserRegistrationServiceImpl implements UserRegistrationService {
+public class UserServiceImpl implements UserService {
 
     private final UserDao userDao;
 
@@ -23,18 +23,18 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
     private final ApplicationEventPublisher eventPublisher;
 
-    private boolean emailVerifyEnabled;
+    private boolean emailVerifyEnabled = true;
 
     @Autowired
-    public UserRegistrationServiceImpl(UserDao userDao,
-                                       PasswordEncoder passwordEncoder,
-                                       ApplicationEventPublisher eventPublisher) {
+    public UserServiceImpl(UserDao userDao,
+                           PasswordEncoder passwordEncoder,
+                           ApplicationEventPublisher eventPublisher) {
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
     }
 
-    @Value("${auth.email.verify.enabled}")
+    @Value("${registration.email.verify.enabled}")
     public void setEmailVerifyEnabled(boolean emailVerifyEnabled) {
         this.emailVerifyEnabled = emailVerifyEnabled;
     }
