@@ -1,4 +1,4 @@
-package com.radioteria.business.services.auth.events;
+package com.radioteria.business.services.events.userService;
 
 import com.radioteria.data.entities.User;
 import org.springframework.context.ApplicationEvent;

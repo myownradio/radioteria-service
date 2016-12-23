@@ -1,6 +1,8 @@
-package com.radioteria.business.services.auth.exceptions;
+package com.radioteria.business.services.exceptions;
 
-public class UserNotFoundException extends AuthServiceException {
+import com.radioteria.business.services.exceptions.ServiceException;
+
+public class UserNotFoundException extends ServiceException {
 
     public UserNotFoundException() {
         super();

@@ -1,4 +1,4 @@
-package com.radioteria.business.services.auth.api;
+package com.radioteria.business.services.api;
 
 import com.radioteria.data.entities.User;
 

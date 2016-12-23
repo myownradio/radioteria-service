@@ -1,11 +1,11 @@
-package com.radioteria.business.services.auth.impl;
+package com.radioteria.business.services.impl;
 
-import com.radioteria.business.services.auth.events.PasswordChangedEvent;
-import com.radioteria.business.services.auth.events.UserConfirmedEvent;
-import com.radioteria.business.services.auth.events.UserRegisteredEvent;
-import com.radioteria.business.services.auth.api.UserService;
-import com.radioteria.business.services.auth.exceptions.UserExistsException;
-import com.radioteria.business.services.auth.exceptions.UserNotFoundException;
+import com.radioteria.business.services.events.userService.PasswordChangedEvent;
+import com.radioteria.business.services.events.userService.UserConfirmedEvent;
+import com.radioteria.business.services.events.userService.UserRegisteredEvent;
+import com.radioteria.business.services.api.UserService;
+import com.radioteria.business.services.exceptions.UserExistsException;
+import com.radioteria.business.services.exceptions.UserNotFoundException;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;

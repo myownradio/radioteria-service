@@ -1,7 +1,7 @@
 package com.radioteria.test.business.services.userService;
 
-import com.radioteria.business.services.auth.api.UserService;
-import com.radioteria.business.services.auth.impl.UserServiceImpl;
+import com.radioteria.business.services.api.UserService;
+import com.radioteria.business.services.impl.UserServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import org.junit.Before;
 import org.junit.runner.RunWith;

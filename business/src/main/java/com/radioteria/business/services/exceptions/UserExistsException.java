@@ -1,6 +1,8 @@
-package com.radioteria.business.services.auth.exceptions;
+package com.radioteria.business.services.exceptions;
 
-public class UserExistsException extends AuthServiceException {
+import com.radioteria.business.services.exceptions.ServiceException;
+
+public class UserExistsException extends ServiceException {
 
     public UserExistsException() {
         super();

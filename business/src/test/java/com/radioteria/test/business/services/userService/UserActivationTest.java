@@ -1,7 +1,7 @@
 package com.radioteria.test.business.services.userService;
 
-import com.radioteria.business.services.auth.events.UserConfirmedEvent;
-import com.radioteria.business.services.auth.exceptions.UserNotFoundException;
+import com.radioteria.business.services.events.userService.UserConfirmedEvent;
+import com.radioteria.business.services.exceptions.UserNotFoundException;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
 import org.junit.Test;
