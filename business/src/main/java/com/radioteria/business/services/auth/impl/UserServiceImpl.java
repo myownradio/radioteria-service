@@ -1,8 +1,10 @@
 package com.radioteria.business.services.auth.impl;
 
-import com.radioteria.business.events.UserConfirmedEvent;
-import com.radioteria.business.events.UserRegisteredEvent;
+import com.radioteria.business.services.auth.events.UserConfirmedEvent;
+import com.radioteria.business.services.auth.events.UserRegisteredEvent;
 import com.radioteria.business.services.auth.api.UserService;
+import com.radioteria.business.services.auth.exceptions.UserExistsException;
+import com.radioteria.business.services.auth.exceptions.UserNotFoundException;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
@@ -29,17 +31,23 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserDao userDao,
                            PasswordEncoder passwordEncoder,
                            ApplicationEventPublisher eventPublisher) {
+
         this.userDao = userDao;
         this.passwordEncoder = passwordEncoder;
         this.eventPublisher = eventPublisher;
+
     }
 
     @Value("${registration.email.verify.enabled}")
     public void setEmailVerifyEnabled(boolean emailVerifyEnabled) {
+
         this.emailVerifyEnabled = emailVerifyEnabled;
+
     }
 
     public void register(String email, String plainPassword, String name) {
+
+        throwErrorIfEmailIsUsed(email);
 
         String encodedPassword = passwordEncoder.encode(plainPassword);
 
@@ -61,9 +69,21 @@ public class UserServiceImpl implements UserService {
 
         User user = userDao.findByEmail(email);
 
+        if (user == null) {
+            throw new UserNotFoundException(String.format("User with email \"%s\" not exists", email));
+        }
+
         user.setState(UserState.ACTIVE);
 
         publishEventAboutUserConfirmed(user);
+
+    }
+
+    private void throwErrorIfEmailIsUsed(String email) {
+
+        if (userDao.isEmailAlreadyUsed(email)) {
+            throw new UserExistsException(String.format("User with email \"%s\" already exists", email));
+        }
 
     }
 

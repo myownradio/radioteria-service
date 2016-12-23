@@ -1,7 +1,8 @@
 package com.radioteria.tests.business;
 
-import com.radioteria.business.events.UserConfirmedEvent;
+import com.radioteria.business.services.auth.events.UserConfirmedEvent;
 import com.radioteria.business.services.auth.api.UserService;
+import com.radioteria.business.services.auth.exceptions.UserNotFoundException;
 import com.radioteria.business.services.auth.impl.UserServiceImpl;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
@@ -50,6 +51,26 @@ public class TestUserConfirmationService {
 
         userRegistrationService.confirm("foo@bar.com");
 
+        verifyResults(user);
+
+    }
+
+    @Test(expected = UserNotFoundException.class)
+    public void testConfirmationWhenUserDoesNotExist() {
+
+        UserService userRegistrationService = new UserServiceImpl(userDao, passwordEncoder, eventPublisher);
+        User user = createInactiveUser();
+
+        configureDaoToReturnNull();
+
+        userRegistrationService.confirm("foo@bar.com");
+
+        verifyResults(user);
+
+    }
+
+    private void verifyResults(User user) {
+
         verifyThatUserIsActivated(user);
         verifyThatConfirmatiopnEventIsFired();
         captureTheFiredEvent();
@@ -69,6 +90,12 @@ public class TestUserConfirmationService {
     private void configureDaoToReturnGivenUser(User user) {
 
         when(userDao.findByEmail(anyString())).thenReturn(user);
+
+    }
+
+    private void configureDaoToReturnNull() {
+
+        when(userDao.findByEmail(anyString())).thenReturn(null);
 
     }
 
