@@ -38,7 +38,7 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
 
     }
 
-    public void verifyRemindPasswordCode(String code) {
+    public void verifyPasswordRecoveryCode(String code) {
 
         String decodedCode = decodePasswordRecoveryCode(code);
 
