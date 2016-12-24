@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
         User user = userDao.findByEmail(email);
 
         if (user == null) {
-            throw new UserNotFoundException(String.format("User with email \"%s\" not exists", email));
+            throw new UserNotFoundException(String.format("User with email \"%s\" not exists.", email));
         }
 
         user.setState(UserState.ACTIVE);
@@ -113,7 +113,7 @@ public class UserServiceImpl implements UserService {
     private void throwErrorIfEmailNotAvailable(String email) {
 
         if (!isEmailAvailable(email)) {
-            throw new UserExistsException(String.format("User with email \"%s\" already exists", email));
+            throw new UserExistsException(String.format("User with email \"%s\" already exists.", email));
         }
 
     }
