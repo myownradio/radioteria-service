@@ -46,6 +46,12 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public boolean isEmailAvailable(String email) {
+
+        return userDao.isEmailAvailable(email);
+
+    }
+
     public void register(String email, String plainPassword, String name) {
 
         throwErrorIfEmailNotAvailable(email);
@@ -106,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
     private void throwErrorIfEmailNotAvailable(String email) {
 
-        if (!userDao.isEmailAvailable(email)) {
+        if (!isEmailAvailable(email)) {
             throw new UserExistsException(String.format("User with email \"%s\" already exists", email));
         }
 
