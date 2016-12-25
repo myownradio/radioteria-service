@@ -9,9 +9,9 @@
 
     <modules>
         <module>web</module>
-        <module>base</module>
         <module>data</module>
         <module>business</module>
+        <module>backing</module>
     </modules>
 
     <groupId>com.radioteria</groupId>
@@ -27,9 +27,12 @@
         <mysql.connector.version>5.1.6</mysql.connector.version>
         <log4j.version>2.6.2</log4j.version>
         <slf4j.version>1.7.21</slf4j.version>
-        <junit.version>4.12</junit.version>
         <servlet.api.version>3.1.0</servlet.api.version>
         <hsqldb.version>2.3.4</hsqldb.version>
+        <jade4j.version>1.2.5</jade4j.version>
+
+        <junit.version>4.12</junit.version>
+        <mockito.version>1.9.5</mockito.version>
     </properties>
 
     <profiles>
@@ -50,17 +53,7 @@
             <!-- Modules -->
             <dependency>
                 <groupId>com.radioteria</groupId>
-                <artifactId>base</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.radioteria</groupId>
                 <artifactId>web</artifactId>
-                <version>1.0</version>
-            </dependency>
-            <dependency>
-                <groupId>com.radioteria</groupId>
-                <artifactId>db</artifactId>
                 <version>1.0</version>
             </dependency>
 
@@ -150,9 +143,22 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
                 <version>${spring.version}</version>
+            </dependency>
+
+            <!-- Templates -->
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>jade4j</artifactId>
+                <version>${jade4j.version}</version>
             </dependency>
 
         </dependencies>

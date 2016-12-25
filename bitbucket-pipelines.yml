@@ -4,4 +4,4 @@ pipelines:
   default:
     - step:
         script:
-          - mvn test -pl data -pl business
+          - mvn test -pl data -pl business -pl backing

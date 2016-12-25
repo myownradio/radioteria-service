@@ -4,7 +4,6 @@ import com.radioteria.data.dao.api.AbstractDao;
 import com.radioteria.data.entities.Identifiable;
 import com.radioteria.data.utils.CriteriaCallback;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
