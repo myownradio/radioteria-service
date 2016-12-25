@@ -2,7 +2,7 @@ package com.radioteria.backing.tests;
 
 import com.radioteria.backing.template.JadeTemplateService;
 import com.radioteria.backing.template.TemplateService;
-import org.apache.commons.collections.map.HashedMap;
+import com.radioteria.backing.template.TemplateServiceException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class JadeTemplateTest {
+public class JadeTemplateServiceTest {
 
     private TemplateService templateService;
 
@@ -22,26 +22,26 @@ public class JadeTemplateTest {
     }
 
     @Test
-    public void testSimpleTemplate() {
-        String renderedTemplate = templateService.render("hello-world", Collections.emptyMap());
+    public void testSimpleTemplate() throws TemplateServiceException {
+        String renderedTemplate = (String) templateService.render("hello-world", Collections.emptyMap());
         assertEquals("<h1>Hello, World!</h1>", renderedTemplate);
     }
 
     @Test
-    public void testTemplateWithParameters() {
+    public void testTemplateWithParameters() throws TemplateServiceException {
         Map<String, Object> context = new HashMap<String, Object>() {{
             this.put("username", "John");
         }};
 
-        String renderedTemplate = templateService.render("hello-username", context);
+        String renderedTemplate = (String) templateService.render("hello-username", context);
 
         assertEquals("<h1>Hello, John!</h1>", renderedTemplate);
     }
 
     @Test
-    public void testSubDirTemplate() {
+    public void testSubDirTemplate() throws TemplateServiceException {
         String expectedContent = "<html><head><title>Page Title</title></head><body><h1>Page Content</h1></body></html>";
-        String renderedTemplate = templateService.render("sub.template", Collections.emptyMap());
+        String renderedTemplate = (String) templateService.render("sub.template", Collections.emptyMap());
 
         assertEquals(expectedContent, renderedTemplate);
     }

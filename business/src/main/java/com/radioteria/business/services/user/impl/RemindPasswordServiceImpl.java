@@ -1,28 +1,34 @@
 package com.radioteria.business.services.user.impl;
 
 
-import com.radioteria.backing.mail.PlainLetter;
+import com.radioteria.backing.mail.Letter;
+import com.radioteria.backing.template.JadeTemplateService;
+import com.radioteria.backing.template.TemplateService;
+import com.radioteria.backing.template.TemplateServiceException;
+import com.radioteria.backing.template.TemplateWithContext;
+import com.radioteria.business.services.exceptions.ServiceException;
 import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.exceptions.RemindPasswordException;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.backing.mail.EmailService;
-import com.radioteria.backing.mail.Letter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RemindPasswordServiceImpl implements RemindPasswordService {
 
     final private static String CODE_DELIMITER = ":";
 
-
     @Value("remind.password.code.ttl")
-    private Long remindCodeTtl;
+    private Long remindCodeTtl = TimeUnit.MINUTES.toMillis(1);
 
     private UserDao userDao;
 
@@ -39,10 +45,14 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
     public void sendRemindPasswordLetter(User user) {
 
         String passwordRecoveryCode = generatePasswordRecoveryCode(user);
+        Map<String, Object> context = new HashMap<String, Object>() {{
+            this.put("user", user);
+            this.put("code", passwordRecoveryCode);
+        }};
 
-        Letter letter = new PlainLetter(user.getEmail(), "Password recovery", passwordRecoveryCode);
+        TemplateWithContext templateWithContext = new TemplateWithContext("letters.remind-password", context);
 
-        emailService.sendLetter(letter);
+        emailService.sendTemplateBasedLetter(user.getEmail(), "Remind password", templateWithContext);
 
     }
 
@@ -76,18 +86,6 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
 
     }
 
-    private String decodePasswordRecoveryCode(String code) {
-
-        Base64.Decoder decoder = Base64.getDecoder();
-
-        try {
-            return new String(decoder.decode(code));
-        } catch (IllegalArgumentException e) {
-            throw new RemindPasswordException("Specified code is broken.");
-        }
-
-    }
-
     private String generatePasswordRecoveryCode(User user) {
 
         Long time = System.currentTimeMillis() + remindCodeTtl;
@@ -99,6 +97,18 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         CharSequence[] codeParts = new String[] { time.toString(), userEmail, digest };
 
         return encoder.encodeToString(String.join(CODE_DELIMITER, codeParts).getBytes());
+
+    }
+
+    private String decodePasswordRecoveryCode(String code) {
+
+        Base64.Decoder decoder = Base64.getDecoder();
+
+        try {
+            return new String(decoder.decode(code));
+        } catch (IllegalArgumentException e) {
+            throw new RemindPasswordException("Specified code is broken.");
+        }
 
     }
 

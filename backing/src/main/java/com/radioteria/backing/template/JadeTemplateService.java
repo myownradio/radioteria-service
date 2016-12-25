@@ -3,7 +3,6 @@ package com.radioteria.backing.template;
 import de.neuland.jade4j.Jade4J;
 import de.neuland.jade4j.exceptions.JadeCompilerException;
 import de.neuland.jade4j.template.JadeTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -26,30 +25,38 @@ public class JadeTemplateService implements TemplateService {
     }
 
     @Override
-    public String render(String template, Map<String, Object> context) {
-        String templateFile = convertTemplateFile(template);
-        CharSequence[] pathParts = new String[] { templateRoot, templateFile };
-        String pathToTemplate = String.join(File.separator, pathParts);
+    public String render(String template, Map<String, Object> context) throws TemplateServiceException {
         try {
-            JadeTemplate jadeTemplate = getTemplate(pathToTemplate);
+            JadeTemplate jadeTemplate = getTemplate(template);
             return Jade4J.render(jadeTemplate, context);
         } catch (JadeCompilerException e) {
-            throw new TemplateServiceException(e);
+            throw new TemplateServiceException("Template " + template + " could not be rendered.", e);
         }
     }
 
-    private String convertTemplateFile(String templateFile) {
+    private String templateToFilename(String templateFile) {
         return templateFile.replace('.', File.separatorChar) + JADE_FILE_EXTENSION;
     }
 
-    private JadeTemplate getTemplate(String pathToTemplate) {
-        return cachedTemplates.computeIfAbsent(pathToTemplate, path -> {
-            try {
-                return Jade4J.getTemplate(path);
-            } catch (IOException e) {
-                throw new TemplateServiceException(e);
+    private JadeTemplate getTemplate(String template) throws TemplateServiceException {
+        try {
+            return cachedTemplates.computeIfAbsent(template, t -> {
+                String templateFile = templateToFilename(t);
+                CharSequence[] pathParts = { templateRoot, templateFile };
+                String pathToTemplate = String.join(File.separator, pathParts);
+                try {
+                    return Jade4J.getTemplate(pathToTemplate);
+                } catch (IOException e) {
+                    throw new RuntimeException(
+                            new TemplateServiceException("Template " + template + " could not be read.", e));
+                }
+            });
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof TemplateServiceException) {
+                throw (TemplateServiceException) e.getCause();
             }
-        });
+            throw e;
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 package com.radioteria.backing.mail;
 
-class Letter {
+public class Letter {
 
     private String to;
     private String subject;

@@ -1,5 +1,8 @@
 package com.radioteria.backing.mail;
 
-public interface EmailService<L extends Letter> {
-    void sendLetter(L letter);
+import com.radioteria.backing.template.TemplateWithContext;
+
+public interface EmailService {
+    void sendPlainLetter(String to, String subject, String body);
+    void sendTemplateBasedLetter(String to, String subject, TemplateWithContext templateWithContext);
 }

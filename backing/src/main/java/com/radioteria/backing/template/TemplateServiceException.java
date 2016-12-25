@@ -1,6 +1,8 @@
 package com.radioteria.backing.template;
 
-public class TemplateServiceException extends RuntimeException {
+import com.radioteria.backing.exceptions.BackingServiceException;
+
+public class TemplateServiceException extends BackingServiceException {
 
     public TemplateServiceException() {
         super();
