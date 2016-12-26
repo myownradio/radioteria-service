@@ -40,6 +40,18 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public User findByEmail(String email) {
+
+        return userDao.findByEmail(email);
+
+    }
+
+    public User findById(Long id) {
+
+        return userDao.find(id);
+
+    }
+
     public boolean passwordMatches(User user, String plainPassword) {
 
         return passwordEncoder.matches(plainPassword, user.getPassword());
@@ -74,7 +86,7 @@ public class UserServiceImpl implements UserService {
 
     public void activateByEmail(String email) {
 
-        User user = userDao.findByEmail(email);
+        User user = findByEmail(email);
 
         if (user == null) {
             throw new UserNotFoundException(String.format("User with email \"%s\" not exists.", email));
