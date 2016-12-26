@@ -2,9 +2,12 @@ package com.radioteria.data.dao.impl;
 
 import com.radioteria.data.dao.api.ChannelDao;
 import com.radioteria.data.entities.Channel;
+import com.radioteria.data.entities.Track;
 import com.radioteria.data.entities.User;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 @Repository
