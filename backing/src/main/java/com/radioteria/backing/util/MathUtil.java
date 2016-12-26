@@ -1,6 +1,10 @@
-package com.radioteria.backing.utils;
+package com.radioteria.backing.util;
 
 public class MathUtil {
+
+    public static boolean between(char left, char right, char value) {
+        return left <= value && right >= value;
+    }
 
     public static boolean between(long left, long right, long value) {
         return left <= value && right >= value;

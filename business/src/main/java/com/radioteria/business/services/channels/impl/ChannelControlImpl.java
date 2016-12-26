@@ -1,12 +1,10 @@
 package com.radioteria.business.services.channels.impl;
 
-import com.radioteria.backing.utils.MathUtil;
-import com.radioteria.backing.utils.Tuple;
+import com.radioteria.backing.util.MathUtil;
+import com.radioteria.backing.util.Tuple;
 import com.radioteria.business.events.channelControl.ChannelStateChangedEvent;
 import com.radioteria.business.services.channels.api.ChannelControl;
 import com.radioteria.business.services.channels.exceptions.ChannelControlException;
-import com.radioteria.data.dao.api.ChannelDao;
-import com.radioteria.data.dao.api.TrackDao;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
 import com.radioteria.data.enumerations.ChannelState;

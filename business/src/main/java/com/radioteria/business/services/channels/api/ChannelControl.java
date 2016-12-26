@@ -1,6 +1,6 @@
 package com.radioteria.business.services.channels.api;
 
-import com.radioteria.backing.utils.Tuple;
+import com.radioteria.backing.util.Tuple;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
 

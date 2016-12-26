@@ -1,4 +1,4 @@
-package com.radioteria.backing.utils;
+package com.radioteria.backing.util;
 
 public class Tuple<X, Y> {
 
