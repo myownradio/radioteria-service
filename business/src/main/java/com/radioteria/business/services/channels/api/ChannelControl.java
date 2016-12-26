@@ -6,7 +6,7 @@ import com.radioteria.data.entities.User;
 
 public interface ChannelControl extends AccessControlled<User> {
     void start();
-    void start(Track track);
+    void startFrom(Track track);
     void stop();
     void rewind();
     void next();
