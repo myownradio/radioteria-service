@@ -104,7 +104,7 @@ public class ChannelControlImpl implements ChannelControl {
         }
 
         throw new ChannelControlException(
-                String.format("Can't find now playing track (channel=%d, position=%d, duration=%d).",
+                String.format("Can't find playing track (channel=%d, position=%d, duration=%d).",
                         channel.getId(), trackListPosition, duration)
         );
 
