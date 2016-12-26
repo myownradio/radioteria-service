@@ -8,6 +8,7 @@ import javax.persistence.*;
 public class Track extends Identifiable<Long> {
 
     final public static String ID = "id";
+    final public static String ORDER_ID = "order_id";
     final public static String TITLE = "title";
     final public static String ARTIST = "artist";
     final public static String DURATION = "duration";
@@ -18,6 +19,9 @@ public class Track extends Identifiable<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
+
+    @Column(name = ORDER_ID, nullable = false)
+    private Long orderId;
 
     @Column(name = TITLE, nullable = false)
     private String title;
@@ -38,6 +42,14 @@ public class Track extends Identifiable<Long> {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Long orderId) {
+        this.orderId = orderId;
     }
 
     public String getTitle() {
