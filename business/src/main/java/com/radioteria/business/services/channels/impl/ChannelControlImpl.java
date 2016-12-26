@@ -2,7 +2,7 @@ package com.radioteria.business.services.channels.impl;
 
 import com.radioteria.backing.util.MathUtil;
 import com.radioteria.backing.util.Tuple;
-import com.radioteria.business.events.channelControl.ChannelStateChangedEvent;
+import com.radioteria.business.events.channelControl.ChannelPlaybackUpdatedEvent;
 import com.radioteria.business.services.channels.api.ChannelControl;
 import com.radioteria.business.services.channels.exceptions.ChannelControlException;
 import com.radioteria.data.entities.Channel;
@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.function.Consumer;
+
+import static com.radioteria.data.enumerations.ChannelState.STOPPED;
 
 
 @Service
@@ -69,7 +71,7 @@ public class ChannelControlImpl implements ChannelControl {
     public void stop(Channel channel) {
 
         modifyChannel(channel, ch -> {
-            ch.setChannelState(ChannelState.STOPPED);
+            ch.setChannelState(STOPPED);
             ch.setStartedAt(null);
         });
 
@@ -85,11 +87,22 @@ public class ChannelControlImpl implements ChannelControl {
 
     public Tuple<Track, Long> now(Channel channel) {
 
-        if (channel.getChannelState().equals(ChannelState.STOPPED) || channel.getTracks().size() == 0) {
+        if (channel.getChannelState() == STOPPED) {
+            return null;
+        }
+
+        if (channel.getTracks().size() == 0) {
+            LOGGER.warn("Channel {} is streaming, but there is no tracks.", channel.getId());
             return null;
         }
 
         long duration = channel.getTracks().stream().mapToLong(Track::getDuration).sum();
+
+        if (duration == 0) {
+            LOGGER.warn("Channel {} is streaming, but tracks duration is ZERO.", channel.getId());
+            return null;
+        }
+
         long trackListPosition = (System.currentTimeMillis() - channel.getStartedAt()) % duration;
 
         Long trackOffset = 0L;
@@ -110,15 +123,17 @@ public class ChannelControlImpl implements ChannelControl {
 
     private void modifyChannel(Channel channel, Consumer<Channel> consumer) {
 
+        LOGGER.info("Modifying channel {}.", channel.getId());
         consumer.accept(channel);
 
-        publishEventAboutChannelStateChanged(channel);
+        LOGGER.info("Publishing event about channel {} playback update.", channel.getId());
+        publishEventAboutChannelPlaybackUpdated(channel);
 
     }
 
-    private void publishEventAboutChannelStateChanged(Channel channel) {
+    private void publishEventAboutChannelPlaybackUpdated(Channel channel) {
 
-        ApplicationEvent event = new ChannelStateChangedEvent(this, channel);
+        ApplicationEvent event = new ChannelPlaybackUpdatedEvent(this, channel);
 
         eventPublisher.publishEvent(event);
 
