@@ -1,5 +1,6 @@
 package com.radioteria.business.services.channels.impl;
 
+import com.radioteria.backing.utils.MathUtil;
 import com.radioteria.backing.utils.Tuple;
 import com.radioteria.business.events.channelControl.ChannelStateChangedEvent;
 import com.radioteria.business.services.channels.api.ChannelControl;
@@ -95,7 +96,7 @@ public class ChannelControlImpl implements ChannelControl {
 
         Long trackOffset = 0L;
         for (Track track : channel.getTracks()) {
-            if (trackListPosition >= trackOffset && trackListPosition <= track.getDuration() + trackOffset) {
+            if (MathUtil.between(trackOffset, trackOffset + track.getDuration(), trackListPosition)) {
                 long position = trackListPosition - trackOffset;
                 return new Tuple<>(track, position);
             }
@@ -106,6 +107,7 @@ public class ChannelControlImpl implements ChannelControl {
                 String.format("Can't find now playing track (channel=%d, position=%d, duration=%d).",
                         channel.getId(), trackListPosition, duration)
         );
+
     }
 
     private void modifyChannel(Channel channel, Consumer<Channel> consumer) {
