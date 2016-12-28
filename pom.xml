@@ -12,6 +12,7 @@
         <module>data</module>
         <module>business</module>
         <module>backing</module>
+        <module>util</module>
     </modules>
 
     <groupId>com.radioteria</groupId>

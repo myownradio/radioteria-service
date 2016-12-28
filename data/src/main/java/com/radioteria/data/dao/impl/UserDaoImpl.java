@@ -4,6 +4,8 @@ import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao {
 
@@ -12,13 +14,13 @@ public class UserDaoImpl extends AbstractDaoImpl<Long, User> implements UserDao 
     }
 
     @Override
-    public User findByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return this.findByPropertyValue(User.EMAIL, email);
     }
 
     @Override
     public boolean isEmailAvailable(String email) {
-        return findByEmail(email) != null;
+        return !findByEmail(email).isPresent();
     }
 
 }

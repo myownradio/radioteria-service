@@ -1,8 +1,7 @@
 package com.radioteria.data.dao.api;
 
-import com.radioteria.data.utils.CriteriaCallback;
-
 import java.util.List;
+import java.util.Optional;
 
 public interface AbstractDao<P, E> {
 
@@ -20,19 +19,17 @@ public interface AbstractDao<P, E> {
 
     E load(P id);
 
-    E find(P id);
+    Optional<E> find(P id);
 
-    <V> E findByPropertyValue(String propertyName, V propertyValue);
-
-    E findByCriteria(CriteriaCallback<E> criteriaCallback);
+    <V> Optional<E> findByPropertyValue(String propertyName, V propertyValue);
 
     <V> List<E> listByPropertyValue(String propertyName, V propertyValue);
 
     List<E> list();
 
-    List<E> listByCriteria(CriteriaCallback<E> criteriaCallback);
+    List<E> list(Integer offset, Integer limit);
 
-    P findIdByPropertyValue(String propertyName, String propertyValue);
+    Optional<P> findIdByPropertyValue(String propertyName, String propertyValue);
 
     void clear();
 

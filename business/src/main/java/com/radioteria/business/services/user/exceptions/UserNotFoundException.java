@@ -1,4 +1,4 @@
-package com.radioteria.business.services.exceptions;
+package com.radioteria.business.services.user.exceptions;
 
 import com.radioteria.business.services.exceptions.ServiceException;
 

@@ -50,7 +50,7 @@ public class UserDaoTest {
     public void testFindUserByEmail() {
         userDao.persist(entityFactory.createUser("abc@foo.com"));
 
-        User foundUser = userDao.findByEmail("abc@foo.com");
+        User foundUser = userDao.findByEmail("abc@foo.com").get();
 
         assertEquals("abc@foo.com", foundUser.getEmail());
     }

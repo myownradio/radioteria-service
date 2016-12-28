@@ -2,7 +2,6 @@ package com.radioteria.data.dao.impl;
 
 import com.radioteria.data.dao.api.AbstractDao;
 import com.radioteria.data.entities.Identifiable;
-import com.radioteria.data.utils.CriteriaCallback;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -13,6 +12,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>> implements AbstractDao<P, E> {
@@ -40,98 +40,121 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
         return entityManager;
     }
 
+    @Override
     public void persist(E entity) {
         getEntityManager().persist(entity);
     }
 
     @SuppressWarnings("unchecked")
+    @Override
     public E merge(E entity) {
         return (E) getEntityManager().merge(entity);
     }
 
+    @Override
     public void detach(E entity) {
         getEntityManager().detach(entity);
     }
 
+    @Override
     public void delete(E entity) {
         getEntityManager().remove(entity);
     }
 
+    @Override
     public void deleteByKey(P key) {
         E entity = load(key);
         delete(entity);
     }
 
+    @Override
     public void flush() {
         getEntityManager().flush();
     }
 
+    @Override
     public E load(P id) {
         return getEntityManager().getReference(getEntityClass(), id);
     }
 
-    public E find(P id) {
-        return getEntityManager().find(getEntityClass(), id);
+    @Override
+    public Optional<E> find(P id) {
+        return Optional.ofNullable(getEntityManager().find(getEntityClass(), id));
     }
 
-    public <V> E findByPropertyValue(String propertyName, V propertyValue) {
-        return findByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
-            criteriaQuery.select(entityRoot);
-            criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
+    @Override
+    public <V> Optional<E> findByPropertyValue(String propertyName, V propertyValue) {
+        TypedQuery<E> typedQuery = getQueryByPropertyValue(propertyName, propertyValue);
 
-            return getEntityManager().createQuery(criteriaQuery);
-        });
+        return Optional.ofNullable(typedQuery.getSingleResult());
     }
 
-    public E findByCriteria(CriteriaCallback<E> criteriaCallback) {
-        return getTypedQueryByCriteria(criteriaCallback).getSingleResult();
-    }
-
+    @Override
     public <V> List<E> listByPropertyValue(String propertyName, V propertyValue) {
-        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
-            criteriaQuery.select(entityRoot);
-            criteriaQuery.where(criteriaBuilder.equal(entityRoot.get(propertyName), propertyValue));
-
-            return getEntityManager().createQuery(criteriaQuery);
-        });
+        return getQueryByPropertyValue(propertyName, propertyValue).getResultList();
     }
 
+    private <V> TypedQuery<E> getQueryByPropertyValue(String propertyName, V propertyValue) {
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<E> query = cb.createQuery(getEntityClass());
+        Root<E> root = query.from(getEntityClass());
+
+        query.select(root);
+
+        query.where(cb.equal(root.get(propertyName), propertyValue));
+
+        return getEntityManager().createQuery(query);
+    }
+
+    @Override
     public List<E> list() {
-        return listByCriteria((cb, cq, er) -> getEntityManager().createQuery(cq));
+
+        TypedQuery<E> typedQuery = getListQuery();
+
+        return typedQuery.getResultList();
+
     }
 
-    public List<E> list(int offset, Integer limit) {
-        return listByCriteria((criteriaBuilder, criteriaQuery, entityRoot) -> {
-            TypedQuery<E> query = getEntityManager().createQuery(criteriaQuery);
-            query.setFirstResult(offset);
-            if (limit != null) {
-                query.setMaxResults(limit);
-            }
-            return query;
-        });
-    }
+    @Override
+    public List<E> list(Integer offset, Integer limit) {
 
-    public List<E> listByCriteria(CriteriaCallback<E> criteriaCallback) {
-        return getTypedQueryByCriteria(criteriaCallback).getResultList();
-    }
+        TypedQuery<E> typedQuery = getListQuery();
 
-    public P findIdByPropertyValue(String propertyName, String propertyValue) {
-        E entity = findByPropertyValue(propertyName, propertyValue);
-        if (entity == null) {
-            return null;
+        typedQuery.setFirstResult(offset);
+
+        if (limit != null) {
+            typedQuery.setMaxResults(limit);
         }
-        return entity.getId();
+
+        return typedQuery.getResultList();
+
     }
 
-    // todo: http://www.objectdb.com/java/jpa/query/jpql/structure
-    private TypedQuery<E> getTypedQueryByCriteria(CriteriaCallback<E> criteriaCallback) {
-        CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<E> criteriaQuery = criteriaBuilder.createQuery(entityClass);
-        Root<E> entityRoot = criteriaQuery.from(entityClass);
+    private TypedQuery<E> getListQuery() {
 
-        return criteriaCallback.call(criteriaBuilder, criteriaQuery, entityRoot);
+        CriteriaQuery<E> query = getEntityManager().getCriteriaBuilder().createQuery(getEntityClass());
+
+        return getEntityManager().createQuery(query);
+
     }
 
+    @Override
+    public Optional<P> findIdByPropertyValue(String propertyName, String propertyValue) {
+
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<P> query = cb.createQuery(getIdClass());
+
+        Root<E> root = query.from(getEntityClass());
+
+        query.select(root.get("id"));
+
+        query.where(cb.equal(root.get(propertyName), propertyValue));
+
+        return Optional.ofNullable(getEntityManager().createQuery(query).getSingleResult());
+
+    }
+
+    @Override
     public void clear() {
         getEntityManager().clear();
     }

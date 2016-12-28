@@ -1,10 +1,16 @@
 package com.radioteria.data.entities;
 
 import com.radioteria.data.enumerations.ChannelState;
+import com.radioteria.util.MathUtil;
+import com.radioteria.util.OptionalUtil;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
+
+import static com.radioteria.util.FunctionalUtil.statefulFilter;
 
 @Entity
 @Table(name = "channels")
@@ -46,6 +52,7 @@ public class Channel extends Identifiable<Long> {
     private File artworkFile;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy(Track.ORDER_ID + " ASC")
     private List<Track> tracks = new ArrayList<>();
 
     public Channel() {
@@ -110,6 +117,78 @@ public class Channel extends Identifiable<Long> {
 
     public List<Track> getTracks() {
         return tracks;
+    }
+
+    public Long getTracksDuration() {
+        return getTracks().stream().mapToLong(Track::getDuration).sum();
+    }
+
+    public Optional<Track> getTrackAtOrderId(Long orderId) {
+        return getTracks()
+                .stream()
+                .filter(t -> t.getOrderId().equals(orderId))
+                .findFirst();
+    }
+
+    public Long getTrackOffsetAtOrderId(Long orderId) {
+        return getTracks()
+                .stream()
+                .filter(t -> t.getOrderId() < orderId)
+                .mapToLong(Track::getDuration)
+                .sum();
+    }
+
+    public Optional<Track> getTrackAfter(Track track) {
+
+        Optional<Track> trackAfter = getTracks()
+                .stream()
+                .filter(t -> t.getOrderId() > track.getOrderId())
+                .findFirst();
+
+        return OptionalUtil.first(trackAfter, getFirstTrack());
+
+    }
+
+    public Optional<Track> getTrackBefore(Track track) {
+
+        Optional<Track> trackBefore = getTracks()
+                .stream()
+                .filter(t -> t.getOrderId() < track.getOrderId())
+                .sorted((o1, o2) -> o2.getOrderId().compareTo(o1.getOrderId()))
+                .findFirst();
+
+        return OptionalUtil.first(trackBefore, getLastTrack());
+
+    }
+
+    public Optional<Track> getTrackAtTimePosition(Long timePosition) {
+        BiFunction<Long, Track, Boolean> offsetBasedPredicate = (offset, track) ->
+                MathUtil.between(offset, offset + track.getDuration(), timePosition);
+
+        return getTracks().stream()
+                .filter(statefulFilter(0L, offsetBasedPredicate, (offset, track) -> offset + track.getDuration()))
+                .findFirst();
+    }
+
+    public Optional<Track> getFirstTrack() {
+        return getTracks().stream().findFirst();
+    }
+
+    public Optional<Track> getLastTrack() {
+        return getTracks().stream()
+                .sorted((o1, o2) -> o2.getOrderId().compareTo(o1.getOrderId()))
+                .findFirst();
+    }
+
+    public Optional<Track> getPlayingAt(Long time) {
+        if (getChannelState() == ChannelState.STOPPED || getTracks().size() == 0) {
+            return Optional.empty();
+        }
+
+        long playingLongPosition = time - getStartedAt();
+        long playingShortPosition = playingLongPosition % getTracksDuration();
+
+        return getTrackAtTimePosition(playingShortPosition);
     }
 
 }

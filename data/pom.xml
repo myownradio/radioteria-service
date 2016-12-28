@@ -16,6 +16,11 @@
     <dependencies>
 
         <!-- Service Modules -->
+        <dependency>
+            <groupId>com.radioteria</groupId>
+            <artifactId>util</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!-- Spring Framework -->
         <dependency>

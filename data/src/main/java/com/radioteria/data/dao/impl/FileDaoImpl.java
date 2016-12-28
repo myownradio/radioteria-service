@@ -18,6 +18,7 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
     }
 
     public void increaseLinksCount(File file) {
+
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
         CriteriaUpdate<File> update = cb.createCriteriaUpdate(File.class);
@@ -34,9 +35,11 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
         query.executeUpdate();
 
         getEntityManager().refresh(file);
+
     }
 
     public synchronized void decreaseLinksCount(File file) {
+
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
 
         CriteriaUpdate<File> update = cb.createCriteriaUpdate(File.class);
@@ -53,6 +56,7 @@ public class FileDaoImpl extends AbstractDaoImpl<Long, File> implements FileDao 
         query.executeUpdate();
 
         getEntityManager().refresh(file);
+
     }
 
 }

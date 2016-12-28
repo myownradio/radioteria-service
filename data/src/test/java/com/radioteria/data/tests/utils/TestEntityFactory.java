@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class TestEntityFactory {
+
     public User createUser(String email) {
         User user = new User();
 

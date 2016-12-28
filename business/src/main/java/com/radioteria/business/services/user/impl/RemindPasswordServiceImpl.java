@@ -1,14 +1,9 @@
 package com.radioteria.business.services.user.impl;
 
 
-import com.radioteria.backing.mail.Letter;
-import com.radioteria.backing.template.JadeTemplateService;
-import com.radioteria.backing.template.TemplateService;
-import com.radioteria.backing.template.TemplateServiceException;
 import com.radioteria.backing.template.TemplateWithContext;
-import com.radioteria.business.services.exceptions.ServiceException;
 import com.radioteria.business.services.user.api.RemindPasswordService;
-import com.radioteria.business.services.exceptions.RemindPasswordException;
+import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.User;
 import com.radioteria.backing.mail.EmailService;
@@ -63,7 +58,7 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         String[] codeParts = decodedCode.split(CODE_DELIMITER, 3);
 
         if (codeParts.length != 3) {
-            throw new RemindPasswordException("Specified code is invalid.");
+            throw new RemindPasswordServiceException("Specified code is invalid.");
         }
 
         long codeStaleTime = Long.parseLong(codeParts[0]);
@@ -71,17 +66,17 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         String userDigest = codeParts[2];
 
         if (codeStaleTime > System.currentTimeMillis()) {
-            throw new RemindPasswordException("Specified code is stale.");
+            throw new RemindPasswordServiceException("Specified code is stale.");
         }
 
         User user = userDao.findByEmail(userEmail);
 
         if (user == null) {
-            throw new RemindPasswordException("Specified code belongs to user that does not exist.");
+            throw new RemindPasswordServiceException("Specified code belongs to user that does not exist.");
         }
 
         if (!matchUserDigest(user, userDigest)) {
-            throw new RemindPasswordException("Code verification failed.");
+            throw new RemindPasswordServiceException("Code verification failed.");
         }
 
     }
@@ -107,7 +102,7 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         try {
             return new String(decoder.decode(code));
         } catch (IllegalArgumentException e) {
-            throw new RemindPasswordException("Specified code is broken.");
+            throw new RemindPasswordServiceException("Specified code is broken.");
         }
 
     }

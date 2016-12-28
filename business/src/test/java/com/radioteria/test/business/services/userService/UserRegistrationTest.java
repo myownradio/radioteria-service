@@ -1,7 +1,7 @@
 package com.radioteria.test.business.services.userService;
 
 import com.radioteria.business.events.userService.UserRegisteredEvent;
-import com.radioteria.business.services.exceptions.UserExistsException;
+import com.radioteria.business.services.user.exceptions.UserExistsException;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.UserState;
 import org.junit.Test;
