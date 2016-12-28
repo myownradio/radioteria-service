@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 
 abstract public class FunctionalUtil implements Predicate {
 
-    public static <T, S> Predicate<T> statefulFilter(
+    public static <T, S> Predicate<T> statefulPredicate(
             S initialState,
             BiFunction<S, T, Boolean> statefulPredicate,
             BiFunction<S, T, S> stateUpdate

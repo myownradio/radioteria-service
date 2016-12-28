@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 
-import static com.radioteria.util.FunctionalUtil.statefulFilter;
+import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
 @Table(name = "channels")
@@ -166,7 +166,7 @@ public class Channel extends Identifiable<Long> {
                 MathUtil.between(offset, offset + track.getDuration(), timePosition);
 
         return getTracks().stream()
-                .filter(statefulFilter(0L, offsetBasedPredicate, (offset, track) -> offset + track.getDuration()))
+                .filter(statefulPredicate(0L, offsetBasedPredicate, (offset, track) -> offset + track.getDuration()))
                 .findFirst();
     }
 
