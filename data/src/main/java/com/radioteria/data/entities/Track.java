@@ -40,6 +40,13 @@ public class Track extends Identifiable<Long> {
     @JoinColumn(name = CHANNEL_ID, nullable = false)
     private Channel channel;
 
+    public Track() {}
+
+    public Track(String title, Long duration) {
+        this.setTitle(title);
+        this.setDuration(duration);
+    }
+
     public Long getId() {
         return id;
     }
@@ -92,4 +99,13 @@ public class Track extends Identifiable<Long> {
         this.channel = channel;
     }
 
+    @Override
+    public String toString() {
+        return "Track{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", title='" + title + '\'' +
+                ", duration=" + duration +
+                '}';
+    }
 }

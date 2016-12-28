@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.radioteria.data.enumerations.ChannelState.STOPPED;
+import static com.radioteria.data.enumerations.ChannelState.STREAMING;
 
 
 @Service
@@ -39,7 +40,7 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
         modifyChannel(channel, ch -> {
             ch.setChannelState(ChannelState.STREAMING);
-            ch.setStartedAt(System.currentTimeMillis());
+            ch.setStartedAt(getCurrentTimeMillis());
         });
 
     }
@@ -51,7 +52,8 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
         modifyChannel(channel, ch -> {
             Long trackOffset = ch.getTrackOffsetByOrderId(orderId);
-            ch.setStartedAt(System.currentTimeMillis() - trackOffset);
+            ch.setChannelState(STREAMING);
+            ch.setStartedAt(getCurrentTimeMillis() - trackOffset);
         });
 
     }
@@ -68,16 +70,16 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
     @Override
     public void next(Channel channel) {
-        playBasedOnCurrent(channel, channel::getTrackBefore);
+        playBasedOnCurrent(channel, channel::getTrackAfter);
     }
 
     @Override
     public void previous(Channel channel) {
-        playBasedOnCurrent(channel, channel::getTrackAfter);
+        playBasedOnCurrent(channel, channel::getTrackBefore);
     }
 
     private void playBasedOnCurrent(Channel channel, Function<Track, Optional<Track>> nextTrackGetter) {
-        long time = System.currentTimeMillis();
+        long time = getCurrentTimeMillis();
         Track nextTrack = channel.getPlayingAt(time)
                 .flatMap(nextTrackGetter)
                 .orElseThrow(() -> new ChannelControlsServiceException(
@@ -103,6 +105,10 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
         eventPublisher.publishEvent(event);
 
+    }
+
+    protected long getCurrentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
 }

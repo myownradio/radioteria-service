@@ -157,12 +157,12 @@ public class Channel extends Identifiable<Long> {
         return OptionalUtil.first(trackBefore, getLastTrack());
     }
 
-    public Optional<Track> getTrackAtTimePosition(Long time) {
+    public Optional<Track> getTrackAtTimePosition(long time) {
         long initialOffset = 0L;
         return getTracks().stream()
                 .filter(statefulPredicate(
                         initialOffset,
-                        (offset, track) -> MathUtil.between(offset, offset + track.getDuration(), time),
+                        (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), time),
                         operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
                 .findFirst();
@@ -178,7 +178,7 @@ public class Channel extends Identifiable<Long> {
                 .findFirst();
     }
 
-    public Optional<Long> getLongPlayingPositionAt(Long time) {
+    public Optional<Long> getLongPlayingPositionAt(long time) {
         if (getChannelState() == ChannelState.STOPPED) {
             return Optional.empty();
         }
@@ -186,7 +186,7 @@ public class Channel extends Identifiable<Long> {
         return Optional.of(time - getStartedAt());
     }
 
-    public Optional<Long> getShortPlayingPositionAt(Long time) {
+    public Optional<Long> getShortPlayingPositionAt(long time) {
         if (getTracks().size() == 0) {
             return Optional.empty();
         }
@@ -195,9 +195,15 @@ public class Channel extends Identifiable<Long> {
                 .map(pos -> pos % getTracksDuration());
     }
 
-    public Optional<Track> getPlayingAt(Long time) {
+    public Optional<Track> getPlayingAt(long time) {
         return getShortPlayingPositionAt(time)
                 .flatMap(this::getTrackAtTimePosition);
+    }
+
+    public void addTrack(Track track) {
+        track.setChannel(this);
+        track.setOrderId(1L + getTracks().size());
+        getTracks().add(track);
     }
 
 }
