@@ -5,7 +5,6 @@ import com.radioteria.business.services.channels.api.ChannelControlsService;
 import com.radioteria.business.services.channels.exceptions.ChannelControlsServiceException;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
-import com.radioteria.data.enumerations.ChannelState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static com.radioteria.data.enumerations.ChannelState.STOPPED;
@@ -35,41 +33,37 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
     @Override
     public void start(Channel channel) {
-
-        if (channel.getTracksDuration() == 0L) {
-            LOGGER.warn("Tried to start empty channel {}.", channel.getId());
-            return;
-        }
-
-        LOGGER.info("Starting channel {}.", channel.getId());
-
-        modifyChannel(channel, ch -> {
-            ch.setChannelState(ChannelState.STREAMING);
-            ch.setStartedAt(getCurrentTimeMillis());
-        });
-
+        start(channel, 1L);
     }
 
     @Override
-    public void startFrom(Long orderId, Channel channel) {
+    public void start(Channel channel, Long orderId) {
+
+        if (channel.getTracksDuration() == 0L) {
+            LOGGER.warn("Tried to start an empty channel {}.", channel.getId());
+            return;
+        }
 
         LOGGER.info("Starting channel {} from track {} position.", channel.getId(), orderId);
 
-        modifyChannel(channel, ch -> {
-            Long trackOffset = ch.getTrackOffsetByOrderId(orderId);
-            ch.setChannelState(STREAMING);
-            ch.setStartedAt(getCurrentTimeMillis() - trackOffset);
-        });
+        Long trackOffset = channel.getTrackOffsetByOrderId(orderId);
+
+        channel.setChannelState(STREAMING);
+        channel.setStartedAt(getCurrentTimeMillis() - trackOffset);
+
+        publishChannelControlsEvent(channel);
 
     }
 
     @Override
     public void stop(Channel channel) {
 
-        modifyChannel(channel, ch -> {
-            ch.setChannelState(STOPPED);
-            ch.setStartedAt(null);
-        });
+        LOGGER.info("Stopping channel {}.", channel.getId());
+
+        channel.setChannelState(STOPPED);
+        channel.setStartedAt(null);
+
+        publishChannelControlsEvent(channel);
 
     }
 
@@ -91,20 +85,12 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
                         String.format("Nothing to play next on channel %d.", channel.getId())
                 ));
 
-        startFrom(nextTrack.getOrderId(), channel);
+        start(channel, nextTrack.getOrderId());
     }
 
-    private void modifyChannel(Channel channel, Consumer<Channel> consumer) {
+    private void publishChannelControlsEvent(Channel channel) {
 
-        LOGGER.info("Modifying channel {}.", channel.getId());
-        consumer.accept(channel);
-
-        LOGGER.info("Publishing event about channel {} playback update.", channel.getId());
-        publishEventAboutChannelPlaybackUpdated(channel);
-
-    }
-
-    private void publishEventAboutChannelPlaybackUpdated(Channel channel) {
+        LOGGER.info("Publishing channel controls event for channel {}.", channel.getId());
 
         ApplicationEvent event = new ChannelControlsEvent(this, channel);
 

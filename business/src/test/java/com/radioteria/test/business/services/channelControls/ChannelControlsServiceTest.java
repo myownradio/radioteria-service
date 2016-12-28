@@ -20,14 +20,13 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.rules.ExpectedException.none;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class ChannelControlsTest {
+public class ChannelControlsServiceTest {
 
     final private static Long TIME = 100L;
 
@@ -41,7 +40,6 @@ public class ChannelControlsTest {
         ChannelControlsServiceWithFixedTime(ApplicationEventPublisher eventPublisher) {
             super(eventPublisher);
         }
-
         @Override
         protected long getCurrentTimeMillis() {
             return TIME;
@@ -85,12 +83,14 @@ public class ChannelControlsTest {
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #1", nowPlaying.get().getTitle());
 
+        verifyThatEventPublishedTimes(times(1));
+
     }
 
     @Test
     public void testChannelStartFrom() {
 
-        channelControlsService.startFrom(2L, channel);
+        channelControlsService.start(channel, 2L);
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
 
@@ -98,6 +98,8 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #2", nowPlaying.get().getTitle());
+
+        verifyThatEventPublishedTimes(times(1));
 
     }
 
@@ -113,12 +115,14 @@ public class ChannelControlsTest {
         assertEquals(ChannelState.STOPPED, channel.getChannelState());
         assertFalse(channel.getPlayingAt(TIME).isPresent());
 
+        verifyThatEventPublishedTimes(times(2));
+
     }
 
     @Test
     public void testChannelPlayNext() {
 
-        channelControlsService.startFrom(3L, channel);
+        channelControlsService.start(channel, 3L);
         channelControlsService.next(channel);
 
         Optional<Track> nowPlaying = channel.getPlayingAt(TIME);
@@ -126,13 +130,15 @@ public class ChannelControlsTest {
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #4", nowPlaying.get().getTitle());
 
+        verifyThatEventPublishedTimes(times(2));
+
     }
 
 
     @Test
     public void testChannelPlayPrevious() {
 
-        channelControlsService.startFrom(3L, channel);
+        channelControlsService.start(channel, 3L);
         channelControlsService.previous(channel);
 
         Optional<Track> nowPlaying = channel.getPlayingAt(100L);
@@ -140,12 +146,14 @@ public class ChannelControlsTest {
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #2", nowPlaying.get().getTitle());
 
+        verifyThatEventPublishedTimes(times(2));
+
     }
 
     @Test
     public void testChannelPlayNextIfLast() {
 
-        channelControlsService.startFrom(5L, channel);
+        channelControlsService.start(channel, 5L);
         channelControlsService.next(channel);
 
         Optional<Track> nowPlaying = channel.getPlayingAt(100L);
@@ -153,18 +161,22 @@ public class ChannelControlsTest {
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #1", nowPlaying.get().getTitle());
 
+        verifyThatEventPublishedTimes(times(2));
+
     }
 
     @Test
     public void testChannelPlayPreviousIfFirst() {
 
-        channelControlsService.startFrom(1L, channel);
+        channelControlsService.start(channel, 1L);
         channelControlsService.previous(channel);
 
         Optional<Track> nowPlaying = channel.getPlayingAt(100L);
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #5", nowPlaying.get().getTitle());
+
+        verifyThatEventPublishedTimes(times(2));
 
     }
 
@@ -176,6 +188,8 @@ public class ChannelControlsTest {
         channelControlsService.start(channel);
 
         assertEquals(ChannelState.STOPPED, channel.getChannelState());
+
+        verifyThatEventPublishedTimes(never());
 
     }
 
@@ -194,7 +208,23 @@ public class ChannelControlsTest {
 
     }
 
-    public void verifyThatEventPublishedTimes(VerificationMode mode) {
+    @Test
+    public void testStartFromWrongOrder() {
+
+        channelControlsService.start(channel, 10L);
+        verifyThatPlayingFirstTrack();
+
+        channelControlsService.start(channel, -10L);
+        verifyThatPlayingFirstTrack();
+
+    }
+
+    private void verifyThatPlayingFirstTrack() {
+        Optional<Track> track = channel.getPlayingAt(TIME);
+        assertEquals(Optional.of("Test Track #1"), track.map(Track::getTitle));
+    }
+
+    private void verifyThatEventPublishedTimes(VerificationMode mode) {
         verify(eventPublisher, mode).publishEvent(isA(ChannelControlsEvent.class));
     }
 
