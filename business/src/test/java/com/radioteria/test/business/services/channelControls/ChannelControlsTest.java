@@ -22,13 +22,24 @@ import static org.junit.Assert.assertFalse;
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelControlsTest {
 
-    final private static Long FIXED_TIME = 100L;
+    final private static Long TIME = 100L;
 
     private User user;
 
     private Channel channel;
 
     private ChannelControlsService channelControlsService;
+
+    private class ChannelControlsServiceWithFixedTime extends ChannelControlsServiceImpl {
+        ChannelControlsServiceWithFixedTime(ApplicationEventPublisher eventPublisher) {
+            super(eventPublisher);
+        }
+
+        @Override
+        protected long getCurrentTimeMillis() {
+            return TIME;
+        }
+    }
 
     @Mock
     private ApplicationEventPublisher eventPublisher;
@@ -50,7 +61,7 @@ public class ChannelControlsTest {
         channel.addTrack(new Track("Test Track #4", 250L));
         channel.addTrack(new Track("Test Track #5", 500L));
 
-        channelControlsService = new ChannelControlServiceFixedTime(eventPublisher, FIXED_TIME);
+        channelControlsService = new ChannelControlsServiceWithFixedTime(eventPublisher);
 
     }
 
@@ -60,7 +71,7 @@ public class ChannelControlsTest {
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
 
-        Optional<Track> nowPlaying = channel.getPlayingAt(FIXED_TIME);
+        Optional<Track> nowPlaying = channel.getPlayingAt(TIME);
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #1", nowPlaying.get().getTitle());
@@ -72,7 +83,7 @@ public class ChannelControlsTest {
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
 
-        Optional<Track> nowPlaying = channel.getPlayingAt(FIXED_TIME);
+        Optional<Track> nowPlaying = channel.getPlayingAt(TIME);
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #2", nowPlaying.get().getTitle());
@@ -87,7 +98,7 @@ public class ChannelControlsTest {
         channelControlsService.stop(channel);
 
         assertEquals(ChannelState.STOPPED, channel.getChannelState());
-        assertFalse(channel.getPlayingAt(FIXED_TIME).isPresent());
+        assertFalse(channel.getPlayingAt(TIME).isPresent());
     }
 
     @Test
@@ -95,7 +106,7 @@ public class ChannelControlsTest {
         channelControlsService.startFrom(3L, channel);
         channelControlsService.next(channel);
 
-        Optional<Track> nowPlaying = channel.getPlayingAt(FIXED_TIME);
+        Optional<Track> nowPlaying = channel.getPlayingAt(TIME);
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #4", nowPlaying.get().getTitle());
