@@ -67,6 +67,7 @@ public class ChannelControlsTest {
 
     @Test
     public void testChannelStart() {
+
         channelControlsService.start(channel);
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
@@ -75,10 +76,12 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #1", nowPlaying.get().getTitle());
+
     }
 
     @Test
     public void testChannelStartFrom() {
+
         channelControlsService.startFrom(2L, channel);
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
@@ -87,10 +90,12 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #2", nowPlaying.get().getTitle());
+
     }
 
     @Test
     public void testChannelStop() {
+
         channelControlsService.start(channel);
 
         assertEquals(ChannelState.STREAMING, channel.getChannelState());
@@ -99,10 +104,12 @@ public class ChannelControlsTest {
 
         assertEquals(ChannelState.STOPPED, channel.getChannelState());
         assertFalse(channel.getPlayingAt(TIME).isPresent());
+
     }
 
     @Test
     public void testChannelPlayNext() {
+
         channelControlsService.startFrom(3L, channel);
         channelControlsService.next(channel);
 
@@ -110,11 +117,13 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #4", nowPlaying.get().getTitle());
+
     }
 
 
     @Test
     public void testChannelPlayPrevious() {
+
         channelControlsService.startFrom(3L, channel);
         channelControlsService.previous(channel);
 
@@ -122,10 +131,12 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #2", nowPlaying.get().getTitle());
+
     }
 
     @Test
     public void testChannelPlayNextIfLast() {
+
         channelControlsService.startFrom(5L, channel);
         channelControlsService.next(channel);
 
@@ -133,10 +144,12 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #1", nowPlaying.get().getTitle());
+
     }
 
     @Test
     public void testChannelPlayPreviousIfFirst() {
+
         channelControlsService.startFrom(1L, channel);
         channelControlsService.previous(channel);
 
@@ -144,6 +157,31 @@ public class ChannelControlsTest {
 
         assertTrue(nowPlaying.isPresent());
         assertEquals("Test Track #5", nowPlaying.get().getTitle());
+
+    }
+
+    @Test
+    public void testStartEmptyChannel() {
+
+        channel.getTracks().clear();
+
+        channelControlsService.start(channel);
+
+        assertEquals(ChannelState.STOPPED, channel.getChannelState());
+
+    }
+
+    @Test
+    public void testStartWithZeroLength() {
+
+        channel.getTracks().clear();
+        channel.addTrack(new Track("Broken Zero", 0L));
+        channel.addTrack(new Track("Another Broken Zero", 0L));
+
+        channelControlsService.start(channel);
+
+        assertEquals(ChannelState.STOPPED, channel.getChannelState());
+
     }
 
 }

@@ -36,7 +36,12 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
     @Override
     public void start(Channel channel) {
 
-        LOGGER.info("Starting channel (channel={}).", channel.getId());
+        if (channel.getTracksDuration() == 0L) {
+            LOGGER.warn("Tried to start empty channel {}.", channel.getId());
+            return;
+        }
+
+        LOGGER.info("Starting channel {}.", channel.getId());
 
         modifyChannel(channel, ch -> {
             ch.setChannelState(ChannelState.STREAMING);
