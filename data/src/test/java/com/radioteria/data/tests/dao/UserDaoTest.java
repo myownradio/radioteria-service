@@ -78,8 +78,8 @@ public class UserDaoTest {
 
     @Test
     @Transactional
-    public void testNotExistentUserReturnsNull() {
-        assertNull(userDao.find(1000L));
+    public void testNotExistentUser() {
+        assertFalse(userDao.find(1000L).isPresent());
     }
 
 }

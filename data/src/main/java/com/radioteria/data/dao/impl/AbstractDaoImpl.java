@@ -132,7 +132,10 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>
 
     private TypedQuery<E> getListQuery() {
 
-        CriteriaQuery<E> query = getEntityManager().getCriteriaBuilder().createQuery(getEntityClass());
+        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
+        CriteriaQuery<E> query = cb.createQuery(getEntityClass());
+
+        query.select(query.from(getEntityClass()));
 
         return getEntityManager().createQuery(query);
 
