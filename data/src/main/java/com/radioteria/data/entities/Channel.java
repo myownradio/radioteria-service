@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.radioteria.util.FunctionalUtil.increment;
+import static com.radioteria.util.FunctionalUtil.operator;
 import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
@@ -163,7 +163,7 @@ public class Channel extends Identifiable<Long> {
                 .filter(statefulPredicate(
                         initialOffset,
                         (offset, track) -> MathUtil.between(offset, offset + track.getDuration(), time),
-                        increment((s1, s2) -> s1 + s2, Track::getDuration)
+                        operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
                 .findFirst();
     }
