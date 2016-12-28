@@ -1,8 +1,7 @@
 package com.radioteria.util;
 
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.BiFunction;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 abstract public class FunctionalUtil implements Predicate {
 
@@ -17,6 +16,10 @@ abstract public class FunctionalUtil implements Predicate {
         return item -> statefulPredicate.apply(
                 state.getAndUpdate(s -> stateUpdate.apply(s, item)), item);
 
+    }
+
+    public static <S, T> BiFunction<S, T, S> increment(BinaryOperator<S> op, Function<T, S> changeFunction) {
+        return (s, v) -> op.apply(s, changeFunction.apply(v));
     }
 
 }

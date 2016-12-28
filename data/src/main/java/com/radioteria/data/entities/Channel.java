@@ -8,8 +8,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
+import static com.radioteria.util.FunctionalUtil.increment;
 import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
@@ -161,12 +161,14 @@ public class Channel extends Identifiable<Long> {
 
     }
 
-    public Optional<Track> getTrackAtTimePosition(Long timePosition) {
-        BiFunction<Long, Track, Boolean> offsetBasedPredicate = (offset, track) ->
-                MathUtil.between(offset, offset + track.getDuration(), timePosition);
-
+    public Optional<Track> getTrackAtTimePosition(Long time) {
+        long initialOffset = 0L;
         return getTracks().stream()
-                .filter(statefulPredicate(0L, offsetBasedPredicate, (offset, track) -> offset + track.getDuration()))
+                .filter(statefulPredicate(
+                        initialOffset,
+                        (offset, track) -> MathUtil.between(offset, offset + track.getDuration(), time),
+                        increment((s1, s2) -> s1 + s2, Track::getDuration)
+                ))
                 .findFirst();
     }
 
@@ -180,15 +182,26 @@ public class Channel extends Identifiable<Long> {
                 .findFirst();
     }
 
-    public Optional<Track> getPlayingAt(Long time) {
-        if (getChannelState() == ChannelState.STOPPED || getTracks().size() == 0) {
+    public Optional<Long> getLongPlayingPositionAt(Long time) {
+        if (getChannelState() == ChannelState.STOPPED) {
             return Optional.empty();
         }
 
-        long playingLongPosition = time - getStartedAt();
-        long playingShortPosition = playingLongPosition % getTracksDuration();
+        return Optional.of(time - getStartedAt());
+    }
 
-        return getTrackAtTimePosition(playingShortPosition);
+    public Optional<Long> getShortPlayingPositionAt(Long time) {
+        if (getTracks().size() == 0) {
+            return Optional.empty();
+        }
+
+        return getLongPlayingPositionAt(time)
+                .map(pos -> pos % getTracksDuration());
+    }
+
+    public Optional<Track> getPlayingAt(Long time) {
+        return getShortPlayingPositionAt(time)
+                .flatMap(this::getTrackAtTimePosition);
     }
 
 }
