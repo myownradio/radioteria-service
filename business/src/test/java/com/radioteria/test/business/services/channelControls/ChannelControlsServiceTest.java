@@ -2,6 +2,7 @@ package com.radioteria.test.business.services.channelControls;
 
 import com.radioteria.business.events.channelControl.ChannelControlsEvent;
 import com.radioteria.business.services.channels.api.ChannelControlsService;
+import com.radioteria.business.services.channels.exceptions.ChannelControlsServiceException;
 import com.radioteria.business.services.channels.impl.ChannelControlsServiceImpl;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
@@ -18,6 +19,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import java.util.Optional;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Matchers.isA;
@@ -216,6 +218,23 @@ public class ChannelControlsServiceTest {
 
         channelControlsService.start(channel, -10L);
         verifyThatPlayingFirstTrack();
+
+    }
+
+    @Test(expected = ChannelControlsServiceException.class)
+    public void testPlayNextOnStoppedChannel() {
+        channelControlsService.next(channel);
+    }
+
+    @Test
+    public void testCurrentTimeMillis() {
+
+        long time = System.currentTimeMillis();
+
+        ChannelControlsService channelControlsService = new ChannelControlsServiceImpl(eventPublisher);
+        channelControlsService.start(channel);
+
+        assertTrue(channel.getStartedAt() >= time);
 
     }
 
