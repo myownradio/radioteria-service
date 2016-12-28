@@ -1,5 +1,6 @@
 package com.radioteria.test.business.services.channelControls;
 
+import com.radioteria.business.events.channelControl.ChannelControlsEvent;
 import com.radioteria.business.services.channels.api.ChannelControlsService;
 import com.radioteria.business.services.channels.impl.ChannelControlsServiceImpl;
 import com.radioteria.data.entities.Channel;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.verification.VerificationMode;
 import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
@@ -18,6 +20,11 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.rules.ExpectedException.none;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ChannelControlsTest {
@@ -50,6 +57,7 @@ public class ChannelControlsTest {
         user = new User();
 
         channel = new Channel();
+        channel.setId(1L);
         channel.setChannelState(ChannelState.STOPPED);
 
         user.addChannel(channel);
@@ -182,6 +190,12 @@ public class ChannelControlsTest {
 
         assertEquals(ChannelState.STOPPED, channel.getChannelState());
 
+        verifyThatEventPublishedTimes(never());
+
+    }
+
+    public void verifyThatEventPublishedTimes(VerificationMode mode) {
+        verify(eventPublisher, mode).publishEvent(isA(ChannelControlsEvent.class));
     }
 
 }

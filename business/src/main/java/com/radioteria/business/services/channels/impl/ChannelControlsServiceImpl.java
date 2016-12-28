@@ -1,6 +1,6 @@
 package com.radioteria.business.services.channels.impl;
 
-import com.radioteria.business.events.channelControl.ChannelPlaybackUpdatedEvent;
+import com.radioteria.business.events.channelControl.ChannelControlsEvent;
 import com.radioteria.business.services.channels.api.ChannelControlsService;
 import com.radioteria.business.services.channels.exceptions.ChannelControlsServiceException;
 import com.radioteria.data.entities.Channel;
@@ -106,7 +106,7 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
     private void publishEventAboutChannelPlaybackUpdated(Channel channel) {
 
-        ApplicationEvent event = new ChannelPlaybackUpdatedEvent(this, channel);
+        ApplicationEvent event = new ChannelControlsEvent(this, channel);
 
         eventPublisher.publishEvent(event);
 
