@@ -1,21 +1,17 @@
 package com.radioteria.business.services.channels.impl;
 
-import com.radioteria.backing.util.Tuple;
 import com.radioteria.business.events.channelControl.ChannelPlaybackUpdatedEvent;
 import com.radioteria.business.services.channels.api.ChannelControlsService;
 import com.radioteria.business.services.channels.exceptions.ChannelControlsServiceException;
-import com.radioteria.data.dao.api.TrackDao;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
 import com.radioteria.data.enumerations.ChannelState;
-import com.radioteria.util.MathUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -54,7 +50,7 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
         LOGGER.info("Starting channel {} from track {} position.", channel.getId(), orderId);
 
         modifyChannel(channel, ch -> {
-            Long trackOffset = ch.getTrackOffsetAtOrderId(orderId);
+            Long trackOffset = ch.getTrackOffsetByOrderId(orderId);
             ch.setStartedAt(System.currentTimeMillis() - trackOffset);
         });
 

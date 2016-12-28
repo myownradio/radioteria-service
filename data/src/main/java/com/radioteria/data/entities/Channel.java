@@ -123,14 +123,14 @@ public class Channel extends Identifiable<Long> {
         return getTracks().stream().mapToLong(Track::getDuration).sum();
     }
 
-    public Optional<Track> getTrackAtOrderId(Long orderId) {
+    public Optional<Track> getTrackByAtOrderId(Long orderId) {
         return getTracks()
                 .stream()
                 .filter(t -> t.getOrderId().equals(orderId))
                 .findFirst();
     }
 
-    public Long getTrackOffsetAtOrderId(Long orderId) {
+    public Long getTrackOffsetByOrderId(Long orderId) {
         return getTracks()
                 .stream()
                 .filter(t -> t.getOrderId() < orderId)
@@ -139,18 +139,15 @@ public class Channel extends Identifiable<Long> {
     }
 
     public Optional<Track> getTrackAfter(Track track) {
-
         Optional<Track> trackAfter = getTracks()
                 .stream()
                 .filter(t -> t.getOrderId() > track.getOrderId())
                 .findFirst();
 
         return OptionalUtil.first(trackAfter, getFirstTrack());
-
     }
 
     public Optional<Track> getTrackBefore(Track track) {
-
         Optional<Track> trackBefore = getTracks()
                 .stream()
                 .filter(t -> t.getOrderId() < track.getOrderId())
@@ -158,7 +155,6 @@ public class Channel extends Identifiable<Long> {
                 .findFirst();
 
         return OptionalUtil.first(trackBefore, getLastTrack());
-
     }
 
     public Optional<Track> getTrackAtTimePosition(Long time) {
