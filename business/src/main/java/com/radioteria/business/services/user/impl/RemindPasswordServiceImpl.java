@@ -69,11 +69,8 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
             throw new RemindPasswordServiceException("Specified code is stale.");
         }
 
-        User user = userDao.findByEmail(userEmail);
-
-        if (user == null) {
-            throw new RemindPasswordServiceException("Specified code belongs to user that does not exist.");
-        }
+        User user = userDao.findByEmail(userEmail).orElseThrow(() ->
+                new RemindPasswordServiceException("Specified code belongs to user that does not exist."));
 
         if (!matchUserDigest(user, userDigest)) {
             throw new RemindPasswordServiceException("Code verification failed.");

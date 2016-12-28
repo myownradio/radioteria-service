@@ -2,9 +2,11 @@ package com.radioteria.business.services.user.api;
 
 import com.radioteria.data.entities.User;
 
+import java.util.Optional;
+
 public interface UserService {
-    User findByEmail(String email);
-    User findById(Long id);
+    Optional<User> findByEmail(String email);
+    Optional<User> findById(Long id);
 
     boolean passwordMatches(User user, String plainPassword);
     boolean isEmailAvailable(String email);

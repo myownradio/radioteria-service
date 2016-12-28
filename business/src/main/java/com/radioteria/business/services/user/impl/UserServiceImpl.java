@@ -16,6 +16,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,13 +42,15 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public User findByEmail(String email) {
+    @Override
+    public Optional<User> findByEmail(String email) {
 
         return userDao.findByEmail(email);
 
     }
 
-    public User findById(Long id) {
+    @Override
+    public Optional<User> findById(Long id) {
 
         return userDao.find(id);
 
@@ -86,11 +90,8 @@ public class UserServiceImpl implements UserService {
 
     public void activateByEmail(String email) {
 
-        User user = findByEmail(email);
-
-        if (user == null) {
-            throw new UserNotFoundException(String.format("User with email \"%s\" not exists.", email));
-        }
+        User user = findByEmail(email).orElseThrow(() ->
+                new UserNotFoundException(String.format("User with email \"%s\" not exists.", email)));
 
         user.setState(UserState.ACTIVE);
 

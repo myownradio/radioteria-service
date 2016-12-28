@@ -7,6 +7,8 @@ import com.radioteria.data.enumerations.UserState;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 import static org.mockito.Mockito.*;
@@ -47,13 +49,13 @@ public class UserActivationTest extends AbstractUserServiceTest {
 
     private void configureDaoToReturnGivenUser(User user) {
 
-        when(userDao.findByEmail(anyString())).thenReturn(user);
+        when(userDao.findByEmail(anyString())).thenReturn(Optional.of(user));
 
     }
 
     private void configureDaoToReturnNull() {
 
-        when(userDao.findByEmail(anyString())).thenReturn(null);
+        when(userDao.findByEmail(anyString())).thenReturn(Optional.empty());
 
     }
 
