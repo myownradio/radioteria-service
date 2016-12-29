@@ -5,7 +5,8 @@ import com.radioteria.business.services.channels.api.ChannelControlsService;
 import com.radioteria.business.services.channels.exceptions.ChannelControlsServiceException;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
-import jdk.nashorn.internal.ir.annotations.Ignore;
+import com.radioteria.data.enumerations.ChannelState;
+import com.radioteria.util.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.function.Function;
-
-import static com.radioteria.data.enumerations.ChannelState.STOPPED;
-import static com.radioteria.data.enumerations.ChannelState.STREAMING;
 
 
 @Service
@@ -38,7 +36,7 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
     }
 
     @Override
-    public void start(Channel channel, Long orderId) {
+    public void start(Channel channel, long orderId) {
 
         if (channel.getTracksDuration() == 0L) {
             LOGGER.warn("Tried to start an empty channel {}.", channel.getId());
@@ -49,7 +47,6 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
         Long trackOffset = channel.getTrackOffsetByOrderId(orderId);
 
-        channel.setChannelState(STREAMING);
         channel.setStartedAt(getCurrentTimeMillis() - trackOffset);
 
         publishChannelControlsEvent(channel);
@@ -61,7 +58,6 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
         LOGGER.info("Stopping channel {}.", channel.getId());
 
-        channel.setChannelState(STOPPED);
         channel.setStartedAt(null);
 
         publishChannelControlsEvent(channel);
@@ -87,6 +83,47 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
                 ));
 
         start(channel, nextTrack.getOrderId());
+    }
+
+    @Override
+    public void forward(Channel channel, long millis) {
+        if (channel.getChannelState() == ChannelState.STOPPED) {
+            throw new ChannelControlsServiceException(
+                    String.format("Could not forward stopped channel %d.", channel.getId())
+            );
+        }
+        channel.setStartedAt(channel.getStartedAt() - millis);
+
+        publishChannelControlsEvent(channel);
+    }
+
+    @Override
+    public void backward(Channel channel, long millis) {
+        if (channel.getChannelState() == ChannelState.STOPPED) {
+            throw new ChannelControlsServiceException(
+                    String.format("Could not backward stopped channel %d.", channel.getId())
+            );
+        }
+        channel.setStartedAt(channel.getStartedAt() + millis);
+
+        publishChannelControlsEvent(channel);
+    }
+
+    @Override
+    public void exactly(Channel channel, long millis) {
+
+        channel.setStartedAt(getCurrentTimeMillis() - millis);
+
+        publishChannelControlsEvent(channel);
+
+    }
+
+    @Override
+    public Tuple<Track, Long> nowPlaying(Channel channel) {
+        return channel.getShortPlayingPositionAt(getCurrentTimeMillis())
+                .flatMap(channel::getTrackWithPositionAtTimePosition)
+                .orElseThrow(() -> new ChannelControlsServiceException(
+                        String.format("Channel %d is stopped.", channel.getId())));
     }
 
     private void publishChannelControlsEvent(Channel channel) {

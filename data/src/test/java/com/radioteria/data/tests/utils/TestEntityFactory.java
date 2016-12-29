@@ -25,7 +25,6 @@ public class TestEntityFactory {
         Channel channel = new Channel();
 
         channel.setName(name);
-        channel.setChannelState(ChannelState.STOPPED);
         channel.setDescription("Default Description");
 
         return channel;

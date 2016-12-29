@@ -3,6 +3,7 @@ package com.radioteria.data.entities;
 import com.radioteria.data.enumerations.ChannelState;
 import com.radioteria.util.MathUtil;
 import com.radioteria.util.OptionalUtil;
+import com.radioteria.util.Tuple;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.radioteria.util.FunctionalUtil.operator;
+import static com.radioteria.util.FunctionalUtil.statefulFunction;
 import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
@@ -20,7 +22,6 @@ public class Channel extends Identifiable<Long> {
     final public static String ID = "id";
     final public static String NAME = "name";
     final public static String DESCRIPTION = "description";
-    final public static String STATE = "state";
     final public static String STARTED_AT = "started_at";
     final public static String USER_ID = "user_id";
     final public static String ARTWORK_FILE_ID = "artwork_file_id";
@@ -35,10 +36,6 @@ public class Channel extends Identifiable<Long> {
 
     @Column(name = DESCRIPTION, nullable = false)
     private String description;
-
-    @Enumerated
-    @Column(name = STATE, nullable = false)
-    private ChannelState channelState;
 
     @Column(name = STARTED_AT)
     private Long startedAt;
@@ -88,11 +85,7 @@ public class Channel extends Identifiable<Long> {
     }
 
     public ChannelState getChannelState() {
-        return channelState;
-    }
-
-    public void setChannelState(ChannelState channelState) {
-        this.channelState = channelState;
+        return getStartedAt() == null ? ChannelState.STOPPED : ChannelState.STREAMING;
     }
 
     public Long getStartedAt() {
@@ -169,6 +162,19 @@ public class Channel extends Identifiable<Long> {
                         (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), time),
                         operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
+                .findFirst();
+    }
+
+    public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long time) {
+        long initialOffset = 0L;
+        return getTracks().stream()
+                .map(statefulFunction(
+                        initialOffset,
+                        (offset, track) -> new Tuple<>(track, offset),
+                        operator((s1, s2) -> s1 + s2, Track::getDuration)
+                ))
+                .filter(tuple -> MathUtil.inRange(tuple.y, tuple.y + tuple.x.getDuration(), time))
+                .map(tuple -> new Tuple<>(tuple.x, time - tuple.y))
                 .findFirst();
     }
 

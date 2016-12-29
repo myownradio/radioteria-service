@@ -8,6 +8,7 @@ import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.Track;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.enumerations.ChannelState;
+import com.radioteria.util.Tuple;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,6 @@ public class ChannelControlsServiceTest {
 
         channel = new Channel();
         channel.setId(1L);
-        channel.setChannelState(ChannelState.STOPPED);
 
         user.addChannel(channel);
 
@@ -235,6 +235,64 @@ public class ChannelControlsServiceTest {
         channelControlsService.start(channel);
 
         assertTrue(channel.getStartedAt() >= time);
+
+    }
+
+    @Test
+    public void testExactly() {
+
+        channelControlsService.exactly(channel, 511L);
+
+        Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
+
+        assertEquals("Test Track #3", nowPlaying.x.getTitle());
+        assertEquals(new Long(1L), nowPlaying.y);
+
+        verifyThatEventPublishedTimes(times(1));
+
+    }
+
+    @Test
+    public void testForward() {
+
+        channelControlsService.exactly(channel, 511L);
+        channelControlsService.forward(channel, 1500L);
+
+        Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
+
+        assertEquals("Test Track #4", nowPlaying.x.getTitle());
+        assertEquals(new Long(1L), nowPlaying.y);
+
+        verifyThatEventPublishedTimes(times(2));
+
+    }
+
+    @Test
+    public void testBackward() {
+
+        channelControlsService.exactly(channel, 511L);
+        channelControlsService.backward(channel, 500L);
+
+        Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
+
+        assertEquals("Test Track #2", nowPlaying.x.getTitle());
+        assertEquals(new Long(1L), nowPlaying.y);
+
+        verifyThatEventPublishedTimes(times(2));
+
+    }
+
+    @Test(expected = ChannelControlsServiceException.class)
+    public void testForwardWhenStopped() {
+
+        channelControlsService.forward(channel, 1500L);
+
+    }
+
+    @Test(expected = ChannelControlsServiceException.class)
+    public void testBackwardWhenStopped() {
+
+        channelControlsService.backward(channel, 1500L);
 
     }
 
