@@ -120,7 +120,7 @@ public class Channel extends Identifiable<Long> {
         return getTracks().stream().mapToLong(Track::getDuration).sum();
     }
 
-    public Optional<Track> getTrackByAtOrderId(Long orderId) {
+    public Optional<Track> getTrackByOrderId(Long orderId) {
         return getTracks()
                 .stream()
                 .filter(t -> t.getOrderId().equals(orderId))
@@ -154,6 +154,11 @@ public class Channel extends Identifiable<Long> {
         return OptionalUtil.first(trackBefore, getLastTrack());
     }
 
+    public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long time) {
+        return getTrackAtTimePosition(time)
+            .map(t -> new Tuple<>(t, time - getTrackOffsetByOrderId(t.getOrderId())));
+    }
+
     public Optional<Track> getTrackAtTimePosition(long time) {
         long initialOffset = 0L;
         return getTracks().stream()
@@ -162,19 +167,6 @@ public class Channel extends Identifiable<Long> {
                         (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), time),
                         operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
-                .findFirst();
-    }
-
-    public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long time) {
-        long initialOffset = 0L;
-        return getTracks().stream()
-                .map(statefulFunction(
-                        initialOffset,
-                        (offset, track) -> new Tuple<>(track, offset),
-                        operator((s1, s2) -> s1 + s2, Track::getDuration)
-                ))
-                .filter(tuple -> MathUtil.inRange(tuple.Y, tuple.Y + tuple.X.getDuration(), time))
-                .map(tuple -> new Tuple<>(tuple.X, time - tuple.Y))
                 .findFirst();
     }
 
