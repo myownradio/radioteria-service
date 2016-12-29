@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.radioteria.util.FunctionalUtil.operator;
-import static com.radioteria.util.FunctionalUtil.statefulFunction;
 import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
@@ -120,13 +119,6 @@ public class Channel extends Identifiable<Long> {
         return getTracks().stream().mapToLong(Track::getDuration).sum();
     }
 
-    public Optional<Track> getTrackByOrderId(Long orderId) {
-        return getTracks()
-                .stream()
-                .filter(t -> t.getOrderId().equals(orderId))
-                .findFirst();
-    }
-
     public Long getTrackOffsetByOrderId(Long orderId) {
         return getTracks()
                 .stream()
@@ -154,17 +146,18 @@ public class Channel extends Identifiable<Long> {
         return OptionalUtil.first(trackBefore, getLastTrack());
     }
 
-    public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long time) {
-        return getTrackAtTimePosition(time)
-            .map(t -> new Tuple<>(t, time - getTrackOffsetByOrderId(t.getOrderId())));
+    public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long timePosition) {
+        return getTrackAtTimePosition(timePosition).map(track -> {
+            long trackPosition = timePosition - getTrackOffsetByOrderId(track.getOrderId());
+            return new Tuple<>(track, trackPosition);
+        });
     }
 
-    public Optional<Track> getTrackAtTimePosition(long time) {
+    public Optional<Track> getTrackAtTimePosition(long timePosition) {
         long initialOffset = 0L;
-        return getTracks().stream()
-                .filter(statefulPredicate(
+        return getTracks().stream().filter(statefulPredicate(
                         initialOffset,
-                        (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), time),
+                        (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), timePosition),
                         operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
                 .findFirst();
