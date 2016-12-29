@@ -1,4 +1,4 @@
-package com.radioteria.data.tools;
+package com.radioteria.data.entities.tracklist;
 
 import com.radioteria.data.entities.Track;
 
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import static com.radioteria.util.FunctionalUtil.statefulFunction;
 
-public class TrackEntries extends AbstractList<TrackEntries.TrackEntry> {
+public class Tracklist extends AbstractList<Tracklist.TrackEntry> {
 
     static class TrackEntry {
 
@@ -24,21 +24,9 @@ public class TrackEntries extends AbstractList<TrackEntries.TrackEntry> {
 
     }
 
-    static class TrackWithPosition {
-
-        final public long position;
-        final public Track track;
-
-        TrackWithPosition(long position, Track track) {
-            this.position = position;
-            this.track = track;
-        }
-
-    }
-
     private final List<TrackEntry> trackEntries;
 
-    public TrackEntries(List<Track> tracks) {
+    public Tracklist(List<Track> tracks) {
         trackEntries = tracks.stream()
                 .map(statefulFunction(0L, TrackEntry::new, (offset, track) -> track.getDuration() + offset))
                 .collect(Collectors.toList());
@@ -62,12 +50,13 @@ public class TrackEntries extends AbstractList<TrackEntries.TrackEntry> {
         return lastTrackEntry.offset + lastTrackEntry.track.getDuration();
     }
 
-    public Optional<TrackWithPosition> trackAtPlayingTime(long playingTime) {
+    public Optional<PlayingItem> playingItem(long playingTime) {
         return find(trackEntry -> {
             long leftBound = trackEntry.offset;
             long rightBound = trackEntry.offset + trackEntry.track.getDuration();
             return leftBound <= playingTime && playingTime < rightBound;
-        }).map(trackEntry -> new TrackWithPosition(playingTime - trackEntry.offset, trackEntry.track));
+        }).map(trackEntry ->
+                new PlayingItem(trackEntry.track, playingTime - trackEntry.offset));
     }
 
     public Optional<TrackEntry> find(Predicate<TrackEntry> predicate) {
