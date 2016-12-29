@@ -245,8 +245,8 @@ public class ChannelControlsServiceTest {
 
         Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
 
-        assertEquals("Test Track #3", nowPlaying.x.getTitle());
-        assertEquals(new Long(1L), nowPlaying.y);
+        assertEquals("Test Track #3", nowPlaying.X.getTitle());
+        assertEquals(new Long(1L), nowPlaying.Y);
 
         verifyThatEventPublishedTimes(times(1));
 
@@ -260,8 +260,8 @@ public class ChannelControlsServiceTest {
 
         Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
 
-        assertEquals("Test Track #4", nowPlaying.x.getTitle());
-        assertEquals(new Long(1L), nowPlaying.y);
+        assertEquals("Test Track #4", nowPlaying.X.getTitle());
+        assertEquals(new Long(1L), nowPlaying.Y);
 
         verifyThatEventPublishedTimes(times(2));
 
@@ -275,8 +275,8 @@ public class ChannelControlsServiceTest {
 
         Tuple<Track, Long> nowPlaying = channelControlsService.nowPlaying(channel);
 
-        assertEquals("Test Track #2", nowPlaying.x.getTitle());
-        assertEquals(new Long(1L), nowPlaying.y);
+        assertEquals("Test Track #2", nowPlaying.X.getTitle());
+        assertEquals(new Long(1L), nowPlaying.Y);
 
         verifyThatEventPublishedTimes(times(2));
 

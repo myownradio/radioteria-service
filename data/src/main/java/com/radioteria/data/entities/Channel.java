@@ -173,8 +173,8 @@ public class Channel extends Identifiable<Long> {
                         (offset, track) -> new Tuple<>(track, offset),
                         operator((s1, s2) -> s1 + s2, Track::getDuration)
                 ))
-                .filter(tuple -> MathUtil.inRange(tuple.y, tuple.y + tuple.x.getDuration(), time))
-                .map(tuple -> new Tuple<>(tuple.x, time - tuple.y))
+                .filter(tuple -> MathUtil.inRange(tuple.Y, tuple.Y + tuple.X.getDuration(), time))
+                .map(tuple -> new Tuple<>(tuple.X, time - tuple.Y))
                 .findFirst();
     }
 
