@@ -35,6 +35,7 @@
         <junit.version>4.12</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <tomcat.version>8.0.28</tomcat.version>
+        <spring.boot.version>1.4.3.RELEASE</spring.boot.version>
     </properties>
 
     <profiles>
@@ -52,38 +53,6 @@
 
     <dependencyManagement>
         <dependencies>
-
-            <!-- Embedded tomcat -->
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-core</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-logging-juli</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat.embed</groupId>
-                <artifactId>tomcat-embed-jasper</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jasper</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jasper-el</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.tomcat</groupId>
-                <artifactId>tomcat-jsp-api</artifactId>
-                <version>${tomcat.version}</version>
-            </dependency>
 
             <!-- Modules -->
             <dependency>
@@ -238,22 +207,14 @@
                     </configuration>
                 </plugin>
                 <plugin>
-                    <groupId>org.apache.tomcat.maven</groupId>
-                    <artifactId>tomcat7-maven-plugin</artifactId>
-                    <version>2.2</version>
-                    <configuration>
-                        <!--<port>8080</port>-->
-                        <path>/</path>
-                        <protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
-                        <contextReloadable>true</contextReloadable>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>com.heroku.sdk</groupId>
                     <artifactId>heroku-maven-plugin</artifactId>
                     <version>1.1.2</version>
                     <configuration>
                         <appName>radioteria</appName>
+                        <!--<processTypes>-->
+                            <!--<web>web: sh target/bin/radioteria</web>-->
+                        <!--</processTypes>-->
                     </configuration>
                 </plugin>
             </plugins>

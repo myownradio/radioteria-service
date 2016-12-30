@@ -5,7 +5,7 @@ install:
 	mvn install
 
 run:
-	mvn tomcat7:run
+	java -cp web/target/classes/ com.radioteria.Main
 
 test:
 	mvn test

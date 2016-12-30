@@ -17,6 +17,6 @@
 
     <!-- MVC Configuration -->
     <mvc:annotation-driven />
-    <mvc:resources location="WEB-INF/.." mapping="**" order="0" />
+    <mvc:resources location="classpath:static/" mapping="**" order="0" />
 
 </beans>
