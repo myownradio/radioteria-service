@@ -208,7 +208,7 @@
                     <artifactId>tomcat7-maven-plugin</artifactId>
                     <version>2.2</version>
                     <configuration>
-                        <port>8080</port>
+                        <!--<port>8080</port>-->
                         <path>/</path>
                         <protocol>org.apache.coyote.http11.Http11NioProtocol</protocol>
                         <contextReloadable>true</contextReloadable>
