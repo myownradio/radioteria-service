@@ -9,6 +9,7 @@ import java.util.List;
 public class Content {
     final public static String ID = "id";
     final public static String HASH = "hash";
+    final public static String TYPE = "type";
 
     @Id
     @GeneratedValue
@@ -17,6 +18,9 @@ public class Content {
 
     @Column(name = HASH, unique = true)
     private String hash;
+
+    @Column(name = TYPE)
+    private String type;
 
     @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
@@ -43,5 +47,13 @@ public class Content {
 
     public void setFiles(List<File> files) {
         this.files = files;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
