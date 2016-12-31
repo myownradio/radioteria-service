@@ -45,23 +45,7 @@ public class FileDaoTest {
     @Test
     @Transactional
     public void changeFileLinks() {
-        File file = entityFactory.createFile();
-        fileDao.persist(file);
-        assertEquals(new Long(0), file.getLinksCount());
 
-        fileDao.increaseLinksCount(file);
-        assertEquals(new Long(1), file.getLinksCount());
-
-        fileDao.increaseLinksCount(file);
-        assertEquals(new Long(2), file.getLinksCount());
-
-        fileDao.decreaseLinksCount(file);
-        assertEquals(new Long(1), file.getLinksCount());
-
-        fileDao.decreaseLinksCount(file);
-        assertEquals(new Long(0), file.getLinksCount());
-
-        fileDao.flush();
     }
 
     @Test

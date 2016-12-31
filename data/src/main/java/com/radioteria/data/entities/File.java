@@ -7,26 +7,43 @@ import javax.persistence.*;
 public class File extends Identifiable<Long> {
 
     final public static String ID = "id";
-    final public static String LINKS_COUNT = "links_count";
+    final public static String NAME = "name";
+    final public static String CONTENT_ID = "content_id";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = LINKS_COUNT, nullable = false)
-    private Long linksCount;
+    @Column(name = NAME, nullable = false)
+    private String name;
+
+    @ManyToOne(targetEntity = Content.class)
+    @JoinColumn(name = CONTENT_ID, nullable = false)
+    private Content content;
 
     @Override
     public Long getId() {
         return id;
     }
 
-    public Long getLinksCount() {
-        return linksCount;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setLinksCount(Long linksCount) {
-        this.linksCount = linksCount;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Content getContent() {
+        return content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
     }
 }

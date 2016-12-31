@@ -51,6 +51,10 @@ public class Track extends Identifiable<Long> {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public Long getOrderId() {
         return orderId;
     }
