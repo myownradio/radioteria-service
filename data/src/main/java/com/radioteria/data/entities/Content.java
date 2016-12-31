@@ -6,6 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "content")
+@Access(AccessType.FIELD)
 public class Content {
     final public static String ID = "id";
     final public static String HASH = "hash";
@@ -22,7 +23,7 @@ public class Content {
     @Column(name = TYPE)
     private String type;
 
-    @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
 
     public Long getId() {

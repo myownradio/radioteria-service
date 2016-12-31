@@ -1,9 +1,6 @@
 package com.radioteria.data.tests.utils;
 
-import com.radioteria.data.entities.Channel;
-import com.radioteria.data.entities.File;
-import com.radioteria.data.entities.Track;
-import com.radioteria.data.entities.User;
+import com.radioteria.data.entities.*;
 import com.radioteria.data.enumerations.UserState;
 import org.springframework.stereotype.Repository;
 

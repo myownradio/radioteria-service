@@ -7,6 +7,7 @@ import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.File;
 import com.radioteria.data.entities.User;
 import com.radioteria.data.tests.utils.TestEntityFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 
 import static org.junit.Assert.*;
 
+@Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:/META-INF/spring/test-data-context.xml")
 public class FileDaoTest {
@@ -52,7 +54,7 @@ public class FileDaoTest {
     @Transactional
     public void testMakeUserAvatar() {
         File avatar = entityFactory.createFile();
-        fileDao.persist(avatar);
+         fileDao.persist(avatar);
 
         User user = entityFactory.createUser("foo@example.com");
         userDao.persist(user);
