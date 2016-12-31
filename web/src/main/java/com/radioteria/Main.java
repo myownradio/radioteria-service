@@ -7,9 +7,7 @@ import org.springframework.context.annotation.ImportResource;
 @EnableAutoConfiguration
 @ImportResource(locations = "classpath:web-context.xml")
 public class Main {
-
     public static void main(String[] args) throws Exception {
         SpringApplication.run(Main.class, args);
     }
-
 }
