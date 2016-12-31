@@ -32,10 +32,17 @@ public class HomePageTest {
     }
 
     @Test
-    public void test() throws Exception {
+    public void testRoot() throws Exception {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("Hello, World!"));
+    }
+
+    @Test
+    public void testView() throws Exception {
+        mockMvc.perform(get("/views"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"));
     }
 
 }

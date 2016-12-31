@@ -50,6 +50,16 @@
             <version>${spring.boot.version}</version>
         </dependency>
 
+        <!-- Template Engine -->
+        <dependency>
+            <groupId>de.neuland-bfi</groupId>
+            <artifactId>jade4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.neuland-bfi</groupId>
+            <artifactId>spring-jade4j</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

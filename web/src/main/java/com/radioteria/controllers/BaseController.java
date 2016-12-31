@@ -14,4 +14,9 @@ public class BaseController {
         response.getWriter().print("Hello, World!");
     }
 
+    @RequestMapping("views")
+    public String view() {
+        return "index";
+    }
+
 }

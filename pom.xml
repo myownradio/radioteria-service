@@ -159,6 +159,11 @@
                 <artifactId>jade4j</artifactId>
                 <version>${jade4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>de.neuland-bfi</groupId>
+                <artifactId>spring-jade4j</artifactId>
+                <version>${jade4j.version}</version>
+            </dependency>
 
         </dependencies>
 
