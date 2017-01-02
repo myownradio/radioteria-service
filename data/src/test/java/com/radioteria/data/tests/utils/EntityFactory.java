@@ -5,7 +5,7 @@ import com.radioteria.data.enumerations.UserState;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class TestEntityFactory {
+public class EntityFactory {
 
     public User createUser(String email) {
         User user = new User();

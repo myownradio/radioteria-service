@@ -4,7 +4,7 @@ import com.radioteria.data.dao.api.ChannelDao;
 import com.radioteria.data.dao.api.UserDao;
 import com.radioteria.data.entities.Channel;
 import com.radioteria.data.entities.User;
-import com.radioteria.data.tests.utils.TestEntityFactory;
+import com.radioteria.data.tests.utils.EntityFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:/META-INF/spring/test-data-context.xml")
+@ContextConfiguration(locations = "classpath:data-context-test.xml")
 public class ChannelDaoTest {
 
     @Resource
@@ -29,7 +29,7 @@ public class ChannelDaoTest {
     UserDao userDao;
 
     @Resource
-    TestEntityFactory entityFactory;
+    EntityFactory entityFactory;
 
     private User user;
 

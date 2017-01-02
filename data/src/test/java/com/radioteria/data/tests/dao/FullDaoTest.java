@@ -3,21 +3,20 @@ package com.radioteria.data.tests.dao;
 import com.radioteria.data.dao.api.*;
 import com.radioteria.data.entities.*;
 import com.radioteria.data.enumerations.UserState;
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:/META-INF/spring/test-data-context.xml")
+@ContextConfiguration(locations = "classpath:data-context-test.xml")
 public class FullDaoTest {
     private UserDao userDao;
     private ChannelDao channelDao;
@@ -34,11 +33,21 @@ public class FullDaoTest {
         this.contentDao = contentDao;
     }
 
+    @After
+    public void flush() {
+        userDao.flush();
+        channelDao.flush();
+        trackDao.flush();
+        fileDao.flush();
+        contentDao.flush();
+    }
+
     @Test
     @Transactional
     public void testCreateUser() {
         User user = createUser();
 
+        assertTrue(isPersist(user));
         assertThat(userDao.list().get(0), equalTo(user));
     }
 
@@ -48,6 +57,7 @@ public class FullDaoTest {
         User user = createUser();
         Channel channel = createChannelForUser(user);
 
+        assertTrue(isPersist(channel));
         assertThat(channelDao.list().size(), equalTo(1));
         assertThat(channel.getUser(), equalTo(user));
         assertThat(user.getChannels().get(0), equalTo(channel));
@@ -151,5 +161,9 @@ public class FullDaoTest {
         file.setContent(content);
         fileDao.persist(file);
         return file;
+    }
+
+    private boolean isPersist(BaseEntity baseEntity) {
+        return baseEntity.getId() != null;
     }
 }
