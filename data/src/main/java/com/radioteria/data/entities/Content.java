@@ -11,17 +11,21 @@ public class Content {
     final public static String ID = "id";
     final public static String HASH = "hash";
     final public static String TYPE = "type";
+    final public static String LENGTH = "length";
 
     @Id
     @GeneratedValue
-    @Column(name = ID, updatable = false)
+    @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
-    @Column(name = HASH, unique = true)
+    @Column(name = HASH, nullable = false, unique = true)
     private String hash;
 
-    @Column(name = TYPE)
+    @Column(name = TYPE, nullable = false)
     private String type;
+
+    @Column(name = LENGTH, nullable = false)
+    private Long length;
 
     @OneToMany(mappedBy = "content", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<File> files = new ArrayList<>();
@@ -56,5 +60,13 @@ public class Content {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public Long getLength() {
+        return length;
+    }
+
+    public void setLength(Long length) {
+        this.length = length;
     }
 }
