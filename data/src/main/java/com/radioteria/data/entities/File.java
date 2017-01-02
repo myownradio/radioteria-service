@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "files")
-public class File extends Identifiable<Long> {
+public class File extends BaseEntity<Long> {
     final public static String ID = "id";
     final public static String NAME = "name";
     final public static String CONTENT_ID = "content_id";

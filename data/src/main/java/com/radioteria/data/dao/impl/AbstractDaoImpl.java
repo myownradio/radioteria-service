@@ -1,7 +1,7 @@
 package com.radioteria.data.dao.impl;
 
 import com.radioteria.data.dao.api.AbstractDao;
-import com.radioteria.data.entities.Identifiable;
+import com.radioteria.data.entities.BaseEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -14,8 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
-abstract class AbstractDaoImpl<P extends Serializable, E extends Identifiable<P>> implements AbstractDao<P, E> {
+abstract class AbstractDaoImpl<P extends Serializable, E extends BaseEntity<P>> implements AbstractDao<P, E> {
 
     private Class<P> idClass;
     private Class<E> entityClass;

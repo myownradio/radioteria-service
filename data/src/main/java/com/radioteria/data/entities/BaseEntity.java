@@ -1,7 +1,6 @@
 package com.radioteria.data.entities;
 
-abstract public class Identifiable<K> {
-
+abstract public class BaseEntity<K> {
     abstract public K getId();
 
     @Override
@@ -9,15 +8,13 @@ abstract public class Identifiable<K> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Track track = (Track) o;
+        BaseEntity entity = (BaseEntity) o;
 
-        return getId() != null ? getId().equals(track.getId()) : track.getId() == null;
-
+        return getId() != null ? getId().equals(entity.getId()) : entity.getId() == null;
     }
 
     @Override
     public int hashCode() {
         return getId() != null ? getId().hashCode() : 0;
     }
-
 }

@@ -8,14 +8,12 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Access(AccessType.FIELD)
-public class User extends Identifiable<Long> implements Serializable {
+public class User extends BaseEntity<Long> implements Serializable {
 
     final public static String ID = "id";
     final public static String EMAIL = "email";

@@ -16,7 +16,7 @@ import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 @Entity
 @Table(name = "channels")
 @Access(AccessType.FIELD)
-public class Channel extends Identifiable<Long> {
+public class Channel extends BaseEntity<Long> {
 
     final public static String ID = "id";
     final public static String NAME = "name";
