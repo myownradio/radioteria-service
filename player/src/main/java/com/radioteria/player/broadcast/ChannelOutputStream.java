@@ -85,4 +85,8 @@ public class ChannelOutputStream extends OutputStream {
     public long getBytesWritten() {
         return bytesWritten;
     }
+
+    public long getListenersCount() {
+        return listeners.size();
+    }
 }
