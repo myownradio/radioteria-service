@@ -13,6 +13,7 @@
         <module>business</module>
         <module>backing</module>
         <module>util</module>
+        <module>player</module>
     </modules>
 
     <groupId>com.radioteria</groupId>
@@ -55,7 +56,6 @@
 
     <dependencyManagement>
         <dependencies>
-
              <!-- Servlet API -->
             <dependency>
                 <groupId>javax.servlet</groupId>

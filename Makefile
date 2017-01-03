@@ -9,3 +9,6 @@ run:
 
 test:
 	mvn test
+
+deploy:
+	mvn heroku:deploy -pl web

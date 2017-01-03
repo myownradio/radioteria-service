@@ -33,5 +33,6 @@
     <mvc:annotation-driven />
     <mvc:resources mapping="**" location="classpath:static/" order="0" />
 
+    <import resource="classpath:backing-context.xml"/>
 
 </beans>
