@@ -47,26 +47,46 @@ public class NonBlockingServletOutputStreamTest {
         verify(sos, times(1)).write((byte) 64);
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void testWhenNotReady() throws IOException {
         when(sos.isReady()).thenReturn(false);
 
-        nbsos.write(getTestData());
+        byte[] testData = getTestData();
+
+        try {
+            nbsos.write(testData);
+            Assert.fail("Expected IOException.");
+        } catch (IOException e) {
+            /* NOP */
+        }
+
+        verify(sos, times(1)).isReady();
+        verify(sos, times(0)).write(testData);
     }
 
-    @Test(expected = IOException.class)
+    @Test
     public void testWhenReadyAndThenNotReady() throws IOException {
         when(sos.isReady())
                 .thenReturn(true)
                 .thenReturn(false);
 
+        byte[] testData = getTestData();
+
         try {
-            nbsos.write(getTestData());
+            nbsos.write(testData);
         } catch (IOException e) {
             Assert.fail("Unexpected IOException.");
         }
 
-        nbsos.write(getTestData());
+        try {
+            nbsos.write(testData);
+            Assert.fail("Expected IOException.");
+        } catch (IOException e) {
+            /* NOP */
+        }
+
+        verify(sos, times(2)).isReady();
+        verify(sos, times(1)).write(testData);
     }
 
     @Test
