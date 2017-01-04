@@ -56,7 +56,9 @@ public class NonBlockingServletOutputStreamTest {
 
     @Test(expected = IOException.class)
     public void testWhenReadyAndThenNotReady() throws IOException {
-        when(sos.isReady()).thenReturn(true).thenReturn(false);
+        when(sos.isReady())
+                .thenReturn(true)
+                .thenReturn(false);
 
         try {
             nbsos.write(getTestData());
