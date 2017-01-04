@@ -2,8 +2,6 @@ package com.radioteria.player.test;
 
 import com.radioteria.player.broadcast.ChannelOutputStream;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,7 +52,8 @@ public class ChannelOutputStreamTest {
 
         assertEquals(bytesToWrite.length, os.getBytesWritten());
         Arrays.stream(listeners)
-                .forEach(l -> assertArrayEquals(bytesToWrite, l.toByteArray()));
+                .map(ByteArrayOutputStream::toByteArray)
+                .forEach(arr -> assertArrayEquals(bytesToWrite, arr));
     }
 
     @Test

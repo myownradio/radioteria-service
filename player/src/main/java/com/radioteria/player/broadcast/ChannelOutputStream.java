@@ -1,5 +1,6 @@
 package com.radioteria.player.broadcast;
 
+import com.radioteria.util.io.IOConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +15,6 @@ public class ChannelOutputStream extends OutputStream {
     final private ConcurrentLinkedQueue<OutputStream> listeners = new ConcurrentLinkedQueue<>();
 
     private volatile long bytesWritten = 0L;
-
-    @FunctionalInterface
-    private interface ListenerConsumer {
-        void accept(OutputStream outputStream) throws IOException;
-    }
 
     @Override
     public void write(int b) {
@@ -58,7 +54,7 @@ public class ChannelOutputStream extends OutputStream {
         clear();
     }
 
-    private void doWithAllListeners(ListenerConsumer consumer) {
+    private void doWithAllListeners(IOConsumer<OutputStream> consumer) {
         List<OutputStream> queueToRemove = new ArrayList<>();
         for (OutputStream listener : listeners) {
             try {
