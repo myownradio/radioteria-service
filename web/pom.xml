@@ -23,6 +23,11 @@
         </dependency>
         <dependency>
             <groupId>com.radioteria</groupId>
+            <artifactId>business</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.radioteria</groupId>
             <artifactId>backing</artifactId>
             <version>1.0</version>
         </dependency>

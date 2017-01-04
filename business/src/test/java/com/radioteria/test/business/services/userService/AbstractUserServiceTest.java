@@ -13,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-@ContextConfiguration(locations = "classpath:/META-INF/spring/business-context.xml")
+@ContextConfiguration(locations = "classpath:/business-context.xml")
 abstract public class AbstractUserServiceTest {
 
     @Mock

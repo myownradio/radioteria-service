@@ -47,4 +47,9 @@ public class MemoryFileSystem implements FileSystem {
         copy(sourceStream, baos);
         fileSystem.put(path, new FileEntry(contentType, baos.toByteArray()));
     }
+
+    @Override
+    public void delete(String path) throws FileSystemException {
+        fileSystem.remove(path);
+    }
 }

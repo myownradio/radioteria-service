@@ -1,6 +1,5 @@
 package com.radioteria.fs;
 
-import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3Client;
@@ -10,9 +9,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class S3FileSystem implements FileSystem {
-    private final String bucketName;
-
     private final AmazonS3Client s3Client;
+    private final String bucketName;
 
     public S3FileSystem(String bucketName, String accessKey, String secretKey) {
         this.bucketName = bucketName;
@@ -49,6 +47,15 @@ public class S3FileSystem implements FileSystem {
 
         try {
             s3Client.putObject(bucketName, path, sourceStream, metadata);
+        } catch (SdkClientException e) {
+            throw new FileSystemException("S3 File System Exception.", e);
+        }
+    }
+
+    @Override
+    public void delete(String path) throws FileSystemException {
+        try {
+            s3Client.deleteObject(bucketName, path);
         } catch (SdkClientException e) {
             throw new FileSystemException("S3 File System Exception.", e);
         }

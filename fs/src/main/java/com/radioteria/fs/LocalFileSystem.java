@@ -51,4 +51,9 @@ public class LocalFileSystem implements FileSystem {
             copy(sourceStream, targetStream);
         }
     }
+
+    @Override
+    public void delete(String path) throws FileSystemException {
+        new File(rootDirFile, path).delete();
+    }
 }

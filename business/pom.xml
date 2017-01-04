@@ -25,6 +25,11 @@
         </dependency>
         <dependency>
             <groupId>com.radioteria</groupId>
+            <artifactId>fs</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.radioteria</groupId>
             <artifactId>backing</artifactId>
             <version>1.0</version>
         </dependency>
@@ -41,16 +46,8 @@
 
         <!-- Logging -->
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
         </dependency>
 
         <!-- Testing -->

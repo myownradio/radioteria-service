@@ -8,4 +8,5 @@ public interface FileSystem {
     InputStream get(String path) throws FileSystemException;
     String getContentType(String path) throws FileSystemException;
     void put(String path, InputStream sourceStream, String contentType) throws IOException;
+    void delete(String path) throws FileSystemException;
 }
