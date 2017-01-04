@@ -1,11 +1,12 @@
-package com.radioteria.player.test;
+package com.radioteria.web.test.utils;
 
-import com.radioteria.player.broadcast.NonBlockingServletOutputStream;
+import com.radioteria.utils.NonBlockingServletOutputStream;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.ServletOutputStream;
@@ -40,16 +41,16 @@ public class NonBlockingServletOutputStreamTest {
         nbsos.write(testData, 1, 2);
         nbsos.write((byte) 64);
 
-        verify(sos, times(3)).isReady();
+        Mockito.verify(sos, Mockito.times(3)).isReady();
 
-        verify(sos, times(1)).write(testData);
-        verify(sos, times(1)).write(testData, 1, 2);
-        verify(sos, times(1)).write((byte) 64);
+        Mockito.verify(sos, Mockito.times(1)).write(testData);
+        Mockito.verify(sos, Mockito.times(1)).write(testData, 1, 2);
+        Mockito.verify(sos, Mockito.times(1)).write((byte) 64);
     }
 
     @Test
     public void testWhenNotReady() throws IOException {
-        when(sos.isReady()).thenReturn(false);
+        Mockito.when(sos.isReady()).thenReturn(false);
 
         byte[] testData = getTestData();
 
@@ -60,13 +61,13 @@ public class NonBlockingServletOutputStreamTest {
             /* NOP */
         }
 
-        verify(sos, times(1)).isReady();
-        verify(sos, times(0)).write(testData);
+        Mockito.verify(sos, Mockito.times(1)).isReady();
+        Mockito.verify(sos, Mockito.times(0)).write(testData);
     }
 
     @Test
     public void testWhenReadyAndThenNotReady() throws IOException {
-        when(sos.isReady())
+        Mockito.when(sos.isReady())
                 .thenReturn(true)
                 .thenReturn(false);
 
@@ -85,21 +86,21 @@ public class NonBlockingServletOutputStreamTest {
             /* NOP */
         }
 
-        verify(sos, times(2)).isReady();
-        verify(sos, times(1)).write(testData);
+        Mockito.verify(sos, Mockito.times(2)).isReady();
+        Mockito.verify(sos, Mockito.times(1)).write(testData);
     }
 
     @Test
     public void testFlush() throws IOException {
         nbsos.flush();
 
-        verify(sos, times(1)).flush();
+        Mockito.verify(sos, Mockito.times(1)).flush();
     }
 
     @Test
     public void testCancel() throws IOException {
         nbsos.close();
 
-        verify(sos, times(1)).close();
+        Mockito.verify(sos, Mockito.times(1)).close();
     }
 }

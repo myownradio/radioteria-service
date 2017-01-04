@@ -29,6 +29,12 @@
             <artifactId>jade4j</artifactId>
         </dependency>
 
+        <!-- Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- Tests -->
         <dependency>
             <groupId>junit</groupId>

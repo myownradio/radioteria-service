@@ -1,4 +1,4 @@
-package com.radioteria.test.pages;
+package com.radioteria.web.test.controllers;
 
 import org.junit.Before;
 import org.junit.Test;

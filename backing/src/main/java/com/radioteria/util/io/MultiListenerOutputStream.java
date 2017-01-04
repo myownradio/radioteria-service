@@ -1,6 +1,5 @@
-package com.radioteria.player.broadcast;
+package com.radioteria.util.io;
 
-import com.radioteria.util.io.IOConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class ChannelOutputStream extends OutputStream {
-    final private static Logger LOGGER = LoggerFactory.getLogger(ChannelOutputStream.class);
+public class MultiListenerOutputStream extends OutputStream {
+    final private static Logger LOGGER = LoggerFactory.getLogger(MultiListenerOutputStream.class);
 
     final private ConcurrentLinkedQueue<OutputStream> listeners = new ConcurrentLinkedQueue<>();
 

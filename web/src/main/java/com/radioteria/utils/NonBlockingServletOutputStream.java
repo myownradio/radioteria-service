@@ -1,4 +1,4 @@
-package com.radioteria.player.broadcast;
+package com.radioteria.utils;
 
 import com.radioteria.util.io.IOConsumer;
 

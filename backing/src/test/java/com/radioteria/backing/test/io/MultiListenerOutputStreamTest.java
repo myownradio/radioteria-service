@@ -1,6 +1,6 @@
-package com.radioteria.player.test;
+package com.radioteria.backing.test.io;
 
-import com.radioteria.player.broadcast.ChannelOutputStream;
+import com.radioteria.util.io.MultiListenerOutputStream;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 import static org.junit.Assert.*;
 
-public class ChannelOutputStreamTest {
+public class MultiListenerOutputStreamTest {
     private byte[] getTestData() {
         return new byte[] { 0x00, 0x01, 0x02, 0x03 };
     }
@@ -19,7 +19,7 @@ public class ChannelOutputStreamTest {
     public void writeToEmptyStream() {
         byte[] bytesToWrite = getTestData();
 
-        ChannelOutputStream os = new ChannelOutputStream();
+        MultiListenerOutputStream os = new MultiListenerOutputStream();
         os.write(bytesToWrite);
 
         assertEquals(bytesToWrite.length, os.getBytesWritten());
@@ -30,7 +30,7 @@ public class ChannelOutputStreamTest {
         byte[] bytesToWrite = getTestData();
 
         ByteArrayOutputStream listener = new ByteArrayOutputStream();
-        ChannelOutputStream os = new ChannelOutputStream();
+        MultiListenerOutputStream os = new MultiListenerOutputStream();
         os.addListener(listener);
 
         os.write(bytesToWrite);
@@ -48,7 +48,7 @@ public class ChannelOutputStreamTest {
                 .mapToObj(n -> new ByteArrayOutputStream())
                 .toArray(ByteArrayOutputStream[]::new);
 
-        ChannelOutputStream os = new ChannelOutputStream();
+        MultiListenerOutputStream os = new MultiListenerOutputStream();
 
         Arrays.stream(listeners).forEach(os::addListener);
 
@@ -64,7 +64,7 @@ public class ChannelOutputStreamTest {
     public void writeIfOneListenerThrowsException() {
         byte[] bytesToWrite = getTestData();
 
-        ChannelOutputStream os = new ChannelOutputStream();
+        MultiListenerOutputStream os = new MultiListenerOutputStream();
 
         ByteArrayOutputStream goodListener = new ByteArrayOutputStream();
         ByteArrayOutputStream badListener = new ByteArrayOutputStream() {
