@@ -22,7 +22,7 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
 
     final private static String CODE_DELIMITER = ":";
 
-    @Value("remind.password.code.ttl")
+    @Value("${remind.password.code.ttl}")
     private Long remindCodeTtl = TimeUnit.MINUTES.toMillis(1);
 
     private UserDao userDao;

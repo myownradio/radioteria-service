@@ -10,7 +10,7 @@ public class File extends BaseEntity<Long> {
     final public static String CONTENT_ID = "content_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 

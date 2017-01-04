@@ -14,7 +14,7 @@ public class Content extends BaseEntity<Long> {
     final public static String LENGTH = "length";
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 

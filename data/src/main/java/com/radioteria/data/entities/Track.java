@@ -16,7 +16,7 @@ public class Track extends BaseEntity<Long> {
     final public static String CHANNEL_ID = "channel_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 

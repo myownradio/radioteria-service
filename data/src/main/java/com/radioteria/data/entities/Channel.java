@@ -26,7 +26,7 @@ public class Channel extends BaseEntity<Long> {
     final public static String ARTWORK_FILE_ID = "artwork_file_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 

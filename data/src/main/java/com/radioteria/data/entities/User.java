@@ -23,7 +23,7 @@ public class User extends BaseEntity<Long> implements Serializable {
     final public static String AVATAR_FILE_ID = "avatar_file_id";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = ID, nullable = false, updatable = false)
     private Long id;
 
