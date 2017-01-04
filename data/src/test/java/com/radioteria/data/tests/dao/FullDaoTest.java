@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:data-context-test.xml")
+@ContextConfiguration(locations = "classpath:profiles/data-test-context.xml")
 public class FullDaoTest {
     private UserDao userDao;
     private ChannelDao channelDao;

@@ -18,7 +18,7 @@ import java.util.Random;
 import java.util.function.Consumer;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:data-context-test.xml")
+@ContextConfiguration(locations = "classpath:profiles/data-test-context.xml")
 public class CrashTest {
 
     private List<User> users = new ArrayList<>();

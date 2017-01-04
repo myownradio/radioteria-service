@@ -15,7 +15,7 @@ import javax.persistence.PersistenceException;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:data-context-test.xml")
+@ContextConfiguration(locations = "classpath:profiles/data-test-context.xml")
 public class UserDaoTest {
 
     @Resource
