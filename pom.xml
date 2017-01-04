@@ -14,6 +14,7 @@
         <module>backing</module>
         <module>util</module>
         <module>player</module>
+        <module>fs</module>
     </modules>
 
     <groupId>com.radioteria</groupId>
