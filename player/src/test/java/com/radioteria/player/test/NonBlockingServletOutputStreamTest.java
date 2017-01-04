@@ -35,10 +35,16 @@ public class NonBlockingServletOutputStreamTest {
         when(sos.isReady()).thenReturn(true);
 
         byte[] testData = getTestData();
-        nbsos.write(testData);
 
-        verify(sos, times(1)).isReady();
+        nbsos.write(testData);
+        nbsos.write(testData, 1, 2);
+        nbsos.write((byte) 64);
+
+        verify(sos, times(3)).isReady();
+
         verify(sos, times(1)).write(testData);
+        verify(sos, times(1)).write(testData, 1, 2);
+        verify(sos, times(1)).write((byte) 64);
     }
 
     @Test(expected = IOException.class)
@@ -59,5 +65,19 @@ public class NonBlockingServletOutputStreamTest {
         }
 
         nbsos.write(getTestData());
+    }
+
+    @Test
+    public void testFlush() throws IOException {
+        nbsos.flush();
+
+        verify(sos, times(1)).flush();
+    }
+
+    @Test
+    public void testCancel() throws IOException {
+        nbsos.close();
+
+        verify(sos, times(1)).close();
     }
 }

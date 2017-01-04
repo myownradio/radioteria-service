@@ -11,9 +11,13 @@ import java.util.stream.IntStream;
 import static org.junit.Assert.*;
 
 public class ChannelOutputStreamTest {
+    private byte[] getTestData() {
+        return new byte[] { 0x00, 0x01, 0x02, 0x03 };
+    }
+
     @Test
     public void writeToEmptyStream() {
-        byte[] bytesToWrite = new byte[] { 0x00, 0x01, 0x02, 0x03 };
+        byte[] bytesToWrite = getTestData();
 
         ChannelOutputStream os = new ChannelOutputStream();
         os.write(bytesToWrite);
@@ -23,7 +27,7 @@ public class ChannelOutputStreamTest {
 
     @Test
     public void writeToOneListener() {
-        byte[] bytesToWrite = new byte[] { 0x00, 0x01, 0x02, 0x03 };
+        byte[] bytesToWrite = getTestData();
 
         ByteArrayOutputStream listener = new ByteArrayOutputStream();
         ChannelOutputStream os = new ChannelOutputStream();
@@ -37,7 +41,7 @@ public class ChannelOutputStreamTest {
 
     @Test
     public void writeToMoreListeners() {
-        byte[] bytesToWrite = new byte[] { 0x00, 0x01, 0x02, 0x03 };
+        byte[] bytesToWrite = getTestData();
 
         ByteArrayOutputStream[] listeners = IntStream
                 .range(0, 16)
@@ -58,7 +62,7 @@ public class ChannelOutputStreamTest {
 
     @Test
     public void writeIfOneListenerThrowsException() {
-        byte[] bytesToWrite = new byte[] { 0x00, 0x01, 0x02, 0x03 };
+        byte[] bytesToWrite = getTestData();
 
         ChannelOutputStream os = new ChannelOutputStream();
 

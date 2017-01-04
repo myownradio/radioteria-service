@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class ChannelOutputStream extends OutputStream {
     final private static Logger LOGGER = LoggerFactory.getLogger(ChannelOutputStream.class);
+
     final private ConcurrentLinkedQueue<OutputStream> listeners = new ConcurrentLinkedQueue<>();
 
     private volatile long bytesWritten = 0L;
