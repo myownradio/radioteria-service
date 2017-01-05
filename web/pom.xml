@@ -28,7 +28,7 @@
         </dependency>
         <dependency>
             <groupId>com.radioteria</groupId>
-            <artifactId>backing</artifactId>
+            <artifactId>support</artifactId>
             <version>1.0</version>
         </dependency>
 

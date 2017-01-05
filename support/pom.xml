@@ -11,37 +11,22 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>business</artifactId>
-
-    <packaging>jar</packaging>
+    <artifactId>support</artifactId>
 
     <dependencies>
-
-        <!-- Radioteria -->
-        <dependency>
-            <groupId>com.radioteria</groupId>
-            <artifactId>db</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.radioteria</groupId>
-            <artifactId>fs</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.radioteria</groupId>
-            <artifactId>support</artifactId>
-            <version>1.0</version>
-        </dependency>
-
         <!-- Spring -->
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-config</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>de.neuland-bfi</groupId>
+            <artifactId>jade4j</artifactId>
         </dependency>
 
         <!-- Logging -->
@@ -50,24 +35,17 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- Testing -->
+        <!-- Tests -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-all</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
 </project>

@@ -16,8 +16,8 @@
     <beans profile="fs-s3">
         <bean id="fileSystem" class="com.radioteria.fs.S3FileSystem">
             <constructor-arg value="${fs.s3.bucket}"/>
-            <constructor-arg value="${fs.s3.access.key}"/>
-            <constructor-arg value="${fs.s3.secret.key}"/>
+            <constructor-arg value="${fs.s3.accessKey}"/>
+            <constructor-arg value="${fs.s3.secretKey}"/>
         </bean>
     </beans>
 

@@ -3,7 +3,7 @@ package com.radioteria.test.business.services.remindPasswordService;
 import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.user.impl.RemindPasswordServiceImpl;
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.backing.mail.EmailService;
+import com.radioteria.support.mail.EmailService;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

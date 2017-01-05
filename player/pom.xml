@@ -13,11 +13,7 @@
 
     <dependencies>
         <!-- Radioteria -->
-        <dependency>
-            <groupId>com.radioteria</groupId>
-            <artifactId>backing</artifactId>
-            <version>1.0</version>
-        </dependency>
+
 
         <!-- Logging -->
         <dependency>

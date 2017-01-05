@@ -1,12 +1,12 @@
 package com.radioteria.business.services.user.impl;
 
 
-import com.radioteria.backing.template.TemplateWithContext;
+import com.radioteria.support.template.TemplateWithContext;
 import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.db.dao.api.UserDao;
 import com.radioteria.db.entities.User;
-import com.radioteria.backing.mail.EmailService;
+import com.radioteria.support.mail.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

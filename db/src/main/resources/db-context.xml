@@ -61,8 +61,8 @@
         </bean>
 
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="${db.driver:com.mysql.jdbc.Driver}"/>
-            <property name="url" value="${db.url:jdbc:mysql://localhost:3306/radioteria}"/>
+            <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+            <property name="url" value="mysql://localhost:3306/radioteria"/>
             <property name="username" value="${db.username:root}"/>
             <property name="password" value="${db.password:}"/>
         </bean>
