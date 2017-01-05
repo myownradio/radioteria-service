@@ -1,6 +1,6 @@
 package com.radioteria.business.services.user.api;
 
-import com.radioteria.data.entities.User;
+import com.radioteria.db.entities.User;
 
 public interface RemindPasswordService {
     void sendRemindPasswordLetter(User user);

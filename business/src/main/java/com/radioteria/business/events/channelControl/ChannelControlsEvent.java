@@ -1,6 +1,6 @@
 package com.radioteria.business.events.channelControl;
 
-import com.radioteria.data.entities.Channel;
+import com.radioteria.db.entities.Channel;
 import org.springframework.context.ApplicationEvent;
 
 public class ChannelControlsEvent extends ApplicationEvent {

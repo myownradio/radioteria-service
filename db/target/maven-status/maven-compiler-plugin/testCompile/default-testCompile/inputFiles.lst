@@ -1,0 +1,5 @@
+/roman/projects/radioteria/radioteria-service/db/src/test/java/com/radioteria/db/tests/dao/FileDaoTest.java
+/roman/projects/radioteria/radioteria-service/db/src/test/java/com/radioteria/db/tests/utils/EntityFactory.java
+/roman/projects/radioteria/radioteria-service/db/src/test/java/com/radioteria/db/tests/dao/UserDaoTest.java
+/roman/projects/radioteria/radioteria-service/db/src/test/java/com/radioteria/db/tests/dao/FullDaoTest.java
+/roman/projects/radioteria/radioteria-service/db/src/test/java/com/radioteria/db/tests/dao/ChannelDaoTest.java

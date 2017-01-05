@@ -1,7 +1,7 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
 import com.radioteria.backing.template.TemplateWithContext;
-import com.radioteria.data.entities.User;
+import com.radioteria.db.entities.User;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 

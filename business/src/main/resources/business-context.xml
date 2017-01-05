@@ -3,20 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
+       profile="test,local,dev,prod">
 
+    <import resource="classpath:db-context.xml"/>
+    <import resource="classpath:backing-context.xml"/>
 
-
-    <context:annotation-config/>
-    <context:component-scan base-package="com.radioteria.business" />
+    <!--<context:annotation-config/>-->
+    <context:component-scan base-package="com.radioteria.business.services"/>
 
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
-    <beans profile="test">
-        <import resource="classpath:profiles/data-test-context.xml"/>
-    </beans>
-
-    <beans profile="local,dev,prod">
-        <import resource="classpath:profiles/regular-context.xml"/>
-    </beans>
 </beans>

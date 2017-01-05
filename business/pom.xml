@@ -20,7 +20,7 @@
         <!-- Radioteria -->
         <dependency>
             <groupId>com.radioteria</groupId>
-            <artifactId>data</artifactId>
+            <artifactId>db</artifactId>
             <version>1.0</version>
         </dependency>
         <dependency>

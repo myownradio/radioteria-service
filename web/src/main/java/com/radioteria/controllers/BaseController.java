@@ -2,6 +2,7 @@ package com.radioteria.controllers;
 
 import com.radioteria.fs.FileSystem;
 import com.radioteria.util.io.MultiListenerOutputStream;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,7 +16,7 @@ import java.io.IOException;
 @Controller
 public class BaseController {
 
-    private MultiListenerOutputStream multiListenerOutputStream = new MultiListenerOutputStream();
+//    private MultiListenerOutputStream multiListenerOutputStream = new MultiListenerOutputStream();
 
     @Resource
     private FileSystem fileSystem;
@@ -30,13 +31,13 @@ public class BaseController {
         return "index";
     }
 
-    @ResponseBody
-    @RequestMapping("time")
-    public void stream(HttpServletRequest request) throws IOException {
-        AsyncContext asyncContext = request.startAsync();
-        asyncContext.setTimeout(0);
-        HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
-        response.addHeader("Transfer-Encoding", "chunked");
-        multiListenerOutputStream.addListener(response.getOutputStream());
-    }
+//    @ResponseBody
+//    @RequestMapping("time")
+//    public void stream(HttpServletRequest request) throws IOException {
+//        AsyncContext asyncContext = request.startAsync();
+//        asyncContext.setTimeout(0);
+//        HttpServletResponse response = (HttpServletResponse) asyncContext.getResponse();
+//        response.addHeader("Transfer-Encoding", "chunked");
+//        multiListenerOutputStream.addListener(response.getOutputStream());
+//    }
 }
