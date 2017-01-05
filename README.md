@@ -16,4 +16,7 @@ Database:
 db-embedded - Embedded database mode (memory-based)
 db-mysql    - MySQL database mode for local development [--db.username, --db.password]
 db-props    - Properties-based database [--db.dialect, --db.driver, --db.url, --db.username, --db.password]
+
+Default active profiles: fs-memory, db-embedded.
+To use override use --spring.profiles.active option.
 ```
