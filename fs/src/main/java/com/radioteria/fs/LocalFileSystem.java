@@ -60,4 +60,9 @@ public class LocalFileSystem implements FileSystem {
     public void delete(String path) throws FileSystemException {
         new File(rootDirFile, path).delete();
     }
+
+    @Override
+    public FileSystemType getType() {
+        return FileSystemType.LOCAL;
+    }
 }

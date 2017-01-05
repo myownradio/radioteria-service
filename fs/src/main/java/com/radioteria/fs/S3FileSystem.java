@@ -60,4 +60,9 @@ public class S3FileSystem implements FileSystem {
             throw new FileSystemException("S3 File System Exception.", e);
         }
     }
+
+    @Override
+    public FileSystemType getType() {
+        return FileSystemType.S3;
+    }
 }

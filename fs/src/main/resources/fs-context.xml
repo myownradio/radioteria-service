@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+    profile="fs-memory, fs-local, fs-s3">
+
+    <beans profile="fs-memory">
+        <bean id="fileSystem" class="com.radioteria.fs.MemoryFileSystem"/>
+    </beans>
+    <beans profile="fs-local">
+        <bean id="fileSystem" class="com.radioteria.fs.LocalFileSystem">
+            <constructor-arg value="${fs.local.root}"/>
+        </bean>
+    </beans>
+    <beans profile="fs-s3">
+        <bean id="fileSystem" class="com.radioteria.fs.S3FileSystem">
+            <constructor-arg value="${fs.s3.bucket}"/>
+            <constructor-arg value="${fs.s3.access.key}"/>
+            <constructor-arg value="${fs.s3.secret.key}"/>
+        </bean>
+    </beans>
+
+</beans>

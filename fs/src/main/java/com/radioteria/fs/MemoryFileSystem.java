@@ -52,4 +52,9 @@ public class MemoryFileSystem implements FileSystem {
     public void delete(String path) throws FileSystemException {
         fileSystem.remove(path);
     }
+
+    @Override
+    public FileSystemType getType() {
+        return FileSystemType.MEMORY;
+    }
 }

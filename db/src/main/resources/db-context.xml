@@ -7,8 +7,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                            http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
-                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
-       profile="test,local,dev,prod">
+                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
 
     <context:annotation-config/>
     <context:component-scan base-package="com.radioteria.db.dao"/>
@@ -19,12 +18,58 @@
         <property name="entityManagerFactory" ref="entityManagerFactoryBean"/>
     </bean>
 
+    <bean id="entityManagerFactoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan">
+            <list>
+                <value>com.radioteria.db.entities</value>
+            </list>
+        </property>
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"/>
+        </property>
+        <property name="jpaProperties" ref="jpaProperties"/>
+    </bean>
+
     <!-- Profiles -->
-    <beans profile="test">
-        <import resource="classpath:profiles/db-test-context.xml"/>
+    <beans profile="db-embedded">
+        <bean id="jpaProperties" class="java.util.Properties">
+            <constructor-arg>
+                <props>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+                    <prop key="hibernate.show_sql">false</prop>
+                    <prop key="hibernate.hbm2ddl.auto">update</prop>
+                    <prop key="hibernate.connection.autocommit">false</prop>
+                    <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                    <prop key="hibernate.transaction.flush_before_completion">true</prop>
+                    <prop key="hibernate.cache.use_query_cache">false</prop>
+                </props>
+            </constructor-arg>
+        </bean>
+        <jdbc:embedded-database id="dataSource" type="H2" />
     </beans>
-    <beans profile="local,dev,prod">
-        <import resource="classpath:profiles/db-default-context.xml"/>
+
+    <beans profile="db-props">
+        <bean id="jpaProperties" class="java.util.Properties">
+            <constructor-arg>
+                <props>
+                    <prop key="hibernate.id.new_generator_mappings">false</prop>
+                    <prop key="hibernate.dialect">${db.dialect}</prop>
+                    <prop key="hibernate.show_sql">false</prop>
+                    <prop key="hibernate.hbm2ddl.auto">update</prop>
+                    <prop key="hibernate.connection.autocommit">false</prop>
+                    <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                    <prop key="hibernate.transaction.flush_before_completion">true</prop>
+                    <prop key="hibernate.cache.use_query_cache">false</prop>
+                </props>
+            </constructor-arg>
+        </bean>
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="${db.driver}"/>
+            <property name="url" value="${db.url}"/>
+            <property name="username" value="${db.username}"/>
+            <property name="password" value="${db.password}"/>
+        </bean>
     </beans>
 
 </beans>

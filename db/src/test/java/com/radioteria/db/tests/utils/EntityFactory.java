@@ -4,7 +4,6 @@ import com.radioteria.db.entities.*;
 import com.radioteria.db.enumerations.UserState;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public class EntityFactory {
 
     public User createUser(String email) {

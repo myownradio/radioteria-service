@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ContextConfiguration(locations = "classpath:application-context.xml")
-@ActiveProfiles("test")
+@ActiveProfiles("test, fs-memory, db-embedded")
 public class HomePageTest {
 
     @Autowired

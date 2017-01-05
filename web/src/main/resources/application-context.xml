@@ -6,10 +6,9 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
-       profile="test,local,dev,prod">
+                           http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <context:property-placeholder location="classpath:application.yml,classpath:env.properties"/>
+    <context:property-placeholder location="classpath:env.properties"/>
 
     <!-- Context Configuration -->
     <context:annotation-config/>
@@ -22,19 +21,5 @@
     <!-- Modules -->
     <import resource="classpath:context/jade-engine-context.xml"/>
     <import resource="classpath:business-context.xml"/>
-
-    <!-- Profiles -->
-    <beans profile="test">
-        <import resource="classpath:profiles/web-test-context.xml"/>
-    </beans>
-    <beans profile="local">
-        <import resource="classpath:profiles/web-local-context.xml"/>
-    </beans>
-    <beans profile="dev">
-        <import resource="classpath:profiles/web-dev-context.xml"/>
-    </beans>
-    <beans profile="prod">
-        <import resource="classpath:profiles/web-prod-context.xml"/>
-    </beans>
 
 </beans>
