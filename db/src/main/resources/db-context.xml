@@ -41,12 +41,31 @@
                     <prop key="hibernate.hbm2ddl.auto">update</prop>
                     <prop key="hibernate.connection.autocommit">false</prop>
                     <prop key="hibernate.connection.release_mode">after_transaction</prop>
-                    <prop key="hibernate.transaction.flush_before_completion">true</prop>
-                    <prop key="hibernate.cache.use_query_cache">false</prop>
                 </props>
             </constructor-arg>
         </bean>
         <jdbc:embedded-database id="dataSource" type="H2" />
+    </beans>
+
+    <beans profile="db-mysql">
+        <bean id="jpaProperties" class="java.util.Properties">
+            <constructor-arg>
+                <props>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                    <prop key="hibernate.show_sql">false</prop>
+                    <prop key="hibernate.hbm2ddl.auto">update</prop>
+                    <prop key="hibernate.connection.autocommit">false</prop>
+                    <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                </props>
+            </constructor-arg>
+        </bean>
+
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+            <property name="driverClassName" value="${db.driver:com.mysql.jdbc.Driver}"/>
+            <property name="url" value="${db.url:jdbc:mysql://localhost:3306/radioteria}"/>
+            <property name="username" value="${db.username:root}"/>
+            <property name="password" value="${db.password:}"/>
+        </bean>
     </beans>
 
     <beans profile="db-props">
@@ -59,8 +78,6 @@
                     <prop key="hibernate.hbm2ddl.auto">update</prop>
                     <prop key="hibernate.connection.autocommit">false</prop>
                     <prop key="hibernate.connection.release_mode">after_transaction</prop>
-                    <prop key="hibernate.transaction.flush_before_completion">true</prop>
-                    <prop key="hibernate.cache.use_query_cache">false</prop>
                 </props>
             </constructor-arg>
         </bean>
