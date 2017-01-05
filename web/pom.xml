@@ -13,8 +13,11 @@
     <artifactId>web</artifactId>
     <packaging>jar</packaging>
 
-    <dependencies>
+    <properties>
+        <project.dependencies.directory>${project.build.directory}/dependency</project.dependencies.directory>
+    </properties>
 
+    <dependencies>
         <!-- Radioteria -->
         <dependency>
             <groupId>com.radioteria</groupId>
@@ -31,8 +34,6 @@
             <artifactId>support</artifactId>
             <version>1.0</version>
         </dependency>
-
-
         <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -51,6 +52,10 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
 
         <!-- Testing -->
@@ -89,14 +94,37 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <archive>
                         <manifest>
-                            <addClasspath>true</addClasspath>
                             <mainClass>com.radioteria.Main</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputDirectory>${project.dependencies.directory}</outputDirectory>
                 </configuration>
             </plugin>
             <plugin>
@@ -105,6 +133,14 @@
                 <version>1.1.2</version>
                 <configuration>
                     <appName>radioteria-dev</appName>
+                    <includeTarget>false</includeTarget>
+                    <includes>
+                        <include>${project.build.directory}/dependency</include>
+                        <include>${project.build.directory}/${project.build.finalName}.jar</include>
+                    </includes>
+                    <processTypes>
+                        <web>java $JAVA_OPTS -Dserver.port=$PORT -cp target/dependency/*:target/${project.build.finalName}.jar com.radioteria.Main</web>
+                    </processTypes>
                 </configuration>
             </plugin>
         </plugins>

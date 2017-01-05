@@ -32,7 +32,7 @@
     </bean>
 
     <!-- Profiles -->
-    <beans profile="db-embedded">
+    <beans profile="db-embedded, default">
         <bean id="jpaProperties" class="java.util.Properties">
             <constructor-arg>
                 <props>

@@ -2,10 +2,9 @@
 
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
-    profile="fs-memory, fs-local, fs-s3">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <beans profile="fs-memory">
+    <beans profile="fs-memory, default">
         <bean id="fileSystem" class="com.radioteria.fs.MemoryFileSystem"/>
     </beans>
     <beans profile="fs-local">

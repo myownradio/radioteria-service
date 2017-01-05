@@ -1,1 +1,0 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -Dspring.profiles.active=fs-memory,db-embedded -cp target/classes:target/dependency/* com.radioteria.Main
