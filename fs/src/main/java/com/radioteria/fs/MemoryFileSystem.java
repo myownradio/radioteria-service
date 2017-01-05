@@ -11,7 +11,7 @@ public class MemoryFileSystem implements FileSystem {
         private String type;
         private byte[] content;
 
-        public FileEntry(String type, byte[] content) {
+        FileEntry(String type, byte[] content) {
             this.type = type;
             this.content = content;
         }

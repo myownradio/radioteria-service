@@ -9,7 +9,11 @@ public class LocalFileSystem implements FileSystem {
     private File rootDirFile;
 
     public LocalFileSystem(String rootDir) throws FileSystemException {
-        rootDirFile = new File(rootDir);
+        this(new File(rootDir));
+    }
+
+    public LocalFileSystem(File rootDir) throws FileSystemException {
+        rootDirFile = rootDir;
         if (!rootDirFile.isDirectory() || !rootDirFile.canExecute()) {
             throw new FileSystemException(String.format("Directory %s is not writable.", rootDir));
         }
