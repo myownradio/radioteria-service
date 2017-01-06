@@ -1,6 +1,7 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
 import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
+import com.radioteria.business.services.user.impl.PasswordRecoveryServiceImpl;
 import com.radioteria.db.enumerations.UserState;
 import com.radioteria.db.entities.User;
 import org.junit.Test;
@@ -73,6 +74,6 @@ public class RemindPasswordLetterTest extends AbstractPasswordRecoveryServiceTes
 
         assertThat(context.get("user"), equalTo(user));
         assertTrue(context.get("code") instanceof String);
-        assertThat(template, equalTo("email.remind-password"));
+        assertThat(template, equalTo(PasswordRecoveryServiceImpl.PASSWORD_RECOVERY_LETTER_TEMPLATE));
     }
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
 
     final public static String PASSWORD_RECOVERY_LETTER_SUBJECT = "Radioteria Password Recovery";
-    final public static String PASSWORD_RECOVERY_LETTER_TEMPLATE = "email.remind-password";
+    final public static String PASSWORD_RECOVERY_LETTER_TEMPLATE = "email.password-recovery";
     final public static Long PASSWORD_RECOVERY_CODE_TTL = TimeUnit.MINUTES.toMillis(30);
 
     final private UserDao userDao;
