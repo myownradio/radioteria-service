@@ -1,19 +1,25 @@
 package com.radioteria.business.services.user.impl;
 
 
+import com.radioteria.support.template.TemplateService;
 import com.radioteria.support.template.TemplateWithContext;
 import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.db.dao.api.UserDao;
 import com.radioteria.db.entities.User;
-import com.radioteria.support.mail.EmailService;
+import com.radioteria.support.services.mail.EmailService;
+import de.neuland.jade4j.template.TemplateLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.servlet.View;
+import org.springframework.web.servlet.ViewResolver;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -29,36 +35,31 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
 
     private EmailService emailService;
 
-    @Autowired
-    public RemindPasswordServiceImpl(UserDao userDao, EmailService emailService) {
+    private TemplateService templateService;
 
+    @Autowired
+    public RemindPasswordServiceImpl(UserDao userDao, EmailService emailService, TemplateService templateService) {
         this.userDao = userDao;
         this.emailService = emailService;
-
+        this.templateService = templateService;
     }
 
     public void sendRemindPasswordLetter(User user) {
-
         String passwordRecoveryCode = generatePasswordRecoveryCode(user);
         Map<String, Object> context = new HashMap<String, Object>() {{
             this.put("user", user);
             this.put("code", passwordRecoveryCode);
         }};
-
-        TemplateWithContext templateWithContext = new TemplateWithContext("letters.remind-password", context);
-
-        emailService.sendTemplateBasedLetter(user.getEmail(), "Remind password", templateWithContext);
-
+        String body = templateService.render("email.remind-password", context);
+        emailService.send(user.getEmail(), "Remind password", body);
     }
 
     public void verifyPasswordRecoveryCode(String code) {
-
         String decodedCode = decodePasswordRecoveryCode(code);
-
         String[] codeParts = decodedCode.split(CODE_DELIMITER, 3);
 
         if (codeParts.length != 3) {
-            throw new RemindPasswordServiceException("Specified code is invalid.");
+            throw new RemindPasswordServiceException("Specified code is not valid.");
         }
 
         long codeStaleTime = Long.parseLong(codeParts[0]);
@@ -75,11 +76,9 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         if (!matchUserDigest(user, userDigest)) {
             throw new RemindPasswordServiceException("Code verification failed.");
         }
-
     }
 
     private String generatePasswordRecoveryCode(User user) {
-
         Long time = System.currentTimeMillis() + remindCodeTtl;
         String userEmail = user.getEmail();
         String digest = generateUserDigest(user);
@@ -89,33 +88,23 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
         CharSequence[] codeParts = new String[] { time.toString(), userEmail, digest };
 
         return encoder.encodeToString(String.join(CODE_DELIMITER, codeParts).getBytes());
-
     }
 
     private String decodePasswordRecoveryCode(String code) {
-
         Base64.Decoder decoder = Base64.getDecoder();
-
         try {
             return new String(decoder.decode(code));
         } catch (IllegalArgumentException e) {
             throw new RemindPasswordServiceException("Specified code is broken.");
         }
-
     }
 
     private String generateUserDigest(User user) {
-
         String userCredentials = user.getEmail() + user.getPassword();
-
         return DigestUtils.md5DigestAsHex(userCredentials.getBytes());
-
     }
 
     private boolean matchUserDigest(User user, String digest) {
-
         return digest.equals(generateUserDigest(user));
-
     }
-
 }

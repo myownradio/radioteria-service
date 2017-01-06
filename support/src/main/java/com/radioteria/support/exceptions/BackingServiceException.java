@@ -1,6 +1,6 @@
 package com.radioteria.support.exceptions;
 
-public class BackingServiceException extends Exception {
+public class BackingServiceException extends RuntimeException {
 
     public BackingServiceException() {
     }
