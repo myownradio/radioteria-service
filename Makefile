@@ -5,7 +5,7 @@ install:
 	mvn install
 
 run:
-	java -cp web/target/classes:web/target/dependency/* com.radioteria.Main
+	java -cp web/target/dependency/*:web/target/web-1.0.jar com.radioteria.Main
 
 test:
 	mvn test
