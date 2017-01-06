@@ -49,13 +49,13 @@ public class PasswordRecoveryServiceImpl implements PasswordRecoveryService {
     }
 
     private String getEncodedRecoveryCode(User user) {
-        long codeStaleTime = getCodeStaleTime();
+        long codeStaleTime = makeRecoveryCodeStaleTime();
         PasswordRecoveryCode recoveryCode = new PasswordRecoveryCode(user, codeStaleTime);
 
         return recoveryCode.encode();
     }
 
-    private long getCodeStaleTime() {
+    private long makeRecoveryCodeStaleTime() {
         return System.currentTimeMillis() + PASSWORD_RECOVERY_CODE_TTL;
     }
 
