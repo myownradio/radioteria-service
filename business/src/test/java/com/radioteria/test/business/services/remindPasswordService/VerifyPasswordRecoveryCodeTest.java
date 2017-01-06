@@ -10,21 +10,11 @@ import static org.mockito.Mockito.verify;
 
 public class VerifyPasswordRecoveryCodeTest extends AbstractRemindPasswordServiceTest {
     @Test
-    public void justVerifyCode() {
+    public void verifyCode() {
         User user = userDao.findByEmail("foo@bar.com").get();
         String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
 
         remindPasswordService.verifyPasswordRecoveryCode(code);
-    }
-
-    @Test
-    public void changePassword() {
-        User user = userDao.findByEmail("foo@bar.com").get();
-        String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
-
-        remindPasswordService.changePasswordUsingRecoveryCode(code, "new password");
-
-        verify(userService, times(1)).changePassword(user, "new password");
     }
 
     @Test(expected = RemindPasswordServiceException.class)
@@ -49,4 +39,35 @@ public class VerifyPasswordRecoveryCodeTest extends AbstractRemindPasswordServic
 
         remindPasswordService.verifyPasswordRecoveryCode(code);
     }
+
+    @Test
+    public void changePasswordStaleCode() {
+        User user = userDao.findByEmail("foo@bar.com").get();
+        String code = new PasswordRecoveryCode(user, System.currentTimeMillis() - 30_000L).encode();
+
+        try {
+            remindPasswordService.changePasswordUsingRecoveryCode(code, "new password");
+        } catch (RemindPasswordServiceException e) {
+            /* NOP */
+        }
+
+        verify(userService, times(0)).changePassword(user, "new password");
+    }
+
+    @Test
+    public void changePasswordUpdatedUser() {
+        User user = userDao.findByEmail("foo@bar.com").get();
+        String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
+
+        user.setPassword("other password");
+
+        try {
+            remindPasswordService.changePasswordUsingRecoveryCode(code, "new password");
+        } catch (RemindPasswordServiceException e) {
+            /* NOP */
+        }
+
+        verify(userService, times(0)).changePassword(user, "new password");
+    }
+
 }
