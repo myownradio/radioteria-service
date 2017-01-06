@@ -16,12 +16,7 @@ import static org.mockito.Mockito.*;
 public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest {
     @Test
     public void testRemindPasswordLetterActiveUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("foo@bar.com");
-        user.setName("Foo");
-        user.setPassword("i_don't_remember");
-        user.setState(UserState.ACTIVE);
+        User user = createUserWithGivenState(UserState.ACTIVE);
 
         remindPasswordService.sendRemindPasswordLetter(user);
 
@@ -31,12 +26,7 @@ public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest 
 
     @Test
     public void testRemindPasswordLetterInactiveUser() {
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("foo@bar.com");
-        user.setName("Foo");
-        user.setPassword("i_don't_remember");
-        user.setState(UserState.INACTIVE);
+        User user = createUserWithGivenState(UserState.INACTIVE);
 
         remindPasswordService.sendRemindPasswordLetter(user);
 
@@ -46,14 +36,19 @@ public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest 
 
     @Test(expected = RemindPasswordServiceException.class)
     public void testRemindPasswordLetterDeletedUser() {
+        User user = createUserWithGivenState(UserState.DELETED);
+
+        remindPasswordService.sendRemindPasswordLetter(user);
+    }
+
+    private User createUserWithGivenState(UserState userState) {
         User user = new User();
         user.setId(1L);
         user.setEmail("foo@bar.com");
         user.setName("Foo");
         user.setPassword("i_don't_remember");
-        user.setState(UserState.DELETED);
-
-        remindPasswordService.sendRemindPasswordLetter(user);
+        user.setState(userState);
+        return user;
     }
 
     private void verifyEmailServiceCall(User user) {
