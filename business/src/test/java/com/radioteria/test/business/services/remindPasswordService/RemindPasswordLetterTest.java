@@ -49,8 +49,10 @@ public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest 
         verify(templateService, times(1)).render(templateCaptor.capture(), contextCaptor.capture());
 
         Map<String, Object> context = contextCaptor.getValue();
+        String template = templateCaptor.getValue();
 
         assertThat(context.get("user"), equalTo(user));
         assertTrue(context.get("code") instanceof  String);
+        assertThat(template, equalTo("email.remind-password"));
     }
 }
