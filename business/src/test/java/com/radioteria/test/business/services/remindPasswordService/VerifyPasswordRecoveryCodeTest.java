@@ -1,43 +1,43 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
 import com.radioteria.business.services.misc.PasswordRecoveryCode;
-import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
+import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
 import com.radioteria.db.entities.User;
 import org.junit.Test;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class VerifyPasswordRecoveryCodeTest extends AbstractRemindPasswordServiceTest {
+public class VerifyPasswordRecoveryCodeTest extends AbstractPasswordRecoveryServiceTest {
     @Test
     public void verifyCode() {
         User user = userDao.findByEmail("foo@bar.com").get();
         String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
 
-        remindPasswordService.verifyPasswordRecoveryCode(code);
+        passwordRecoveryService.verifyPasswordRecoveryCode(code);
     }
 
-    @Test(expected = RemindPasswordServiceException.class)
+    @Test(expected = PasswordRecoveryServiceException.class)
     public void verifyBrokenCode() {
-        remindPasswordService.verifyPasswordRecoveryCode("broken code");
+        passwordRecoveryService.verifyPasswordRecoveryCode("broken code");
     }
 
-    @Test(expected = RemindPasswordServiceException.class)
+    @Test(expected = PasswordRecoveryServiceException.class)
     public void verifyStaleCode() {
         User user = userDao.findByEmail("foo@bar.com").get();
         String code = new PasswordRecoveryCode(user, System.currentTimeMillis() - 30_000L).encode();
 
-        remindPasswordService.verifyPasswordRecoveryCode(code);
+        passwordRecoveryService.verifyPasswordRecoveryCode(code);
     }
 
-    @Test(expected = RemindPasswordServiceException.class)
+    @Test(expected = PasswordRecoveryServiceException.class)
     public void verifyUpdatedUser() {
         User user = userDao.findByEmail("foo@bar.com").get();
         String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
 
         user.setPassword("other password");
 
-        remindPasswordService.verifyPasswordRecoveryCode(code);
+        passwordRecoveryService.verifyPasswordRecoveryCode(code);
     }
 
     @Test
@@ -46,8 +46,8 @@ public class VerifyPasswordRecoveryCodeTest extends AbstractRemindPasswordServic
         String code = new PasswordRecoveryCode(user, System.currentTimeMillis() - 30_000L).encode();
 
         try {
-            remindPasswordService.changePasswordUsingRecoveryCode(code, "new password");
-        } catch (RemindPasswordServiceException e) {
+            passwordRecoveryService.changePasswordUsingRecoveryCode(code, "new password");
+        } catch (PasswordRecoveryServiceException e) {
             /* NOP */
         }
 
@@ -62,8 +62,8 @@ public class VerifyPasswordRecoveryCodeTest extends AbstractRemindPasswordServic
         user.setPassword("other password");
 
         try {
-            remindPasswordService.changePasswordUsingRecoveryCode(code, "new password");
-        } catch (RemindPasswordServiceException e) {
+            passwordRecoveryService.changePasswordUsingRecoveryCode(code, "new password");
+        } catch (PasswordRecoveryServiceException e) {
             /* NOP */
         }
 

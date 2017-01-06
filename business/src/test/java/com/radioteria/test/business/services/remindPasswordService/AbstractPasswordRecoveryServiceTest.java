@@ -1,15 +1,14 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
-import com.radioteria.business.services.user.api.RemindPasswordService;
+import com.radioteria.business.services.user.api.PasswordRecoveryService;
 import com.radioteria.business.services.user.api.UserService;
-import com.radioteria.business.services.user.impl.RemindPasswordServiceImpl;
+import com.radioteria.business.services.user.impl.PasswordRecoveryServiceImpl;
 import com.radioteria.db.dao.api.UserDao;
 import com.radioteria.db.entities.User;
 import com.radioteria.db.enumerations.UserState;
 import com.radioteria.support.services.mail.EmailService;
 import com.radioteria.support.template.TemplateService;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -21,7 +20,8 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-abstract public class AbstractRemindPasswordServiceTest {
+abstract public class AbstractPasswordRecoveryServiceTest {
+
     @Mock
     protected UserDao userDao;
 
@@ -34,12 +34,10 @@ abstract public class AbstractRemindPasswordServiceTest {
     @Mock
     protected UserService userService;
 
-    protected RemindPasswordService remindPasswordService;
+    protected PasswordRecoveryService passwordRecoveryService;
 
     @Before
     public void setup() {
-        remindPasswordService = new RemindPasswordServiceImpl(userDao, emailService, templateService, userService);
-
         User user = new User();
         user.setState(UserState.ACTIVE);
         user.setEmail("foo@bar.com");
@@ -52,5 +50,7 @@ abstract public class AbstractRemindPasswordServiceTest {
 
         when(userDao.findByEmail("foo@bar.com")).thenReturn(Optional.of(user));
         when(userDao.find(1L)).thenReturn(Optional.of(user));
+
+        passwordRecoveryService = new PasswordRecoveryServiceImpl(userDao, emailService, templateService, userService);
     }
 }

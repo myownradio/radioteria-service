@@ -57,7 +57,7 @@ public class PasswordRecoveryCode {
         return new PasswordRecoveryCode(userEmail, userDigest, codeStaleTime);
     }
 
-    public boolean isMatchUserDigest(User user) {
+    public boolean digestMatches(User user) {
         return userDigest.equals(generateUserDigest(user));
     }
 

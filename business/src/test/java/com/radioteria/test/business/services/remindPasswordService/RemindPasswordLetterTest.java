@@ -1,6 +1,6 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
-import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
+import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
 import com.radioteria.db.enumerations.UserState;
 import com.radioteria.db.entities.User;
 import org.junit.Test;
@@ -13,12 +13,12 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest {
+public class RemindPasswordLetterTest extends AbstractPasswordRecoveryServiceTest {
     @Test
     public void testRemindPasswordLetterActiveUser() {
         User user = createUserWithGivenState(UserState.ACTIVE);
 
-        remindPasswordService.sendRemindPasswordLetter(user);
+        passwordRecoveryService.sendPasswordRecoveryLetter(user);
 
         verifyEmailServiceCall(user);
         verifyTemplateServiceCall(user);
@@ -28,17 +28,17 @@ public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest 
     public void testRemindPasswordLetterInactiveUser() {
         User user = createUserWithGivenState(UserState.INACTIVE);
 
-        remindPasswordService.sendRemindPasswordLetter(user);
+        passwordRecoveryService.sendPasswordRecoveryLetter(user);
 
         verifyEmailServiceCall(user);
         verifyTemplateServiceCall(user);
     }
 
-    @Test(expected = RemindPasswordServiceException.class)
+    @Test(expected = PasswordRecoveryServiceException.class)
     public void testRemindPasswordLetterDeletedUser() {
         User user = createUserWithGivenState(UserState.DELETED);
 
-        remindPasswordService.sendRemindPasswordLetter(user);
+        passwordRecoveryService.sendPasswordRecoveryLetter(user);
     }
 
     private User createUserWithGivenState(UserState userState) {

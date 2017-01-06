@@ -109,4 +109,15 @@ public class User extends BaseEntity<Long> implements Serializable {
         getChannels().add(channel);
     }
 
+    public boolean isInactive() {
+        return getState() == UserState.INACTIVE;
+    }
+
+    public boolean isActive() {
+        return getState() == UserState.ACTIVE;
+    }
+
+    public boolean isDeleted() {
+        return getState() == UserState.DELETED;
+    }
 }
