@@ -32,7 +32,7 @@
     </bean>
 
     <!-- Profiles -->
-    <beans profile="db-embedded, default">
+    <beans profile="db-h2-memory, db-h2-local, default, test">
         <bean id="jpaProperties" class="java.util.Properties">
             <constructor-arg>
                 <props>
@@ -44,27 +44,14 @@
                 </props>
             </constructor-arg>
         </bean>
-        <jdbc:embedded-database id="dataSource" type="H2" />
     </beans>
-
-    <beans profile="db-mysql">
-        <bean id="jpaProperties" class="java.util.Properties">
-            <constructor-arg>
-                <props>
-                    <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
-                    <prop key="hibernate.show_sql">false</prop>
-                    <prop key="hibernate.hbm2ddl.auto">update</prop>
-                    <prop key="hibernate.connection.autocommit">false</prop>
-                    <prop key="hibernate.connection.release_mode">after_transaction</prop>
-                </props>
-            </constructor-arg>
-        </bean>
-
+    <beans profile="db-h2-memory, test">
+        <jdbc:embedded-database id="dataSource" type="H2" database-name="radioteria" />
+    </beans>
+    <beans profile="db-h2-local, default">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
-            <property name="url" value="mysql://localhost:3306/radioteria"/>
-            <property name="username" value="${db.username:root}"/>
-            <property name="password" value="${db.password:}"/>
+            <property name="driverClassName" value="org.h2.Driver"/>
+            <property name="url" value="jdbc:h2:~/.h2/radioteria"/>
         </bean>
     </beans>
 

@@ -22,7 +22,7 @@ import static org.junit.Assert.*;
 @Ignore
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:db-context.xml")
-@ActiveProfiles("db-embedded")
+@ActiveProfiles("test")
 public class FileDaoTest {
 
     @Resource

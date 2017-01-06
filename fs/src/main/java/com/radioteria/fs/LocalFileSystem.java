@@ -65,4 +65,12 @@ public class LocalFileSystem implements FileSystem {
     public FileSystemType getType() {
         return FileSystemType.LOCAL;
     }
+
+    public static FileSystem makeTempFileSystem() throws FileSystemException {
+        File javaTmpDir = new File(System.getProperty("java.io.tmpdir"));
+        File filesTmpDir = new File(javaTmpDir, "radioteria");
+        filesTmpDir.mkdir();
+        System.err.println(filesTmpDir);
+        return new LocalFileSystem(javaTmpDir);
+    }
 }

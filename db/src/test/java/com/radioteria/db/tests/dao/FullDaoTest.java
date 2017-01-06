@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:db-context.xml")
-@ActiveProfiles("db-embedded")
+@ActiveProfiles("test")
 public class FullDaoTest {
     private UserDao userDao;
     private ChannelDao channelDao;

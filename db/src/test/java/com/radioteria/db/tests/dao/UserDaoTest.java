@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = "classpath:db-context.xml")
-@ActiveProfiles("db-embedded")
+@ActiveProfiles("test")
 public class UserDaoTest {
 
     @Resource

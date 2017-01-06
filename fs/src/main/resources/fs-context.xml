@@ -4,13 +4,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <beans profile="fs-memory, default">
+    <beans profile="fs-memory, test">
         <bean id="fileSystem" class="com.radioteria.fs.MemoryFileSystem"/>
     </beans>
-    <beans profile="fs-local">
-        <bean id="fileSystem" class="com.radioteria.fs.LocalFileSystem">
-            <constructor-arg value="${fs.local.root}"/>
-        </bean>
+    <beans profile="fs-local, default">
+        <bean id="fileSystem" class="com.radioteria.fs.LocalFileSystem" factory-method="makeTempFileSystem"/>
     </beans>
     <beans profile="fs-s3">
         <bean id="fileSystem" class="com.radioteria.fs.S3FileSystem">
