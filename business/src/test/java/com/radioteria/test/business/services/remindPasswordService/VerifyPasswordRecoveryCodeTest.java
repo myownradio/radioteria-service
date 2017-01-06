@@ -1,13 +1,9 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
-import com.mysql.jdbc.TimeUtil;
 import com.radioteria.business.services.misc.PasswordRecoveryCode;
-import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.db.entities.User;
 import org.junit.Test;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
