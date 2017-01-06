@@ -51,7 +51,7 @@
     <beans profile="db-h2-local, default">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
             <property name="driverClassName" value="org.h2.Driver"/>
-            <property name="url" value="jdbc:h2:~/.h2/radioteria"/>
+            <property name="url" value="jdbc:h2:${java.io.tmpdir}/radioteria/db"/>
         </bean>
     </beans>
 
