@@ -1,25 +1,19 @@
 package com.radioteria.business.services.user.impl;
 
-
+import com.radioteria.db.enumerations.UserState;
 import com.radioteria.support.template.TemplateService;
-import com.radioteria.support.template.TemplateWithContext;
 import com.radioteria.business.services.user.api.RemindPasswordService;
 import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.db.dao.api.UserDao;
 import com.radioteria.db.entities.User;
 import com.radioteria.support.services.mail.EmailService;
-import de.neuland.jade4j.template.TemplateLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.web.servlet.View;
-import org.springframework.web.servlet.ViewResolver;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import java.util.Base64;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +39,9 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
     }
 
     public void sendRemindPasswordLetter(User user) {
+        if (user.getState() == UserState.DELETED) {
+            throw new RemindPasswordServiceException("User is deleted.");
+        }
         String passwordRecoveryCode = generatePasswordRecoveryCode(user);
         Map<String, Object> context = new HashMap<String, Object>() {{
             this.put("user", user);
@@ -72,6 +69,10 @@ public class RemindPasswordServiceImpl implements RemindPasswordService {
 
         User user = userDao.findByEmail(userEmail).orElseThrow(() ->
                 new RemindPasswordServiceException("Specified code belongs to user that does not exist."));
+
+        if (user.getState() == UserState.DELETED) {
+            throw new RemindPasswordServiceException("Specified code belongs to user that was deleted.");
+        }
 
         if (!matchUserDigest(user, userDigest)) {
             throw new RemindPasswordServiceException("Code verification failed.");

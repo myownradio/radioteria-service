@@ -1,9 +1,8 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
+import com.radioteria.business.services.user.exceptions.RemindPasswordServiceException;
 import com.radioteria.db.enumerations.UserState;
-import com.radioteria.support.template.TemplateWithContext;
 import com.radioteria.db.entities.User;
-import org.apache.commons.collections.map.HashedMap;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -11,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -29,6 +27,18 @@ public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest 
 
         verifyEmailServiceCall(user);
         verifyTemplateServiceCall(user);
+    }
+
+    @Test(expected = RemindPasswordServiceException.class)
+    public void testRemindPasswordLetterDeletedUser() {
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("foo@bar.com");
+        user.setName("Foo");
+        user.setPassword("i_don't_remember");
+        user.setState(UserState.DELETED);
+
+        remindPasswordService.sendRemindPasswordLetter(user);
     }
 
     private void verifyEmailServiceCall(User user) {
