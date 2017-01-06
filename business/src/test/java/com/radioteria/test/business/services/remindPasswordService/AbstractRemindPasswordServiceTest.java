@@ -1,6 +1,7 @@
 package com.radioteria.test.business.services.remindPasswordService;
 
 import com.radioteria.business.services.user.api.RemindPasswordService;
+import com.radioteria.business.services.user.api.UserService;
 import com.radioteria.business.services.user.impl.RemindPasswordServiceImpl;
 import com.radioteria.db.dao.api.UserDao;
 import com.radioteria.db.entities.User;
@@ -13,6 +14,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Optional;
+
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 abstract public class AbstractRemindPasswordServiceTest {
     @Mock
@@ -24,11 +31,26 @@ abstract public class AbstractRemindPasswordServiceTest {
     @Mock
     protected TemplateService templateService;
 
+    @Mock
+    protected UserService userService;
 
     protected RemindPasswordService remindPasswordService;
 
     @Before
     public void setup() {
-        remindPasswordService = new RemindPasswordServiceImpl(userDao, emailService, templateService);
+        remindPasswordService = new RemindPasswordServiceImpl(userDao, emailService, templateService, userService);
+
+        User user = new User();
+        user.setState(UserState.ACTIVE);
+        user.setEmail("foo@bar.com");
+        user.setPassword("");
+        user.setName("Name");
+        user.setId(1L);
+
+        when(userDao.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(userDao.find(anyLong())).thenReturn(Optional.empty());
+
+        when(userDao.findByEmail("foo@bar.com")).thenReturn(Optional.of(user));
+        when(userDao.find(1L)).thenReturn(Optional.of(user));
     }
 }

@@ -15,13 +15,28 @@ import static org.mockito.Mockito.*;
 
 public class RemindPasswordLetterTest extends AbstractRemindPasswordServiceTest {
     @Test
-    public void testRemindPasswordLetter() {
+    public void testRemindPasswordLetterActiveUser() {
         User user = new User();
         user.setId(1L);
         user.setEmail("foo@bar.com");
         user.setName("Foo");
         user.setPassword("i_don't_remember");
         user.setState(UserState.ACTIVE);
+
+        remindPasswordService.sendRemindPasswordLetter(user);
+
+        verifyEmailServiceCall(user);
+        verifyTemplateServiceCall(user);
+    }
+
+    @Test
+    public void testRemindPasswordLetterInactiveUser() {
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("foo@bar.com");
+        user.setName("Foo");
+        user.setPassword("i_don't_remember");
+        user.setState(UserState.INACTIVE);
 
         remindPasswordService.sendRemindPasswordLetter(user);
 
