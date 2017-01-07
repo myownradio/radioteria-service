@@ -8,7 +8,10 @@
         <bean id="fileSystem" class="com.radioteria.fs.MemoryFileSystem"/>
     </beans>
     <beans profile="fs-local, default">
-        <bean id="fileSystem" class="com.radioteria.fs.LocalFileSystem" factory-method="makeTempFileSystem"/>
+        <bean id="fileSystem" class="com.radioteria.fs.LocalFileSystem">
+            <constructor-arg value="${java.io.tmpdir}/radioteria/fs"/>
+            <constructor-arg value="true"/>
+        </bean>
     </beans>
     <beans profile="fs-s3">
         <bean id="fileSystem" class="com.radioteria.fs.S3FileSystem">

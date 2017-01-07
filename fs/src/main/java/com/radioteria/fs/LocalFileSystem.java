@@ -8,15 +8,18 @@ import static org.apache.commons.io.IOUtils.copy;
 public class LocalFileSystem implements FileSystem {
     private File rootDirFile;
 
-    public LocalFileSystem(String rootDir) throws FileSystemException {
-        this(new File(rootDir));
-    }
-
-    public LocalFileSystem(File rootDir) throws FileSystemException {
-        rootDirFile = rootDir;
+    public LocalFileSystem(String rootDir, boolean createDirs) throws FileSystemException {
+        rootDirFile = new File(rootDir);
+        if (createDirs && !rootDirFile.exists()) {
+            rootDirFile.mkdirs();
+        }
         if (!rootDirFile.isDirectory() || !rootDirFile.canExecute()) {
             throw new FileSystemException(String.format("Directory %s is not writable.", rootDir));
         }
+    }
+
+    public LocalFileSystem(String rootDir) throws FileSystemException {
+        this(rootDir, false);
     }
 
     private File getOrError(String path) throws FileSystemException {
@@ -66,11 +69,4 @@ public class LocalFileSystem implements FileSystem {
         return FileSystemType.LOCAL;
     }
 
-    public static FileSystem makeTempFileSystem() throws FileSystemException {
-        File javaTmpDir = new File(System.getProperty("java.io.tmpdir"));
-        File filesTmpDir = new File(javaTmpDir, "radioteria/fs");
-        filesTmpDir.mkdirs();
-        System.err.println(filesTmpDir);
-        return new LocalFileSystem(javaTmpDir);
-    }
 }

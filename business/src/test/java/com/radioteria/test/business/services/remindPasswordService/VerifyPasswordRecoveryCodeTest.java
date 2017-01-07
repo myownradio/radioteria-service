@@ -3,6 +3,7 @@ package com.radioteria.test.business.services.remindPasswordService;
 import com.radioteria.business.services.misc.PasswordRecoveryCode;
 import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
 import com.radioteria.db.entities.User;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.mockito.Mockito.times;
@@ -40,6 +41,16 @@ public class VerifyPasswordRecoveryCodeTest extends AbstractPasswordRecoveryServ
         passwordRecoveryService.verifyPasswordRecoveryCode(code);
     }
 
+    @Test(expected = PasswordRecoveryServiceException.class)
+    public void verifyNonExistentUser() {
+        User user = new User();
+        user.setEmail("deleted@mail.com");
+        String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
+
+        passwordRecoveryService.verifyPasswordRecoveryCode(code);
+    }
+
+
     @Test
     public void changePasswordStaleCode() {
         User user = userDao.findByEmail("foo@bar.com").get();
@@ -70,4 +81,20 @@ public class VerifyPasswordRecoveryCodeTest extends AbstractPasswordRecoveryServ
         verify(userService, times(0)).changePassword(user, "new password");
     }
 
+
+    @Test
+    public void changePasswordForNonExistentUser() {
+        User user = new User();
+        user.setEmail("non@m.com");
+        String code = new PasswordRecoveryCode(user, System.currentTimeMillis() + 30_000L).encode();
+
+        try {
+            passwordRecoveryService.changePasswordUsingRecoveryCode(code, "new password");
+            Assert.fail("Expected exception.");
+        } catch (PasswordRecoveryServiceException e) {
+            /* NOP */
+        }
+
+        verify(userService, times(0)).changePassword(user, "new password");
+    }
 }

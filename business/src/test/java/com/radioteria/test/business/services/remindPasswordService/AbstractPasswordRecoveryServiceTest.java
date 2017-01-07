@@ -34,6 +34,7 @@ abstract public class AbstractPasswordRecoveryServiceTest {
     @Mock
     protected UserService userService;
 
+
     protected PasswordRecoveryService passwordRecoveryService;
 
     @Before
