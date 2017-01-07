@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public boolean passwordMatches(User user, String plainPassword) {
+    public boolean isPasswordMatch(String plainPassword, User user) {
 
         return passwordEncoder.matches(plainPassword, user.getPassword());
 

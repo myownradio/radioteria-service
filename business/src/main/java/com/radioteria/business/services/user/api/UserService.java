@@ -8,8 +8,9 @@ public interface UserService {
     Optional<User> findByEmail(String email);
     Optional<User> findById(Long id);
 
-    boolean passwordMatches(User user, String plainPassword);
+    boolean isPasswordMatch(String plainPassword, User user);
     boolean isEmailAvailable(String email);
+
     void register(String email, String plainPassword, String name);
     void activateByEmail(String email);
     void changePassword(User user, String newPlainPassword);

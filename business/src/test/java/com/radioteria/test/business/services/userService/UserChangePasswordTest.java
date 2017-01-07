@@ -25,7 +25,7 @@ public class UserChangePasswordTest extends AbstractUserServiceTest {
 
     private void verifyThatPasswordChangedSuccessfully(User user, String newPassword) {
 
-        assertTrue(userService.passwordMatches(user, newPassword));
+        assertTrue(userService.isPasswordMatch(newPassword, user));
 
     }
 

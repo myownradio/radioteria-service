@@ -50,7 +50,7 @@ public class UserRegistrationTest extends AbstractUserServiceTest {
         assertEquals("foo@bar.com", user.getEmail());
         assertEquals("Foo Bar", user.getName());
         assertEquals(UserState.INACTIVE, user.getState());
-        assertTrue(userService.passwordMatches(user, "baz"));
+        assertTrue(userService.isPasswordMatch("baz", user));
 
     }
 
