@@ -18,6 +18,8 @@
         <property name="configuration" ref="jadeConfiguration" />
         <!-- rendering nice html formatted error pages for development -->
         <property name="renderExceptions" value="true" />
+        <property name="requestContextAttribute" value="request" />
+        <property name="exposeRequestAttributes" value="true" />
     </bean>
 
 </beans>
