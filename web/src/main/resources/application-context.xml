@@ -19,6 +19,7 @@
     <mvc:resources mapping="**" location="classpath:static/" order="0" />
 
     <!-- Modules -->
+    <import resource="classpath:context/security-context.xml"/>
     <import resource="classpath:context/jade-engine-context.xml"/>
     <import resource="classpath:business-context.xml"/>
 

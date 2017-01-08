@@ -3,7 +3,11 @@ package com.radioteria.controllers;
 import com.radioteria.fs.FileSystem;
 import com.radioteria.util.io.MultiListenerOutputStream;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -12,6 +16,7 @@ import javax.servlet.AsyncContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 
 @Controller
 public class BaseController {
@@ -27,7 +32,10 @@ public class BaseController {
     }
 
     @RequestMapping("views")
-    public String view() {
+    @Secured(value = "ROLE_REGULAR_USER")
+    public String view(ModelMap modelMap) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        modelMap.put("user", authentication.getName());
         return "index";
     }
 
