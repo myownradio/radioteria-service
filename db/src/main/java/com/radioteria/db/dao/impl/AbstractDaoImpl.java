@@ -4,6 +4,7 @@ import com.radioteria.db.dao.api.AbstractDao;
 import com.radioteria.db.entities.BaseEntity;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -84,7 +85,7 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends BaseEntity<P>> 
     public <V> Optional<E> findByPropertyValue(String propertyName, V propertyValue) {
         TypedQuery<E> typedQuery = getQueryByPropertyValue(propertyName, propertyValue);
 
-        return Optional.ofNullable(typedQuery.getSingleResult());
+        return getSingleResult(typedQuery);
     }
 
     @Override
@@ -141,7 +142,6 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends BaseEntity<P>> 
 
     @Override
     public Optional<P> findIdByPropertyValue(String propertyName, String propertyValue) {
-
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<P> query = cb.createQuery(getIdClass());
 
@@ -151,8 +151,15 @@ abstract class AbstractDaoImpl<P extends Serializable, E extends BaseEntity<P>> 
 
         query.where(cb.equal(root.get(propertyName), propertyValue));
 
-        return Optional.ofNullable(getEntityManager().createQuery(query).getSingleResult());
+        return getSingleResult(getEntityManager().createQuery(query));
+     }
 
+    private <T> Optional<T> getSingleResult(TypedQuery<T> typedQuery) {
+        try {
+            return Optional.of(typedQuery.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 
     @Override

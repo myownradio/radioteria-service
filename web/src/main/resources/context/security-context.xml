@@ -12,11 +12,11 @@
     <sec:global-method-security secured-annotations="enabled"/>
 
     <sec:authentication-manager>
-        <sec:authentication-provider>
-            <sec:user-service>
-                <sec:user name="admin" password="123" authorities="ROLE_REGULAR_USER"/>
-            </sec:user-service>
+        <sec:authentication-provider user-service-ref="userService">
+            <sec:password-encoder ref="passwordEncoder"/>
         </sec:authentication-provider>
     </sec:authentication-manager>
+
+    <bean id="userService" class="com.radioteria.web.security.EntityUserDetailsService"/>
 
 </beans>
