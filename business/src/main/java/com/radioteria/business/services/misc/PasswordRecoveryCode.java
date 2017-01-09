@@ -6,6 +6,7 @@ import org.springframework.util.DigestUtils;
 import java.util.Base64;
 
 public class PasswordRecoveryCode {
+
     final public static String CODE_DELIMITER = ":";
 
     private long codeStaleTime;
@@ -13,9 +14,7 @@ public class PasswordRecoveryCode {
     private String userDigest;
 
     public PasswordRecoveryCode(User user, long codeStaleTime) {
-        this.codeStaleTime = codeStaleTime;
-        this.userEmail = user.getEmail();
-        this.userDigest = generateUserDigest(user);
+        this(user.getEmail(), generateUserDigest(user), codeStaleTime);
     }
 
     public PasswordRecoveryCode(String userEmail, String userDigest, long codeStaleTime) {
@@ -66,7 +65,7 @@ public class PasswordRecoveryCode {
         return new String(decoder.decode(code));
     }
 
-    private String generateUserDigest(User user) {
+    private static String generateUserDigest(User user) {
         String userCredentials = user.getEmail() + user.getPassword();
         return DigestUtils.md5DigestAsHex(userCredentials.getBytes());
     }
