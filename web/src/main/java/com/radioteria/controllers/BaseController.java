@@ -2,7 +2,7 @@ package com.radioteria.controllers;
 
 import com.radioteria.business.services.user.api.UserService;
 import com.radioteria.fs.FileSystem;
-import com.radioteria.web.dto.RegistrationForm;
+import com.radioteria.web.forms.SignUpForm;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Controller
@@ -41,21 +41,20 @@ public class BaseController {
         return "index";
     }
 
-    @RequestMapping(value = "registration", method = RequestMethod.GET)
-    public void registration(ModelMap modelMap) {
-        RegistrationForm form = new RegistrationForm();
-        modelMap.put("form", form);
+    @RequestMapping(value = "signup", method = RequestMethod.GET)
+    public String signUpForm(SignUpForm signUpForm) {
+        System.err.println(signUpForm);
+        return "auth/signup";
     }
 
-    @RequestMapping(value = "registration", method = RequestMethod.POST)
+    @RequestMapping(value = "signup", method = RequestMethod.POST)
     @Transactional
-    public String registration(@Validated RegistrationForm form, BindingResult result) {
+    public String signUpSubmit(@Valid SignUpForm signUpForm, BindingResult result) {
+        System.err.println(signUpForm);
         if (result.hasErrors()) {
-            return "registration";
+            return "auth/signup";
         }
-
-        userService.register(form.getEmail(), form.getPassword(), form.getName());
-
+        userService.register(signUpForm.getEmail(), signUpForm.getPassword(), signUpForm.getName());
         return "redirect:/";
     }
 

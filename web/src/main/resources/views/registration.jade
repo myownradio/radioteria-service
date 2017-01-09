@@ -1,8 +1,0 @@
-html
-    h1 Registration
-    form(action="/registration", method="post")
-        input(type="text", placeholder="email", name="email")
-        input(type="password", placeholder="password", name="password")
-        input(type="text", placeholder="name", name="name")
-        input(type="hidden", name=_csrf.parameterName, value=_csrf.token)
-        input(type="submit", value="register")

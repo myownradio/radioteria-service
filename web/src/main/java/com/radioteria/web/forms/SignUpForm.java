@@ -1,11 +1,11 @@
-package com.radioteria.web.dto;
+package com.radioteria.web.forms;
 
 import com.radioteria.web.security.ValidEmail;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.validation.constraints.NotNull;
 
-public class RegistrationForm {
+public class SignUpForm {
     @NotNull
     @ValidEmail
     private String email;
@@ -39,5 +39,9 @@ public class RegistrationForm {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String toString() {
+        return "SignUpForm(email=" + getEmail() + ", password=" + getPassword() + ", name=" + getName() + ")";
     }
 }
