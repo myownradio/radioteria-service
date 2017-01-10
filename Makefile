@@ -7,7 +7,7 @@ docker-build:
 	docker build --build-arg USER_ID=$(USER_ID) --build-arg GROUP_ID=$(GROUP_ID) -t $(IMAGE) .
 
 start-env:
-	docker run -ephemeral -v $(CURDIR):/app -v /tmp/.m2:/home/app/.m2 -p 8080:8080 -ti -w /app $(IMAGE)
+	docker run --rm -v $(CURDIR):/app -v /tmp/.m2:/home/app/.m2 -p 8080:8080 -ti --name $(NAME) -w /app $(IMAGE)
 
 clean:
 	mvn clean
