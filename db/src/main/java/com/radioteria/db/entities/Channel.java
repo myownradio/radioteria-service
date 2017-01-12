@@ -9,6 +9,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.radioteria.util.FunctionalUtil.operator;
 import static com.radioteria.util.FunctionalUtil.statefulPredicate;
@@ -154,12 +155,11 @@ public class Channel extends BaseEntity<Long> {
     }
 
     public Optional<Track> getTrackAtTimePosition(long timePosition) {
-        long initialOffset = 0L;
-        return getTracks().stream().filter(statefulPredicate(
-                        initialOffset,
-                        (offset, track) -> MathUtil.inRange(offset, offset + track.getDuration(), timePosition),
-                        operator((s1, s2) -> s1 + s2, Track::getDuration)
-                ))
+        AtomicLong offset = new AtomicLong();
+        return getTracks().stream()
+                .peek(t -> offset.addAndGet(t.getDuration()))
+                .filter(t -> offset.get() <= timePosition)
+                .filter(t -> offset.get() + t.getDuration() > timePosition)
                 .findFirst();
     }
 
