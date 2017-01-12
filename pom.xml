@@ -167,6 +167,13 @@
                 <version>${jade4j.version}</version>
             </dependency>
 
+            <!-- Utilities -->
+            <dependency>
+                <groupId>one.util</groupId>
+                <artifactId>streamex</artifactId>
+                <version>0.6.4</version>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
