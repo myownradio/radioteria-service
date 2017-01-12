@@ -5,15 +5,13 @@ import com.radioteria.db.entities.Track;
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static com.radioteria.util.FunctionalUtil.statefulFunction;
-
 public class Tracklist extends AbstractList<Tracklist.TrackEntry> {
 
-    static class TrackEntry {
-
+    class TrackEntry {
         final public long offset;
         final public Track track;
 
@@ -21,14 +19,15 @@ public class Tracklist extends AbstractList<Tracklist.TrackEntry> {
             this.offset = offset;
             this.track = track;
         }
-
     }
 
     private final List<TrackEntry> trackEntries;
 
     public Tracklist(List<Track> tracks) {
+        AtomicLong offset = new AtomicLong(0);
         trackEntries = tracks.stream()
-                .map(statefulFunction(0L, TrackEntry::new, (offset, track) -> track.getDuration() + offset))
+                .map(t -> new TrackEntry(offset.get(), t))
+                .peek(e -> offset.addAndGet(e.track.getDuration()))
                 .collect(Collectors.toList());
     }
 

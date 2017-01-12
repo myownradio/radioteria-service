@@ -1,7 +1,6 @@
 package com.radioteria.db.entities;
 
 import com.radioteria.db.enumerations.ChannelState;
-import com.radioteria.util.MathUtil;
 import com.radioteria.util.OptionalUtil;
 import com.radioteria.util.Tuple;
 
@@ -11,8 +10,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.radioteria.util.FunctionalUtil.operator;
-import static com.radioteria.util.FunctionalUtil.statefulPredicate;
 
 @Entity
 @Table(name = "channels")
