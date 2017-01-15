@@ -14,11 +14,6 @@
         <property name="prettyPrint" value="true" />
         <property name="caching" value="false" />
         <property name="templateLoader" ref="templateLoader" />
-        <property name="sharedVariables">
-            <map>
-                <entry id="util" value-ref="jadeUtil"/>
-            </map>
-        </property>
     </bean>
 
     <bean id="viewResolver" class="de.neuland.jade4j.spring.view.JadeViewResolver">
