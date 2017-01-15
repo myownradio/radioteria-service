@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tracks")
-public class Track extends BaseEntity<Long> implements Comparable<Track> {
+public class Track extends BaseEntity<Long> implements Comparable<Track>, IdAware<Long> {
 
     final public static String ID = "id";
     final public static String ORDER_ID = "order_id";

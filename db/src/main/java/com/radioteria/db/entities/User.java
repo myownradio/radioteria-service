@@ -13,7 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Access(AccessType.FIELD)
-public class User extends BaseEntity<Long> implements Serializable {
+public class User extends BaseEntity<Long> implements Serializable, IdAware<Long> {
 
     final public static String ID = "id";
     final public static String EMAIL = "email";
