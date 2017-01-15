@@ -3,12 +3,13 @@ package com.radioteria.db.dao
 import com.radioteria.db.entities.Entity
 import java.io.Serializable
 import javax.persistence.EntityManager
+import javax.persistence.NoResultException
 import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
-
 class JpaEntityRepository<K : Serializable, E : Entity<K>>(
-        val entityClass: Class<E>, val idClass: Class<K>,
+        val entityClass: Class<E>,
+        val idClass: Class<K>,
         val entityManager: EntityManager) : EntityRepository<K, E> {
 
     override fun persist(entity: E) {
@@ -19,12 +20,12 @@ class JpaEntityRepository<K : Serializable, E : Entity<K>>(
         entityManager.remove(entity)
     }
 
-    override fun find(key: K): E? {
-        return entityManager.find(entityClass, key)
+    override fun find(id: K): E? {
+        return entityManager.find(entityClass, id)
     }
 
     override fun find(cqProvider: () -> CriteriaQuery<E>): E? {
-        return createQuery(cqProvider).singleResult
+        return try { query(cqProvider).singleResult } catch (e: NoResultException) { null }
     }
 
     override fun list(): List<E> {
@@ -32,10 +33,10 @@ class JpaEntityRepository<K : Serializable, E : Entity<K>>(
     }
 
     override fun list(cqProvider: () -> CriteriaQuery<E>): List<E> {
-        return createQuery(cqProvider).resultList
+        return query(cqProvider).resultList
     }
 
-    private fun createQuery(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E> {
+    override fun <T> query(cqProvider: () -> CriteriaQuery<T>): TypedQuery<T> {
         return entityManager.createQuery(cqProvider.invoke())
     }
 }

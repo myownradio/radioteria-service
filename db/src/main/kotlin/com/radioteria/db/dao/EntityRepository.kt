@@ -2,6 +2,7 @@ package com.radioteria.db.dao
 
 import com.radioteria.db.entities.Entity
 import java.io.Serializable
+import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
 interface EntityRepository<K : Serializable, E : Entity<K>> {
@@ -16,12 +17,12 @@ interface EntityRepository<K : Serializable, E : Entity<K>> {
     fun remove(entity: E)
 
     /**
-     * Find by primary key.
+     * Find by primary id.
      */
-    fun find(key: K): E?
+    fun find(id: K): E?
 
     /**
-     * Find by queryBuilder.
+     * Find by criteria query.
      */
     fun find(cqProvider: () -> CriteriaQuery<E>): E?
 
@@ -31,7 +32,12 @@ interface EntityRepository<K : Serializable, E : Entity<K>> {
     fun list(): List<E>
 
     /**
-     * List entities by queryBuilder.
+     * List entities by criteria query.
      */
     fun list(cqProvider: () -> CriteriaQuery<E>): List<E>
+
+    /**
+     * Create typed query by criteria query.
+     */
+    fun <T> query(cqProvider: () -> CriteriaQuery<T>): TypedQuery<T>
 }

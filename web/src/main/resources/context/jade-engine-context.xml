@@ -16,7 +16,7 @@
         <property name="templateLoader" ref="templateLoader" />
         <property name="sharedVariables">
             <map>
-                <entry key="util" value-ref="jadeUtil"/>
+                <entry id="util" value-ref="jadeUtil"/>
             </map>
         </property>
     </bean>
