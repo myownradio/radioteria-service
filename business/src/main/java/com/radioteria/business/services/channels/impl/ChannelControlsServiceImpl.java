@@ -38,16 +38,16 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
     @Override
     public void start(Channel channel, long orderId) {
 
-        if (channel.getTracksDuration() == 0L) {
-            LOGGER.warn("Tried to start an empty channel {}.", channel.getId());
-            return;
-        }
+//        if (channel.getTracksDuration() == 0L) {
+//            LOGGER.warn("Tried to start an empty channel {}.", channel.getId());
+//            return;
+//        }
 
         LOGGER.info("Starting channel {} from track {} position.", channel.getId(), orderId);
 
-        Long trackOffset = channel.getTrackOffsetByOrderId(orderId);
+//        Long trackOffset = channel.getTrackOffsetByOrderId(orderId);
 
-        channel.setStartedAt(getCurrentTimeMillis() - trackOffset);
+//        channel.setStartedAt(getCurrentTimeMillis() - trackOffset);
 
         publishChannelControlsEvent(channel);
 
@@ -66,12 +66,12 @@ public class ChannelControlsServiceImpl implements ChannelControlsService {
 
     @Override
     public void next(Channel channel) {
-        playBasedOnCurrent(channel, channel::getTrackAfter);
+//        playBasedOnCurrent(channel, channel::getTrackAfter);
     }
 
     @Override
     public void previous(Channel channel) {
-        playBasedOnCurrent(channel, channel::getTrackBefore);
+//        playBasedOnCurrent(channel, channel::getTrackBefore);
     }
 
     private void playBasedOnCurrent(Channel channel, Function<Track, Optional<Track>> nextTrackGetter) {

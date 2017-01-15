@@ -40,6 +40,8 @@
         <tomcat.version>8.0.28</tomcat.version>
         <spring.boot.version>1.4.3.RELEASE</spring.boot.version>
 
+        <kotlin.version>1.0.6</kotlin.version>
+
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -191,6 +193,25 @@
                         <target>1.8</target>
                         <showWarnings>true</showWarnings>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>kotlin-maven-plugin</artifactId>
+                    <groupId>org.jetbrains.kotlin</groupId>
+                    <version>${kotlin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>test-compile</id>
+                            <goals>
+                                <goal>test-compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

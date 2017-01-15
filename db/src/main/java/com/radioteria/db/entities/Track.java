@@ -5,7 +5,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "tracks")
-public class Track extends BaseEntity<Long> {
+public class Track extends BaseEntity<Long> implements Comparable<Track> {
 
     final public static String ID = "id";
     final public static String ORDER_ID = "order_id";
@@ -21,7 +21,7 @@ public class Track extends BaseEntity<Long> {
     private Long id;
 
     @Column(name = ORDER_ID, nullable = false)
-    private Long orderId;
+    private Integer orderId;
 
     @Column(name = TITLE, nullable = false)
     private String title;
@@ -42,7 +42,7 @@ public class Track extends BaseEntity<Long> {
 
     public Track() {}
 
-    public Track(String title, Long duration) {
+    public Track(String title, long duration) {
         this.setTitle(title);
         this.setDuration(duration);
     }
@@ -55,11 +55,11 @@ public class Track extends BaseEntity<Long> {
         this.id = id;
     }
 
-    public Long getOrderId() {
+    public Integer getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(Long orderId) {
+    public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
 
@@ -101,6 +101,11 @@ public class Track extends BaseEntity<Long> {
 
     public void setChannel(Channel channel) {
         this.channel = channel;
+    }
+
+    @Override
+    public int compareTo(Track o) {
+        return this.getOrderId() - o.getOrderId();
     }
 
     @Override

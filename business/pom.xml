@@ -72,6 +72,12 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
+        <!-- Util -->
+        <dependency>
+            <groupId>one.util</groupId>
+            <artifactId>streamex</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

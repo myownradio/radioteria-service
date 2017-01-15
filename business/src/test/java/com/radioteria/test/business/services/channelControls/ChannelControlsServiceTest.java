@@ -199,8 +199,8 @@ public class ChannelControlsServiceTest {
     public void testStartWithZeroLength() {
 
         channel.getTracks().clear();
-        channel.addTrack(new Track("Broken Zero", 0L));
-        channel.addTrack(new Track("Another Broken Zero", 0L));
+        channel.addTrack(new Track("Broken Zero", 0));
+        channel.addTrack(new Track("Another Broken Zero", 0));
 
         channelControlsService.start(channel);
 

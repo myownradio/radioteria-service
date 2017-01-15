@@ -1,7 +1,6 @@
 package com.radioteria.db.entities;
 
 import com.radioteria.db.enumerations.ChannelState;
-import com.radioteria.util.OptionalUtil;
 import com.radioteria.util.Tuple;
 
 import javax.persistence.*;
@@ -9,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
+
+import static com.radioteria.db.enumerations.ChannelState.*;
 
 
 @Entity
@@ -81,8 +83,16 @@ public class Channel extends BaseEntity<Long> {
         this.description = description;
     }
 
+    public boolean isStopped() {
+        return getChannelState().equals(STOPPED);
+    }
+
+    public boolean isStreaming() {
+        return getChannelState().equals(STREAMING);
+    }
+
     public ChannelState getChannelState() {
-        return getStartedAt() == null ? ChannelState.STOPPED : ChannelState.STREAMING;
+        return ChannelState.of(this);
     }
 
     public Long getStartedAt() {
@@ -113,65 +123,32 @@ public class Channel extends BaseEntity<Long> {
         return tracks;
     }
 
-    public Long getTracksDuration() {
-        return getTracks().stream().mapToLong(Track::getDuration).sum();
-    }
-
-    public Long getTrackOffsetByOrderId(Long orderId) {
-        return getTracks()
-                .stream()
-                .filter(t -> t.getOrderId() < orderId)
-                .mapToLong(Track::getDuration)
-                .sum();
-    }
-
-    public Optional<Track> getTrackAfter(Track track) {
-        Optional<Track> trackAfter = getTracks()
-                .stream()
-                .filter(t -> t.getOrderId() > track.getOrderId())
-                .findFirst();
-
-        return OptionalUtil.first(trackAfter, getFirstTrack());
-    }
-
-    public Optional<Track> getTrackBefore(Track track) {
-        Optional<Track> trackBefore = getTracks()
-                .stream()
-                .filter(t -> t.getOrderId() < track.getOrderId())
-                .sorted((o1, o2) -> o2.getOrderId().compareTo(o1.getOrderId()))
-                .findFirst();
-
-        return OptionalUtil.first(trackBefore, getLastTrack());
-    }
-
     public Optional<Tuple<Track, Long>> getTrackWithPositionAtTimePosition(long timePosition) {
         return getTrackAtTimePosition(timePosition).map(track -> {
-            long trackPosition = timePosition - getTrackOffsetByOrderId(track.getOrderId());
+//            long trackPosition = timePosition - getTrackOffsetByOrderId(track.getOrderId());
+            long trackPosition = 0L;
             return new Tuple<>(track, trackPosition);
         });
     }
 
     public Optional<Track> getTrackAtTimePosition(long timePosition) {
         AtomicLong offset = new AtomicLong();
+
+        Predicate<Track> isTrackInBounds = track -> {
+            long leftBound = offset.get();
+            long rightBound = offset.get() + track.getDuration();
+
+            return leftBound <= timePosition && rightBound > timePosition;
+        };
+
         return getTracks().stream()
+                .filter(isTrackInBounds)
                 .peek(t -> offset.addAndGet(t.getDuration()))
-                .filter(t -> offset.get() <= timePosition)
-                .filter(t -> offset.get() + t.getDuration() > timePosition)
-                .findFirst();
-    }
-
-    public Optional<Track> getFirstTrack() {
-        return getTracks().stream().findFirst();
-    }
-
-    public Optional<Track> getLastTrack() {
-        return getTracks().stream()
-                .sorted((o1, o2) -> o2.getOrderId().compareTo(o1.getOrderId()))
                 .findFirst();
     }
 
     public Optional<Long> getLongPlayingPositionAt(long time) {
-        if (getChannelState() == ChannelState.STOPPED) {
+        if (getChannelState() == STOPPED) {
             return Optional.empty();
         }
 
@@ -184,7 +161,7 @@ public class Channel extends BaseEntity<Long> {
         }
 
         return getLongPlayingPositionAt(time)
-                .map(pos -> pos % getTracksDuration());
+                .map(pos -> pos % 100);
     }
 
     public Optional<Track> getPlayingAt(long time) {
@@ -194,7 +171,7 @@ public class Channel extends BaseEntity<Long> {
 
     public void addTrack(Track track) {
         track.setChannel(this);
-        track.setOrderId(1L + getTracks().size());
+        track.setOrderId(1 + getTracks().size());
         getTracks().add(track);
     }
 
