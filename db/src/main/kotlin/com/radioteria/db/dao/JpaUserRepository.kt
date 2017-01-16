@@ -2,10 +2,12 @@ package com.radioteria.db.dao
 
 import com.radioteria.db.entities.User
 import com.radioteria.db.entities.UserMeta
+import org.springframework.stereotype.Repository
 import javax.persistence.EntityManager
 
-class JpaUserDao(entityManager: EntityManager)
-    : UserDao, JpaEntityRepository<Long, User>(User::class.java, Long::class.java, entityManager) {
+@Repository
+class JpaUserRepository(entityManager: EntityManager) :
+        JpaEntityRepository<Long, User>(User::class.java, Long::class.java, entityManager), UserRepository {
 
     override fun findByEmail(email: String): User? {
         return find {
