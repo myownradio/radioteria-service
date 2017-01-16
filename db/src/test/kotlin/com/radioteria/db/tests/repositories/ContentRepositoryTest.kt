@@ -1,6 +1,7 @@
 package com.radioteria.db.tests.repositories
 
 import com.radioteria.db.entities.Content
+import com.radioteria.db.entities.ContentMeta
 import com.radioteria.db.repositories.ContentRepository
 import org.junit.Assert.assertArrayEquals
 import org.junit.Before
@@ -23,34 +24,44 @@ open class ContentRepositoryTest {
     @Resource
     lateinit var contentRepo: ContentRepository
 
-    @Before
-    fun seed() {
-        LongRange(0, 4)
-                .map { Content(hash = "hash-$it") }
-                .apply { forEach { contentRepo.persist(it) } }
-    }
-
     @Test
     @Transactional
-    open fun findRandomById() {
-        val stored = contentRepo.list()
-        val randomIndex = Random().nextInt(stored.size)
-        val randomItem = stored[randomIndex]
+    open fun findById() {
+        val item = Content()
 
-        val foundItem = contentRepo.find(randomItem.id as Long)
+        contentRepo.persist(item)
 
-        assertEquals(randomItem, foundItem)
+        val found = contentRepo.find(item.id as Long)
+
+        assertEquals(item, found)
     }
 
     @Test
     @Transactional
     open fun list() {
-        assertEquals(5, contentRepo.list().size)
+        val item = Content()
+
+        contentRepo.persist(item)
+
+        val list = contentRepo.list()
+
+        assertEquals(1, list.size)
+        assertEquals(item, list[0])
     }
 
     @Test
     @Transactional
-    open fun listByQuery() {
+    open fun findByProperty() {
+        val item = Content(hash = "my-hash")
+
+        contentRepo.persist(item)
+
+        val found = contentRepo.find(ContentMeta.HASH, "my-hash")
+
+        assertEquals(item, found)
+    }
+
+    open fun delete() {
 
     }
 
