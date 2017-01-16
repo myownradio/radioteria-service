@@ -2,7 +2,6 @@ package com.radioteria.test.business.services.remindPasswordService;
 
 import com.radioteria.business.services.misc.PasswordRecoveryCode;
 import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
-import com.radioteria.db.entities.User;
 import org.junit.Assert;
 import org.junit.Test;
 

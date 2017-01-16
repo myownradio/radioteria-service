@@ -1,8 +1,5 @@
 package com.radioteria.db.lists;
 
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.Track;
-
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,6 +1,5 @@
 package com.radioteria.test.business.services.userService;
 
-import com.radioteria.db.entities.User;
 import org.junit.Test;
 
 public class UserDeleteTest extends AbstractUserServiceTest {

@@ -1,7 +1,6 @@
 package com.radioteria.db.dao.impl;
 
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;

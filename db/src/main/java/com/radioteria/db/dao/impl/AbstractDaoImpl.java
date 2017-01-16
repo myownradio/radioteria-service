@@ -1,7 +1,7 @@
 package com.radioteria.db.dao.impl;
 
 import com.radioteria.db.dao.api.AbstractDao;
-import com.radioteria.db.entities.BaseEntity;
+import com.radioteria.db.entities.IdAwareEntity;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
-abstract class AbstractDaoImpl<P extends Serializable, E extends BaseEntity<P>> implements AbstractDao<P, E> {
+abstract class AbstractDaoImpl<P extends Serializable, E extends IdAwareEntity<P>> implements AbstractDao<P, E> {
 
     private Class<P> idClass;
     private Class<E> entityClass;

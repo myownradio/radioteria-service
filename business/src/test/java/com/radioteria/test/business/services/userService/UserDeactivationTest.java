@@ -1,6 +1,5 @@
 package com.radioteria.test.business.services.userService;
 
-import com.radioteria.db.entities.User;
 import com.radioteria.db.enumerations.UserState;
 import org.junit.Test;
 import org.mockito.Mockito;

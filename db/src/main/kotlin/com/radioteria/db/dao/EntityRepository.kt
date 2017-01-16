@@ -1,11 +1,11 @@
 package com.radioteria.db.dao
 
-import com.radioteria.db.entities.Entity
+import com.radioteria.db.entities.IdAwareEntity
 import java.io.Serializable
 import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
-interface EntityRepository<K : Serializable, E : Entity<K>> {
+interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     /**
      * Make an instance managed and persistent.
      */

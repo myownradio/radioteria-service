@@ -7,7 +7,6 @@ import com.radioteria.business.services.user.api.UserService;
 import com.radioteria.business.services.user.exceptions.UserExistsException;
 import com.radioteria.business.services.user.exceptions.UserNotFoundException;
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.User;
 import com.radioteria.db.enumerations.UserState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

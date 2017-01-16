@@ -1,11 +1,9 @@
 package com.radioteria.business.services.user.impl;
 
 import com.radioteria.business.services.user.api.PlaylistService;
-import com.radioteria.db.entities.Track;
 import one.util.streamex.StreamEx;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PlaylistServiceImpl implements PlaylistService {
     final private List<Track> tracks;

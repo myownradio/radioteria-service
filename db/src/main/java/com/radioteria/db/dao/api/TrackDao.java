@@ -1,8 +1,5 @@
 package com.radioteria.db.dao.api;
 
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.Track;
-
 import java.util.List;
 import java.util.Optional;
 

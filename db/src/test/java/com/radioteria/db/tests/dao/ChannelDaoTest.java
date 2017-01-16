@@ -2,8 +2,6 @@ package com.radioteria.db.tests.dao;
 
 import com.radioteria.db.dao.api.ChannelDao;
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.User;
 import com.radioteria.db.tests.utils.EntityFactory;
 import org.junit.Before;
 import org.junit.Test;

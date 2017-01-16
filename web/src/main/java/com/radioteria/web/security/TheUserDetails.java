@@ -1,6 +1,5 @@
 package com.radioteria.web.security;
 
-import com.radioteria.db.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

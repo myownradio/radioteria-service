@@ -1,7 +1,5 @@
 package com.radioteria.business.services.user.api;
 
-import com.radioteria.db.entities.Track;
-
 import java.util.List;
 import java.util.Optional;
 

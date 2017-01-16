@@ -1,6 +1,5 @@
 package com.radioteria.business.services.misc;
 
-import com.radioteria.db.entities.User;
 import org.springframework.util.DigestUtils;
 
 import java.util.Base64;

@@ -1,7 +1,5 @@
 package com.radioteria.db.entities.tracklist;
 
-import com.radioteria.db.entities.Track;
-
 import java.util.AbstractList;
 import java.util.List;
 import java.util.Optional;

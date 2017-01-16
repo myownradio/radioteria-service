@@ -1,7 +1,5 @@
 package com.radioteria.db.entities.tracklist;
 
-import com.radioteria.db.entities.Track;
-
 public class PlayingItem {
 
     private final Track track;

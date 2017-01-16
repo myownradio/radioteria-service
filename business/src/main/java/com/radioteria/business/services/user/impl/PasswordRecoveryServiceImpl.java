@@ -6,7 +6,6 @@ import com.radioteria.support.template.TemplateService;
 import com.radioteria.business.services.user.api.PasswordRecoveryService;
 import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.User;
 import com.radioteria.support.services.mail.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

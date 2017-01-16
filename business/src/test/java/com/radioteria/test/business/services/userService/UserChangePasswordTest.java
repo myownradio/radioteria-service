@@ -1,7 +1,6 @@
 package com.radioteria.test.business.services.userService;
 
 import com.radioteria.business.events.userService.PasswordChangedEvent;
-import com.radioteria.db.entities.User;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 

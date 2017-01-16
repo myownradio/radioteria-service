@@ -4,7 +4,6 @@ import com.radioteria.business.services.user.api.PasswordRecoveryService;
 import com.radioteria.business.services.user.api.UserService;
 import com.radioteria.business.services.user.impl.PasswordRecoveryServiceImpl;
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.User;
 import com.radioteria.db.enumerations.UserState;
 import com.radioteria.support.services.mail.EmailService;
 import com.radioteria.support.template.TemplateService;

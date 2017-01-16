@@ -1,8 +1,6 @@
 package com.radioteria.db.dao.impl;
 
 import com.radioteria.db.dao.api.TrackDao;
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.Track;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;

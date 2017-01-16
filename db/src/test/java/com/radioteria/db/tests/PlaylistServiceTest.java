@@ -1,7 +1,5 @@
 package com.radioteria.db.tests;
 
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.Track;
 import com.radioteria.db.lists.ChannelPlaylist;
 import junit.framework.TestCase;
 import org.junit.Before;

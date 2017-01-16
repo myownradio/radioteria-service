@@ -1,7 +1,6 @@
 package com.radioteria.business.events.userService;
 
 
-import com.radioteria.db.entities.User;
 import org.springframework.context.ApplicationEvent;
 
 public class PasswordChangedEvent extends ApplicationEvent{

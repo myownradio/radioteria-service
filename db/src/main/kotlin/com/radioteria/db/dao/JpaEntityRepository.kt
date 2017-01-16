@@ -1,16 +1,17 @@
 package com.radioteria.db.dao
 
-import com.radioteria.db.entities.Entity
+import com.radioteria.db.entities.IdAwareEntity
 import java.io.Serializable
 import javax.persistence.EntityManager
 import javax.persistence.NoResultException
 import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
-class JpaEntityRepository<K : Serializable, E : Entity<K>>(
+abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         val entityClass: Class<E>,
         val idClass: Class<K>,
-        val entityManager: EntityManager) : EntityRepository<K, E> {
+        val entityManager: EntityManager
+) : EntityRepository<K, E> {
 
     override fun persist(entity: E) {
         entityManager.persist(entity)

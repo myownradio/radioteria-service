@@ -1,8 +1,6 @@
 package com.radioteria.db.dao.impl;
 
 import com.radioteria.db.dao.api.ChannelDao;
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.User;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

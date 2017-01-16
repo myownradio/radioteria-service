@@ -3,7 +3,6 @@ package com.radioteria.test.business.services.remindPasswordService;
 import com.radioteria.business.services.user.exceptions.PasswordRecoveryServiceException;
 import com.radioteria.business.services.user.impl.PasswordRecoveryServiceImpl;
 import com.radioteria.db.enumerations.UserState;
-import com.radioteria.db.entities.User;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 

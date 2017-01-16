@@ -2,7 +2,6 @@ package com.radioteria.test.business.services.userService;
 
 import com.radioteria.business.events.userService.UserConfirmedEvent;
 import com.radioteria.business.services.user.exceptions.UserNotFoundException;
-import com.radioteria.db.entities.User;
 import com.radioteria.db.enumerations.UserState;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;

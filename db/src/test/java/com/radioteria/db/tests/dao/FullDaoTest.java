@@ -165,7 +165,7 @@ public class FullDaoTest {
         return file;
     }
 
-    private boolean isPersist(BaseEntity baseEntity) {
+    private boolean isPersist(IdAwareEntity baseEntity) {
         return baseEntity.getId() != null;
     }
 }

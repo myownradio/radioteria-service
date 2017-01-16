@@ -1,7 +1,5 @@
 package com.radioteria.business.services.channels.api;
 
-import com.radioteria.db.entities.Channel;
-import com.radioteria.db.entities.Track;
 import com.radioteria.util.Tuple;
 
 public interface ChannelControlsService {

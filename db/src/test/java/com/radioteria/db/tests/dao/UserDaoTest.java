@@ -1,7 +1,6 @@
 package com.radioteria.db.tests.dao;
 
 import com.radioteria.db.dao.api.UserDao;
-import com.radioteria.db.entities.User;
 import com.radioteria.db.tests.utils.EntityFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
