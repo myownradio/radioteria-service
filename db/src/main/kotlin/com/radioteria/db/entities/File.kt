@@ -10,6 +10,7 @@ object FileMeta {
 
 @Entity
 @Table(name = FileMeta.TABLE_NAME)
+@Access(AccessType.FIELD)
 class File(
         @ManyToOne(targetEntity = Content::class)
         @JoinColumn(name = FileMeta.CONTENT_ID, nullable = false)

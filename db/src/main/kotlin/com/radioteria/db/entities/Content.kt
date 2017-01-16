@@ -1,8 +1,6 @@
 package com.radioteria.db.entities
 
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Table
+import javax.persistence.*
 
 object ContentMeta {
     const val TABLE_NAME = "content"
@@ -13,12 +11,13 @@ object ContentMeta {
 
 @Entity
 @Table(name = ContentMeta.TABLE_NAME)
+@Access(AccessType.FIELD)
 class Content(
         @Column(name = ContentMeta.HASH, nullable = false, unique = true)
         val hash: String = "",
 
         @Column(name = ContentMeta.CONTENT_TYPE, nullable = false)
-        val contentType: String = "",
+        val contentType: String = "application/octet-stream",
 
         @Column(name = ContentMeta.LENGTH, nullable = false)
         val length: Long = 0,

@@ -1,4 +1,4 @@
-package com.radioteria.db.dao
+package com.radioteria.db.repositories
 
 import com.radioteria.db.entities.User
 

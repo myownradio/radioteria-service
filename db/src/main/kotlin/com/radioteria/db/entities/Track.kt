@@ -14,6 +14,7 @@ object TrackMeta {
 
 @Entity
 @Table(name = TrackMeta.TABLE_NAME)
+@Access(AccessType.FIELD)
 class Track(
         @ManyToOne(targetEntity = File::class)
         @JoinColumn(name = TrackMeta.TRACK_FILE_ID, nullable = false)

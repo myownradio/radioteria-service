@@ -2,7 +2,7 @@ package com.radioteria.test.business.services.userService;
 
 import com.radioteria.business.services.user.api.UserService;
 import com.radioteria.business.services.user.impl.UserServiceImpl;
-import com.radioteria.db.dao.api.UserDao;
+import com.radioteria.db.repositories.api.UserDao;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

@@ -1,5 +1,6 @@
 package com.radioteria.db.entities
 
+import org.hibernate.annotations.AttributeAccessor
 import javax.persistence.*
 
 object ChannelMeta {
@@ -13,10 +14,11 @@ object ChannelMeta {
 
 @Entity
 @Table(name = ChannelMeta.TABLE_NAME)
+@Access(AccessType.FIELD)
 class Channel(
         @ManyToOne(targetEntity = User::class)
         @JoinColumn(name = ChannelMeta.USER_ID, nullable = false)
-        var userId: User,
+        var user: User,
 
         @Column(name = ChannelMeta.NAME, nullable = false)
         var name: String = "",

@@ -14,6 +14,7 @@ object UserMeta {
 
 @Entity
 @Table(name = UserMeta.TABLE_NAME)
+@Access(AccessType.FIELD)
 class User(
         @Column(name = UserMeta.EMAIL, unique = true, nullable = false)
         var email: String = "",

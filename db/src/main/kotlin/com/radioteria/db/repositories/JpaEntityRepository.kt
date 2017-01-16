@@ -1,17 +1,20 @@
-package com.radioteria.db.dao
+package com.radioteria.db.repositories
 
 import com.radioteria.db.entities.IdAwareEntity
 import java.io.Serializable
 import javax.persistence.EntityManager
 import javax.persistence.NoResultException
+import javax.persistence.PersistenceContext
 import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
 abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         val entityClass: Class<E>,
-        val idClass: Class<K>,
-        val entityManager: EntityManager
+        val idClass: Class<K>
 ) : EntityRepository<K, E> {
+
+    @PersistenceContext
+    lateinit var entityManager: EntityManager
 
     override fun persist(entity: E) {
         entityManager.persist(entity)
@@ -30,7 +33,11 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
     }
 
     override fun list(): List<E> {
-        return list { entityManager.criteriaBuilder.createQuery(entityClass) }
+        return list {
+            with(entityManager.criteriaBuilder.createQuery(entityClass)) {
+                this.select(this.from(entityClass))
+            }
+        }
     }
 
     override fun list(cqProvider: () -> CriteriaQuery<E>): List<E> {
