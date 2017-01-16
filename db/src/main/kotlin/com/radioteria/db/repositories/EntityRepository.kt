@@ -27,6 +27,11 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     fun find(cqProvider: () -> CriteriaQuery<E>): E?
 
     /**
+     * Find by property value.
+     */
+    fun <T> find(propertyName: String, propertyValue: T): E?
+
+    /**
      * List all entities.
      */
     fun list(): List<E>
@@ -37,7 +42,22 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     fun list(cqProvider: () -> CriteriaQuery<E>): List<E>
 
     /**
+     * List entities by property value.
+     */
+    fun <T> list(propertyName: String, propertyValue: T): List<E>
+
+    /**
      * Create typed query by criteria query.
      */
-    fun <T> query(cqProvider: () -> CriteriaQuery<T>): TypedQuery<T>
+    fun query(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E>
+
+    /**
+     * Create typed query by property value.
+     */
+    fun <T> query(propertyName: String, propertyValue: T): TypedQuery<E>
+
+    /**
+     * Synchronize the persistence context to the underlying database.
+     */
+    fun flush()
 }

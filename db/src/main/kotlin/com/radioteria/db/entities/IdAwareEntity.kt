@@ -1,10 +1,7 @@
 package com.radioteria.db.entities
 
 import java.io.Serializable
-import javax.persistence.Column
-import javax.persistence.GeneratedValue
-import javax.persistence.Id
-import javax.persistence.MappedSuperclass
+import javax.persistence.*
 
 const val ID_FIELD = "id"
 
