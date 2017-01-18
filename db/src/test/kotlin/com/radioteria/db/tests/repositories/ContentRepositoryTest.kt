@@ -28,13 +28,10 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findById() {
-        val testContent = Content()
-
-        contentRepo.persist(testContent)
-
-        val foundContent = contentRepo.findById(testContent.id!!)
-
-        assertEquals(testContent, foundContent)
+        with(Content()) {
+            contentRepo.persist(this)
+            assertEquals(this, contentRepo.findById(this.id!!))
+        }
     }
 
     @Test
@@ -53,13 +50,10 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findByProperty() {
-        val testContent = Content(hash = "my-hash")
-
-        contentRepo.persist(testContent)
-
-        val foundContent = contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash")
-
-        assertEquals(testContent, foundContent)
+        with (Content(hash = "my-hash")) {
+            contentRepo.persist(this)
+            assertEquals(this, contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash"))
+        }
     }
 
     @Test
@@ -87,15 +81,13 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun delete() {
-        val testContent = Content(hash = "my-hash")
+        with(Content(hash = "my-hash")) {
+            contentRepo.persist(this)
+            assertTrue(contentRepo.list().isNotEmpty())
 
-        contentRepo.persist(testContent)
-
-        assertTrue(contentRepo.list().isNotEmpty())
-
-        contentRepo.remove(testContent)
-
-        assertTrue(contentRepo.list().isEmpty())
+            contentRepo.remove(this)
+            assertTrue(contentRepo.list().isEmpty())
+        }
     }
 
 }
