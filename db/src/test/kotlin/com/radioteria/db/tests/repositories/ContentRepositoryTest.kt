@@ -28,38 +28,41 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findById() {
-        with(Content()) {
-            contentRepo.persist(this)
-            assertEquals(this, contentRepo.findById(this.id!!))
-        }
+        val testableContent = Content()
+
+        contentRepo.persist(testableContent)
+
+        val foundContent = contentRepo.findById(testableContent.id!!)
+
+        assertEquals(testableContent.id, foundContent?.id)
     }
 
     @Test
     @Transactional
     open fun list() {
-        val item = Content()
+        val testableContent = Content()
 
-        contentRepo.persist(item)
+        contentRepo.persist(testableContent)
 
-        val list = contentRepo.list()
-
-        assertEquals(1, list.size)
-        assertEquals(item, list[0])
+        assertEquals(testableContent, contentRepo.list()[0])
     }
 
     @Test
     @Transactional
     open fun findByProperty() {
-        with (Content(hash = "my-hash")) {
-            contentRepo.persist(this)
-            assertEquals(this, contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash"))
-        }
+        val testableContent = Content(hash = "my-hash")
+
+        contentRepo.persist(testableContent)
+
+        val foundContent = contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash")
+
+        assertEquals(testableContent, foundContent)
     }
 
     @Test
     @Transactional
     open fun listByProperty() {
-        val testObjects = arrayOf(
+        val testableContents = arrayOf(
                 Content(hash = "hash-1000", contentType = "text/plain"),
                 Content(hash = "hash-2000", contentType = "text/plain"),
                 Content(hash = "hash-3000", contentType = "text/plain"),
@@ -71,7 +74,7 @@ open class ContentRepositoryTest {
         fun countByPropertyValue(property: String, value: String): Int =
                 contentRepo.listByPropertyValue(property, value).size
 
-        testObjects.forEach { contentRepo.persist(it) }
+        testableContents.forEach { contentRepo.persist(it) }
 
         assertEquals(3, countByPropertyValue("contentType", "text/plain"))
         assertEquals(2, countByPropertyValue("contentType", "image/jpeg"))
@@ -81,13 +84,13 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun delete() {
-        with(Content(hash = "my-hash")) {
-            contentRepo.persist(this)
-            assertTrue(contentRepo.list().isNotEmpty())
+        val testableContent = Content(hash = "my-hash")
 
-            contentRepo.remove(this)
-            assertTrue(contentRepo.list().isEmpty())
-        }
+        contentRepo.persist(testableContent)
+        assertTrue(contentRepo.list().isNotEmpty())
+
+        contentRepo.remove(testableContent)
+        assertTrue(contentRepo.list().isEmpty())
     }
 
 }
