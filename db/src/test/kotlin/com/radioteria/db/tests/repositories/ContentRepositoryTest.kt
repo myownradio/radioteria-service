@@ -7,14 +7,15 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.springframework.test.annotation.Commit
+import org.springframework.test.annotation.Rollback
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 import javax.annotation.Resource
 import kotlin.test.assertEquals
-import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @RunWith(SpringJUnit4ClassRunner::class)
 @ContextConfiguration(locations = arrayOf("classpath:db-context.xml"))
@@ -27,13 +28,13 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findById() {
-        val item = Content()
+        val testContent = Content()
 
-        contentRepo.persist(item)
+        contentRepo.persist(testContent)
 
-        val found = contentRepo.find(item.id as Long)
+        val foundContent = contentRepo.findById(testContent.id!!)
 
-        assertEquals(item, found)
+        assertEquals(testContent, foundContent)
     }
 
     @Test
@@ -52,17 +53,49 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findByProperty() {
-        val item = Content(hash = "my-hash")
+        val testContent = Content(hash = "my-hash")
 
-        contentRepo.persist(item)
+        contentRepo.persist(testContent)
 
-        val found = contentRepo.find(ContentMeta.HASH, "my-hash")
+        val foundContent = contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash")
 
-        assertEquals(item, found)
+        assertEquals(testContent, foundContent)
     }
 
-    open fun delete() {
+    @Test
+    @Transactional
+    open fun listByProperty() {
+        val testObjects = arrayOf(
+                Content(hash = "hash-1000", contentType = "text/plain"),
+                Content(hash = "hash-2000", contentType = "text/plain"),
+                Content(hash = "hash-3000", contentType = "text/plain"),
+                Content(hash = "hash-4000", contentType = "image/jpeg"),
+                Content(hash = "hash-5000", contentType = "image/jpeg"),
+                Content(hash = "hash-6000", contentType = "audio/aac")
+        )
 
+        fun countByPropertyValue(property: String, value: String): Int =
+                contentRepo.listByPropertyValue(property, value).size
+
+        testObjects.forEach { contentRepo.persist(it) }
+
+        assertEquals(3, countByPropertyValue("contentType", "text/plain"))
+        assertEquals(2, countByPropertyValue("contentType", "image/jpeg"))
+        assertEquals(1, countByPropertyValue("contentType", "audio/aac"))
+    }
+
+    @Test
+    @Transactional
+    open fun delete() {
+        val testContent = Content(hash = "my-hash")
+
+        contentRepo.persist(testContent)
+
+        assertTrue(contentRepo.list().isNotEmpty())
+
+        contentRepo.remove(testContent)
+
+        assertTrue(contentRepo.list().isEmpty())
     }
 
 }

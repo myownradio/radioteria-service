@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 class JpaUserRepository : JpaEntityRepository<Long, User>(User::class.java, Long::class.java), UserRepository {
 
     override fun findByEmail(email: String): User? {
-        return find {
+        return findByQueryProvider {
             val cb = entityManager.criteriaBuilder
             val criteriaQuery = cb.createQuery(entityClass)
             val root = criteriaQuery.from(entityClass)

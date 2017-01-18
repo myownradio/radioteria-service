@@ -19,17 +19,12 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     /**
      * Find by primary id.
      */
-    fun find(id: K): E?
-
-    /**
-     * Find by criteria query.
-     */
-    fun find(cqProvider: () -> CriteriaQuery<E>): E?
+    fun findById(id: K): E?
 
     /**
      * Find by property value.
      */
-    fun <T> find(propertyName: String, propertyValue: T): E?
+    fun <T> findByPropertyValue(propertyName: String, propertyValue: T): E?
 
     /**
      * List all entities.
@@ -37,24 +32,9 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     fun list(): List<E>
 
     /**
-     * List entities by criteria query.
-     */
-    fun list(cqProvider: () -> CriteriaQuery<E>): List<E>
-
-    /**
      * List entities by property value.
      */
-    fun <T> list(propertyName: String, propertyValue: T): List<E>
-
-    /**
-     * Create typed query by criteria query.
-     */
-    fun query(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E>
-
-    /**
-     * Create typed query by property value.
-     */
-    fun <T> query(propertyName: String, propertyValue: T): TypedQuery<E>
+    fun <T> listByPropertyValue(propertyName: String, propertyValue: T): List<E>
 
     /**
      * Synchronize the persistence context to the underlying database.

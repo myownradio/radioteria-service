@@ -23,45 +23,48 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         entityManager.remove(entity)
     }
 
-    override fun find(id: K): E? {
+    override fun findById(id: K): E? {
         return entityManager.find(entityClass, id)
     }
 
-    override fun find(cqProvider: () -> CriteriaQuery<E>): E? {
-        return try { query(cqProvider).singleResult } catch (e: NoResultException) { null }
+    internal fun findByQueryProvider(cqProvider: () -> CriteriaQuery<E>): E? {
+        return try { queryByProvider(cqProvider).singleResult } catch (e: NoResultException) { null }
     }
 
-    override fun <T> find(propertyName: String, propertyValue: T): E? {
-       return try { query(propertyName, propertyValue).singleResult } catch (e: NoResultException) { null }
+    override fun <T> findByPropertyValue(propertyName: String, propertyValue: T): E? {
+       return try { queryByPropertyValue(propertyName, propertyValue).singleResult } catch (e: NoResultException) { null }
     }
 
     override fun list(): List<E> {
-        return list {
+        return listByQueryProvider {
             with(entityManager.criteriaBuilder.createQuery(entityClass)) {
                 this.select(this.from(entityClass))
             }
         }
     }
 
-    override fun <T> list(propertyName: String, propertyValue: T): List<E> {
-        return query(propertyName, propertyValue).resultList
+    override fun <T> listByPropertyValue(propertyName: String, propertyValue: T): List<E> {
+        return queryByPropertyValue(propertyName, propertyValue).resultList
     }
 
-    override fun list(cqProvider: () -> CriteriaQuery<E>): List<E> {
-        return query(cqProvider).resultList
+    internal fun listByQueryProvider(cqProvider: () -> CriteriaQuery<E>): List<E> {
+        return queryByProvider(cqProvider).resultList
     }
 
-    override fun query(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E> {
+    internal fun queryByProvider(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E> {
         return entityManager.createQuery(cqProvider.invoke())
     }
 
-    override fun <T> query(propertyName: String, propertyValue: T): TypedQuery<E> {
+    internal fun <T> queryByPropertyValue(propertyName: String, propertyValue: T): TypedQuery<E> {
         val cb = entityManager.criteriaBuilder
         val criteriaQuery = cb.createQuery(entityClass)
         val root = criteriaQuery.from(entityClass)
 
-        return entityManager.createQuery(criteriaQuery
-                .select(root).where(cb.equal(root.get<T>(propertyName), propertyValue)))
+        return entityManager.createQuery(
+                criteriaQuery
+                        .select(root)
+                        .where(cb.equal(root.get<T>(propertyName), propertyValue))
+        )
     }
 
     override fun flush() {
