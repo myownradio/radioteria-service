@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 @RunWith(SpringJUnit4ClassRunner::class)
@@ -50,7 +51,7 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findByProperty() {
-        val testableContent = Content(hash = "my-hash")
+        val testableContent = Content(hash = "hash-200")
 
         contentRepo.persist(testableContent)
 
@@ -62,19 +63,10 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun listByProperty() {
-        val testableContents = arrayOf(
-                Content(hash = "hash-1000", contentType = "text/plain"),
-                Content(hash = "hash-2000", contentType = "text/plain"),
-                Content(hash = "hash-3000", contentType = "text/plain"),
-                Content(hash = "hash-4000", contentType = "image/jpeg"),
-                Content(hash = "hash-5000", contentType = "image/jpeg"),
-                Content(hash = "hash-6000", contentType = "audio/aac")
-        )
+        loadTestData()
 
-        fun countByPropertyValue(property: String, value: String): Int =
+        val countByPropertyValue = fun(property: String, value: String) =
                 contentRepo.listByPropertyValue(property, value).size
-
-        testableContents.forEach { contentRepo.persist(it) }
 
         assertEquals(3, countByPropertyValue("contentType", "text/plain"))
         assertEquals(2, countByPropertyValue("contentType", "image/jpeg"))
@@ -84,13 +76,34 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun delete() {
-        val testableContent = Content(hash = "my-hash")
+        val testableContent = Content(hash = "hash-100")
 
         contentRepo.persist(testableContent)
         assertTrue(contentRepo.list().isNotEmpty())
 
         contentRepo.remove(testableContent)
         assertTrue(contentRepo.list().isEmpty())
+    }
+
+    @Test
+    @Transactional
+    open fun hashExists() {
+        loadTestData()
+
+        assertTrue(contentRepo.hashExists("hash-3000"))
+        assertFalse(contentRepo.hashExists("anything other"))
+    }
+
+    private fun loadTestData() {
+        val testableContents = arrayOf(
+                Content(hash = "hash-1000", contentType = "text/plain"),
+                Content(hash = "hash-2000", contentType = "text/plain"),
+                Content(hash = "hash-3000", contentType = "text/plain"),
+                Content(hash = "hash-4000", contentType = "image/jpeg"),
+                Content(hash = "hash-5000", contentType = "image/jpeg"),
+                Content(hash = "hash-6000", contentType = "audio/aac")
+        )
+        testableContents.forEach { contentRepo.persist(it) }
     }
 
 }
