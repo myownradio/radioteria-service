@@ -1,6 +1,6 @@
 package com.radioteria.db.entities
 
-import org.hibernate.annotations.AttributeAccessor
+import java.util.concurrent.atomic.AtomicLong
 import javax.persistence.*
 
 object ChannelMeta {
@@ -11,6 +11,10 @@ object ChannelMeta {
     const val USER_ID = "user_id"
     const val ARTWORK_FILE_ID = "artwork_file_id"
 }
+
+class NowPlaying(val track: Track, val position: Long)
+
+class TrackWithOffset(val track: Track, val offset: Long)
 
 @Entity
 @Table(name = ChannelMeta.TABLE_NAME)
@@ -40,14 +44,16 @@ class Channel(
         id: Long? = null
 ) : IdAwareEntity<Long>(id) {
 
-    val isStarted: Boolean get() = startedAt != null
     val isControllable: Boolean get() = isStarted && hasTracks
-    val isPlayable: Boolean get() = hasTracks && tracksDuration > 0
     val isPlaying: Boolean get() = isPlayable && isStarted
 
+    val isStarted: Boolean get() = startedAt != null
+    val isPlayable: Boolean get() = hasTracks && hasPositiveTracksLength
+
     val tracksDuration: Long get() = tracks.map { it.duration }.sum()
-    val hasNoTracks: Boolean get() = tracks.isEmpty()
+    val hasPositiveTracksLength: Boolean get() = tracksDuration > 0
     val hasTracks: Boolean get() = tracks.isNotEmpty()
+    val hasNoTracks: Boolean get() = tracks.isEmpty()
 
     fun addNewTrack(track: Track) {
         track.channel = this
@@ -55,11 +61,25 @@ class Channel(
         tracks.add(track)
     }
 
-    fun getTimePositionByWorldTime(timeMillis: Long): Long? {
+    fun getTimePositionAt(currentTimeMillis: Long): Long? {
         if (isPlaying) {
-            return (timeMillis - startedAt!!) % tracksDuration
+            return (currentTimeMillis - startedAt!!) % tracksDuration
         }
         return null
+    }
+
+    fun getNowPlaying(currentTimeMillis: Long): NowPlaying? {
+        return getTimePositionAt(currentTimeMillis)
+                ?.let { getTrackByTimePosition(it) }
+    }
+
+    fun getTrackByTimePosition(timePosition: Long): NowPlaying? {
+        val offset: AtomicLong = AtomicLong(0L)
+        return tracks
+                .map { TrackWithOffset(it, offset.getAndAdd(it.duration)) }
+                .filter { timePosition in (it.offset until it.offset + it.track.duration) }
+                .firstOrNull()
+                ?.let { NowPlaying(it.track, timePosition - it.offset) }
     }
 
 }
