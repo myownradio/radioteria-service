@@ -18,23 +18,23 @@ object TrackMeta {
 class Track(
         @ManyToOne(targetEntity = File::class)
         @JoinColumn(name = TrackMeta.TRACK_FILE_ID, nullable = false)
-        val trackFile: File,
+        var trackFile: File,
 
         @ManyToOne(targetEntity = Channel::class)
         @JoinColumn(name = TrackMeta.CHANNEL_ID, nullable = false)
-        val channel: Channel,
+        var channel: Channel,
 
         @Column(name = TrackMeta.TITLE, nullable = false)
-        val title: String = "",
+        var title: String = "",
 
         @Column(name = TrackMeta.ARTIST, nullable = false)
-        val artist: String = "",
+        var artist: String = "",
 
         @Column(name = TrackMeta.DURATION, nullable = false)
-        val duration: Long = 0,
+        var duration: Long = 0,
 
         @Column(name = TrackMeta.ORDER_ID, nullable = false)
-        val orderId: Int = 0,
+        var orderId: Int = 0,
 
         id: Long? = null
 ) : IdAwareEntity<Long>(id)

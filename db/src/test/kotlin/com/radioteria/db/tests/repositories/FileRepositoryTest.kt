@@ -4,6 +4,8 @@ import com.radioteria.db.entities.Content
 import com.radioteria.db.entities.File
 import com.radioteria.db.repositories.ContentRepository
 import com.radioteria.db.repositories.FileRepository
+import org.hamcrest.CoreMatchers.equalTo
+import org.junit.Assert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.test.context.ActiveProfiles
@@ -11,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
 import org.springframework.transaction.annotation.Transactional
 import javax.annotation.Resource
-import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @RunWith(SpringJUnit4ClassRunner::class)
 @ContextConfiguration(locations = arrayOf("classpath:db-context.xml"))
@@ -24,29 +26,30 @@ open class FileRepositoryTest {
     @Resource
     lateinit var contentRepo: ContentRepository
 
-    val content: Content by lazy { makeAndPersistCommonContent() }
-
-
-    private fun makeAndPersistCommonContent(): Content {
-        val commonContent = Content(hash = "content-hash")
-        contentRepo.persist(commonContent)
-        return commonContent
-    }
-
     @Test
     @Transactional
     open fun findWithSameContent() {
-        val oneFile = File(content)
-        val twoFile = File(content)
+        val commonContent = makeAndPersistCommonContent { it.hash = "content-hash" }
+
+        val oneFile = File(commonContent)
+        val twoFile = File(commonContent)
 
         fileRepo.persist(oneFile)
         fileRepo.persist(twoFile)
 
-        val allWithSameContent = fileRepo.listAllWithSameContent(oneFile)
-        val othersWithSameContent = fileRepo.listOthersWithSameContent(oneFile)
+        val listWithSameContent = fileRepo.listAllWithSameContent(oneFile)
 
-        assertEquals(2, allWithSameContent.size)
-        assertEquals(1, othersWithSameContent.size)
+        assertTrue(listWithSameContent.containsAll(listOf(oneFile, twoFile)))
+
+        assertThat(fileRepo.listOthersWithSameContent(oneFile)[0], equalTo(twoFile))
+        assertThat(fileRepo.listOthersWithSameContent(twoFile)[0], equalTo(oneFile))
+    }
+
+    private fun makeAndPersistCommonContent(contentConsumer: (Content) -> Unit): Content {
+        val content = Content()
+        contentConsumer.invoke(content)
+        contentRepo.persist(content)
+        return content
     }
 
 }

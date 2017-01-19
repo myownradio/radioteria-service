@@ -51,11 +51,12 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findByProperty() {
-        val testableContent = Content(hash = "hash-200")
+        val hash = "hash-200"
+        val testableContent = Content(hash = hash)
 
         contentRepo.persist(testableContent)
 
-        val foundContent = contentRepo.findByPropertyValue(ContentMeta.HASH, "my-hash")
+        val foundContent = contentRepo.findByPropertyValue("hash", hash)
 
         assertEquals(testableContent, foundContent)
     }

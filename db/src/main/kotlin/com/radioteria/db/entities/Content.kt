@@ -14,13 +14,13 @@ object ContentMeta {
 @Access(AccessType.FIELD)
 class Content(
         @Column(name = ContentMeta.HASH, nullable = false, unique = true)
-        val hash: String = "",
+        var hash: String = "",
 
         @Column(name = ContentMeta.CONTENT_TYPE, nullable = false)
-        val contentType: String = "application/octet-stream",
+        var contentType: String = "application/octet-stream",
 
         @Column(name = ContentMeta.LENGTH, nullable = false)
-        val length: Long = 0,
+        var length: Long = 0,
 
         id: Long? = null
 ) : IdAwareEntity<Long>(id)

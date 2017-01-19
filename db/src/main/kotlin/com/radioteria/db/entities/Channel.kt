@@ -35,9 +35,15 @@ class Channel(
 
         @OneToMany(mappedBy = "channel", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
         @OrderBy(TrackMeta.ORDER_ID + " ASC")
-        var tracks: List<Track> = emptyList(),
+        var tracks: MutableList<Track> = arrayListOf(),
 
         id: Long? = null
 ) : IdAwareEntity<Long>(id) {
     val isStarted: Boolean get() = startedAt != null
+
+    fun addNewTrack(track: Track) {
+        track.channel = this
+        track.orderId = tracks.size + 1
+        tracks.add(track)
+    }
 }
