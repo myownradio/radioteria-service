@@ -51,7 +51,7 @@ open class ContentRepositoryTest {
     @Test
     @Transactional
     open fun findByProperty() {
-        val hash = "hash-200"
+        val hash = "hash-2000"
         val testableContent = Content(hash = hash)
 
         contentRepo.persist(testableContent)

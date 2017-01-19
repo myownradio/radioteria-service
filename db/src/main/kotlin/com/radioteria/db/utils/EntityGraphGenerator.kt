@@ -1,8 +1,9 @@
-package com.radioteria.db.tests.repositories
+package com.radioteria.db.utils
 
 import com.radioteria.db.entities.*
 import com.radioteria.db.enums.UserState
 import java.util.*
+
 
 fun generateListOfUsers(amount: Int): List<User> =
         (1..amount).map { generateUser("User # $it") }
