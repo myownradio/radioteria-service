@@ -40,8 +40,11 @@ class Channel(
         id: Long? = null
 ) : IdAwareEntity<Long>(id) {
     val isStarted: Boolean get() = startedAt != null
+    val isControllable: Boolean get() = isStarted && hasTracks
+
     val tracksDuration: Long get() = tracks.map { it.duration }.sum()
     val hasNoTracks: Boolean get() = tracks.isEmpty()
+    val hasTracks: Boolean get() = tracks.isNotEmpty()
 
     fun addNewTrack(track: Track) {
         track.channel = this
