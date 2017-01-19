@@ -33,14 +33,17 @@ class Channel(
         @JoinColumn(name = ChannelMeta.ARTWORK_FILE_ID)
         var artworkFile: File? = null,
 
-        @OneToMany(mappedBy = "channel", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+        @OneToMany(mappedBy = "channel", orphanRemoval = true)
         @OrderBy(TrackMeta.ORDER_ID + " ASC")
         var tracks: MutableList<Track> = arrayListOf(),
 
         id: Long? = null
 ) : IdAwareEntity<Long>(id) {
+
     val isStarted: Boolean get() = startedAt != null
     val isControllable: Boolean get() = isStarted && hasTracks
+    val isPlayable: Boolean get() = hasTracks && tracksDuration > 0
+    val isPlaying: Boolean get() = isPlayable && isStarted
 
     val tracksDuration: Long get() = tracks.map { it.duration }.sum()
     val hasNoTracks: Boolean get() = tracks.isEmpty()
@@ -51,4 +54,12 @@ class Channel(
         track.orderId = tracks.size + 1
         tracks.add(track)
     }
+
+    fun getTimePositionByWorldTime(timeMillis: Long): Long? {
+        if (isPlaying) {
+            return (timeMillis - startedAt!!) % tracksDuration
+        }
+        return null
+    }
+
 }

@@ -33,8 +33,11 @@ class User(
         @JoinColumn(name = UserMeta.AVATAR_FILE_ID)
         var avatarFile: File? = null,
 
-        @OneToMany(mappedBy = "user", cascade = arrayOf(CascadeType.ALL), orphanRemoval = true)
+        @OneToMany(mappedBy = "user", orphanRemoval = true)
         var channels: List<Channel> = emptyList(),
 
         id: Long? = null
-) : IdAwareEntity<Long>(id)
+) : IdAwareEntity<Long>(id) {
+    val hasAvatar: Boolean get() = avatarFile != null
+    val hasChannels: Boolean get() = channels.isNotEmpty()
+}
