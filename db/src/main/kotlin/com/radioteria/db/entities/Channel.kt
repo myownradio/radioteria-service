@@ -55,7 +55,7 @@ class Channel(
     val hasTracks: Boolean get() = tracks.isNotEmpty()
     val hasNoTracks: Boolean get() = tracks.isEmpty()
 
-    fun addNewTrack(track: Track) {
+    fun addTrack(track: Track) {
         track.channel = this
         track.orderId = tracks.size + 1
         tracks.add(track)
