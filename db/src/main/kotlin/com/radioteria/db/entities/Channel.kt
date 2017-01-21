@@ -68,6 +68,13 @@ class Channel(
         return null
     }
 
+    fun getFullLapsPlayedAt(currentTimeMillis: Long): Long? {
+        if (isPlaying) {
+            return (currentTimeMillis - startedAt!!) / tracksDuration
+        }
+        return null
+    }
+
     fun getNowPlaying(currentTimeMillis: Long): NowPlaying? {
         return getTimePositionAt(currentTimeMillis)
                 ?.let { getTrackByTimePosition(it) }
