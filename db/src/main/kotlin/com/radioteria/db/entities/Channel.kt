@@ -1,16 +1,9 @@
 package com.radioteria.db.entities
 
+import com.radioteria.db.entities.meta.ChannelMeta
+import com.radioteria.db.entities.meta.TrackMeta
 import java.util.concurrent.atomic.AtomicLong
 import javax.persistence.*
-
-object ChannelMeta {
-    const val TABLE_NAME = "channels"
-    const val NAME = "name"
-    const val DESCRIPTION = "description"
-    const val STARTED_AT = "started_at"
-    const val USER_ID = "user_id"
-    const val ARTWORK_FILE_ID = "artwork_file_id"
-}
 
 class NowPlaying(val track: Track, val position: Long)
 

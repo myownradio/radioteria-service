@@ -1,16 +1,7 @@
 package com.radioteria.db.entities
 
+import com.radioteria.db.entities.meta.TrackMeta
 import javax.persistence.*
-
-object TrackMeta {
-    const val TABLE_NAME = "tracks"
-    const val TITLE = "title"
-    const val ARTIST = "artist"
-    const val DURATION = "duration"
-    const val TRACK_FILE_ID = "track_file_id"
-    const val CHANNEL_ID = "channel_id"
-    const val ORDER_ID = "order_id"
-}
 
 @Entity
 @Table(name = TrackMeta.TABLE_NAME)

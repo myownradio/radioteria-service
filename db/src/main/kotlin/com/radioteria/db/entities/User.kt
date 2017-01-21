@@ -1,16 +1,8 @@
 package com.radioteria.db.entities
 
+import com.radioteria.db.entities.meta.UserMeta
 import com.radioteria.db.enums.UserState
 import javax.persistence.*
-
-object UserMeta {
-    const val TABLE_NAME = "users"
-    const val EMAIL = "email"
-    const val PASSWORD = "password"
-    const val NAME = "name"
-    const val STATE = "state"
-    const val AVATAR_FILE_ID = "avatar_file_id"
-}
 
 @Entity
 @Table(name = UserMeta.TABLE_NAME)

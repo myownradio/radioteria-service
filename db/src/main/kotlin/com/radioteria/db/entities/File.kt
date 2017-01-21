@@ -1,12 +1,7 @@
 package com.radioteria.db.entities
 
+import com.radioteria.db.entities.meta.FileMeta
 import javax.persistence.*
-
-object FileMeta {
-    const val TABLE_NAME = "files"
-    const val NAME = "name"
-    const val CONTENT_ID = "content_id"
-}
 
 @Entity
 @Table(name = FileMeta.TABLE_NAME)
