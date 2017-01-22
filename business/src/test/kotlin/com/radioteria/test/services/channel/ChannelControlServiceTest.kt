@@ -74,8 +74,35 @@ class ChannelControlServiceTest {
     @Test(expected = ChannelControlServiceException::class)
     fun playNextOnStopped() {
         val channel = user.channels[0]
-
         channelControlService.playNext(channel)
+    }
+
+    @Test
+    fun playPrevious() {
+        val channel = user.channels[0]
+        val secondTrack = channel.tracks[2]
+        val expectedTrack = channel.tracks[1]
+
+        channelControlService.playByOrderId(secondTrack.orderId, channel)
+        channelControlService.playPrevious(channel)
+
+        assertEquals(expectedTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+    }
+
+    @Test
+    fun playPreviousOnFirst() {
+        val channel = user.channels[0]
+
+        channelControlService.playByOrderId(channel.tracks.first().orderId, channel)
+        channelControlService.playPrevious(channel)
+
+        assertEquals(channel.tracks.last(), channelControlService.nowPlaying(channel).playlistItem.track)
+    }
+
+    @Test(expected = ChannelControlServiceException::class)
+    fun playPreviousOnStopped() {
+        val channel = user.channels[0]
+        channelControlService.playPrevious(channel)
     }
 
 }

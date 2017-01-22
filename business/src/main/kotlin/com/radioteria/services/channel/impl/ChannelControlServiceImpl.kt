@@ -43,16 +43,24 @@ class ChannelControlServiceImpl(
 
     override fun playNext(channel: Channel) {
         val nowPlaying = nowPlaying(channel)
-        val scrollAmount = nowPlaying.playlistItem.track.duration - nowPlaying.trackPosition
+        val lastOrderId = channel.tracks.last().orderId
 
-        scroll(scrollAmount, channel)
+        if (nowPlaying.playlistItem.track.orderId == lastOrderId) {
+            return playByOrderId(1, channel)
+        }
+
+        playByOrderId(nowPlaying.playlistItem.track.orderId + 1, channel)
     }
 
     override fun playPrevious(channel: Channel) {
         val nowPlaying = nowPlaying(channel)
-        val scrollAmount = nowPlaying.trackPosition - nowPlaying.playlistItem.rightBound
+        val lastOrderId = channel.tracks.last().orderId
 
-        scroll(scrollAmount, channel)
+        if (nowPlaying.playlistItem.track.orderId == 1) {
+            return playByOrderId(lastOrderId, channel)
+        }
+
+        playByOrderId(nowPlaying.playlistItem.track.orderId - 1, channel)
     }
 
     override fun scroll(amountMillis: Long, channel: Channel) {
