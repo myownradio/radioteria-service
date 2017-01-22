@@ -80,10 +80,6 @@ class Channel(
                 ?.let { it / tracksDuration }
     }
 
-    internal fun getFullTimePositionAt(currentTimeMillis: Long): Long? {
-        return if (isPlaying) { currentTimeMillis - startedAt!! } else { null }
-    }
-
     fun getNowPlaying(currentTimeMillis: Long): NowPlaying? {
         return getTimePositionAt(currentTimeMillis)
                 ?.let { getTrackByTimePosition(it) }
@@ -93,6 +89,10 @@ class Channel(
         return tracksAsPlaylistItems
                 .firstOrNull { it.isPlayingAt(timePosition) }
                 ?.makeNowPlayingAt(timePosition)
+    }
+
+    internal fun getFullTimePositionAt(currentTimeMillis: Long): Long? {
+        return if (isPlaying) { currentTimeMillis - startedAt!! } else { null }
     }
 
 }
