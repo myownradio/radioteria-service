@@ -64,10 +64,11 @@ class ChannelControlServiceImpl(
     }
 
     override fun scroll(amountMillis: Long, channel: Channel) {
-        val startedAt = channel.startedAt
-                ?: throw ChannelControlServiceException("Channel is stopped.")
+        if (!isPlaying(channel)) {
+            throw ChannelControlServiceException("Channel is stopped.")
+        }
 
-        channel.startedAt = startedAt - amountMillis
+        channel.scroll(amountMillis)
 
         publishEvent(channel)
     }
