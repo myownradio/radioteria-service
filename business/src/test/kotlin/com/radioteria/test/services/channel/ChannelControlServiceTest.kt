@@ -1,19 +1,19 @@
 package com.radioteria.test.services.channel
 
 import com.radioteria.db.utils.generateUser
+import com.radioteria.services.channel.ChannelControlService
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.channel.impl.ChannelControlServiceImpl
 import org.junit.Test
 import org.mockito.Mockito.mock
 import org.springframework.context.ApplicationEventPublisher
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.*
 
 class ChannelControlServiceTest {
 
     val eventPublisher: ApplicationEventPublisher = mock(ApplicationEventPublisher::class.java)
 
-    val channelControlService = ChannelControlServiceImpl({ 0L }, eventPublisher)
+    val channelControlService: ChannelControlService = ChannelControlServiceImpl({ 0L }, eventPublisher)
 
     val user = generateUser()
 
@@ -103,6 +103,15 @@ class ChannelControlServiceTest {
     fun playPreviousOnStopped() {
         val channel = user.channels[0]
         channelControlService.playPrevious(channel)
+    }
+
+    @Test
+    fun stop() {
+        val channel = user.channels[0]
+        channelControlService.playFromFirst(channel)
+        channelControlService.stop(channel)
+
+        assertFalse { channelControlService.isPlaying(channel) }
     }
 
 }

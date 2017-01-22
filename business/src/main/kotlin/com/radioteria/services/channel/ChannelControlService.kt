@@ -14,5 +14,5 @@ interface ChannelControlService {
     fun isPlaying(channel: Channel): Boolean
     fun isControllable(channel: Channel): Boolean
     fun isPlayable(channel: Channel): Boolean
-    fun nowPlaying(channel: Channel): NowPlaying?
+    fun nowPlaying(channel: Channel): NowPlaying
 }
