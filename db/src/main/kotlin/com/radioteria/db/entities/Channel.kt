@@ -71,16 +71,16 @@ class Channel(
     }
 
     fun getTimePositionAt(currentTimeMillis: Long): Long? {
-        return getFullTimePosition(currentTimeMillis)
+        return getFullTimePositionAt(currentTimeMillis)
                 ?.let { it % tracksDuration }
     }
 
     fun getFullLapsPlayedAt(currentTimeMillis: Long): Long? {
-        return getFullTimePosition(currentTimeMillis)
+        return getFullTimePositionAt(currentTimeMillis)
                 ?.let { it / tracksDuration }
     }
 
-    internal fun getFullTimePosition(currentTimeMillis: Long): Long? {
+    internal fun getFullTimePositionAt(currentTimeMillis: Long): Long? {
         return if (isPlaying) { currentTimeMillis - startedAt!! } else { null }
     }
 
