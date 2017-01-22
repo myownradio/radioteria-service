@@ -5,7 +5,9 @@ import com.radioteria.services.channel.ChannelControlService
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.channel.impl.ChannelControlServiceImpl
 import org.junit.Test
-import org.mockito.Mockito.mock
+import org.mockito.Matchers
+import org.mockito.Mockito.*
+import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import kotlin.test.*
 
@@ -25,6 +27,8 @@ class ChannelControlServiceTest {
         channelControlService.playFromFirst(channel)
 
         assertEquals(firstTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test
@@ -38,6 +42,8 @@ class ChannelControlServiceTest {
         channelControlService.playByOrderId(testOrderId, channel)
 
         assertEquals(secondTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test(expected = ChannelControlServiceException::class)
@@ -57,6 +63,8 @@ class ChannelControlServiceTest {
         channelControlService.playNext(channel)
 
         assertEquals(expectedTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test
@@ -69,6 +77,8 @@ class ChannelControlServiceTest {
         channelControlService.playNext(channel)
 
         assertEquals(firstTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test(expected = ChannelControlServiceException::class)
@@ -87,6 +97,8 @@ class ChannelControlServiceTest {
         channelControlService.playPrevious(channel)
 
         assertEquals(expectedTrack, channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test
@@ -97,6 +109,8 @@ class ChannelControlServiceTest {
         channelControlService.playPrevious(channel)
 
         assertEquals(channel.tracks.last(), channelControlService.nowPlaying(channel).playlistItem.track)
+
+        verifyThatEventIsPublished()
     }
 
     @Test(expected = ChannelControlServiceException::class)
@@ -112,6 +126,12 @@ class ChannelControlServiceTest {
         channelControlService.stop(channel)
 
         assertFalse { channelControlService.isPlaying(channel) }
+
+        verifyThatEventIsPublished()
+    }
+
+    fun verifyThatEventIsPublished() {
+        verify(eventPublisher, atLeastOnce()).publishEvent(isA(ApplicationEvent::class.java))
     }
 
 }
