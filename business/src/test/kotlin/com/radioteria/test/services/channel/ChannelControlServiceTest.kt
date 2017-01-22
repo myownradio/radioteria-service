@@ -4,6 +4,8 @@ import com.radioteria.db.utils.generateUser
 import com.radioteria.services.channel.ChannelControlService
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.channel.impl.ChannelControlServiceImpl
+import com.radioteria.services.util.TimeService
+import com.radioteria.services.util.impl.StaticTimeService
 import org.junit.Test
 import org.mockito.Mockito.*
 import org.springframework.context.ApplicationEvent
@@ -14,7 +16,9 @@ class ChannelControlServiceTest {
 
     val eventPublisher: ApplicationEventPublisher = mock(ApplicationEventPublisher::class.java)
 
-    val channelControlService: ChannelControlService = ChannelControlServiceImpl({ 0L }, eventPublisher)
+    val timeService: TimeService = StaticTimeService(100L)
+
+    val channelControlService: ChannelControlService = ChannelControlServiceImpl(timeService, eventPublisher)
 
     val user = generateUser()
 

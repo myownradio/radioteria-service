@@ -6,12 +6,13 @@ import com.radioteria.db.entities.data.NowPlaying
 import com.radioteria.services.channel.ChannelControlService
 import com.radioteria.services.channel.events.ChannelControlsEvent
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
+import com.radioteria.services.util.TimeService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 
 @Service
 class ChannelControlServiceImpl(
-        val realTimeProvider: () -> Long,
+        val timeService: TimeService,
         val eventPublisher: ApplicationEventPublisher
 ) : ChannelControlService {
 
@@ -30,7 +31,7 @@ class ChannelControlServiceImpl(
         if (!isPlayable(channel)) {
             throw ServiceException("Channel could not be played.")
         }
-        channel.startedAt = realTimeProvider.invoke() - timePosition
+        channel.startedAt = timeService.getTimeMillis() - timePosition
 
         publishEvent(channel)
     }
@@ -86,7 +87,7 @@ class ChannelControlServiceImpl(
     }
 
     override fun nowPlaying(channel: Channel): NowPlaying {
-        return channel.getNowPlaying(realTimeProvider.invoke())
+        return channel.getNowPlaying(timeService.getTimeMillis())
                 ?: throw ChannelControlServiceException("Channel is stopped.")
     }
 
