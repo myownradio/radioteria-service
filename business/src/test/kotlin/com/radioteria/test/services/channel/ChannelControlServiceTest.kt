@@ -71,4 +71,11 @@ class ChannelControlServiceTest {
         assertEquals(firstTrack, channelControlService.nowPlaying(channel).playlistItem.track)
     }
 
+    @Test(expected = ChannelControlServiceException::class)
+    fun playNextOnStopped() {
+        val channel = user.channels[0]
+
+        channelControlService.playNext(channel)
+    }
+
 }
