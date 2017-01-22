@@ -38,11 +38,11 @@ class Channel(
     val isPlaying: Boolean get() = isPlayable && isStarted
     val isStarted: Boolean get() = startedAt != null
     val isPlayable: Boolean get() = hasTracks && hasPositiveTracksLength
-    val tracksDuration: Long get() = tracks.map { it.duration }.sum()
     val hasPositiveTracksLength: Boolean get() = tracksDuration > 0
     val hasTracks: Boolean get() = tracks.isNotEmpty()
     val hasNoTracks: Boolean get() = tracks.isEmpty()
 
+    val tracksDuration: Long get() = tracks.map { it.duration }.sum()
     val tracksAsPlaylistItems: List<PlaylistItem> get() {
         val offset: AtomicLong = AtomicLong(0L)
         return tracks.map { PlaylistItem(it, offset.getAndAdd(it.duration)) }
