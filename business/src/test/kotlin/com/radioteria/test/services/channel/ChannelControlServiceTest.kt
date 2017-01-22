@@ -5,7 +5,6 @@ import com.radioteria.services.channel.ChannelControlService
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.channel.impl.ChannelControlServiceImpl
 import org.junit.Test
-import org.mockito.Matchers
 import org.mockito.Mockito.*
 import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
