@@ -8,7 +8,7 @@ import java.util.*
 fun generateListOfUsers(amount: Int): List<User> =
         (1..amount).map { generateUser("User # $it") }
 
-fun generateUser(name: String = generateRandomString()): User {
+fun generateUser(name: String = generateRandomString(), channelsAmount: Int = 10): User {
     val user = User()
 
     user.name = name
@@ -16,7 +16,7 @@ fun generateUser(name: String = generateRandomString()): User {
     user.password = generateRandomString()
     user.state = UserState.ACTIVE
     user.avatarFile = generateFile()
-    user.channels = generateListOfChannels(amount = 10, user = user)
+    user.channels = generateListOfChannels(amount = channelsAmount, user = user)
 
     return user
 }
@@ -43,7 +43,7 @@ fun generateTrack(channel: Channel, orderId: Int = 1): Track {
 
     track.artist = generateRandomString()
     track.title = generateRandomString()
-    track.duration = generateRandomLong()
+    track.duration = generateRandomInt(1000).toLong()
     track.orderId = orderId
     track.channel = channel
 
@@ -59,3 +59,5 @@ fun generateContent(): Content =
 fun generateRandomString() = UUID.randomUUID().toString()
 
 fun generateRandomLong() = Random().nextLong()
+
+fun generateRandomInt(bound: Int) = Random().nextInt(bound)

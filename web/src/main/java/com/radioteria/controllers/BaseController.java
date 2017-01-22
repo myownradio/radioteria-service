@@ -1,6 +1,6 @@
 package com.radioteria.controllers;
 
-import com.radioteria.business.services.user.api.UserService;
+import com.radioteria.services.user.UserService;
 import com.radioteria.fs.FileSystem;
 import com.radioteria.web.forms.SignUpForm;
 import org.springframework.security.access.annotation.Secured;

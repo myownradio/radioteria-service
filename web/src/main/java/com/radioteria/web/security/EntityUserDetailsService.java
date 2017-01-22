@@ -1,6 +1,6 @@
 package com.radioteria.web.security;
 
-import com.radioteria.business.services.user.api.UserService;
+import com.radioteria.services.user.UserService;
 import com.radioteria.business.services.user.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
