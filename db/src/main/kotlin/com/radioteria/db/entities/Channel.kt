@@ -51,7 +51,20 @@ class Channel(
     fun addTrack(track: Track) {
         track.channel = this
         track.orderId = tracks.size + 1
+
         tracks.add(track)
+    }
+
+    fun removeTrack(track: Track) {
+        tracks.removeAll { it.id == track.id }
+    }
+
+    fun moveTimePosition(amount: Long): Unit {
+        if (isPlaying) {
+            val oldStartPosition = startedAt!!
+            val newStartPosition = oldStartPosition - amount
+            startedAt == newStartPosition
+        }
     }
 
     fun getTimePositionAt(currentTimeMillis: Long): Long? {
