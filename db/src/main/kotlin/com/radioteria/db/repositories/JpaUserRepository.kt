@@ -1,7 +1,7 @@
 package com.radioteria.db.repositories
 
 import com.radioteria.db.entities.User
-import com.radioteria.db.entities.UserMeta
+import com.radioteria.db.entities.meta.UserMeta
 import org.springframework.stereotype.Repository
 
 @Repository
