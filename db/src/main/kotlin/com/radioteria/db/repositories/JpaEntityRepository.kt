@@ -78,7 +78,7 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
 
         val property = root.get<A>(propertyName)
 
-        val increment = cb.sum(cb.sum(property, amount))
+        val increment = cb.sum(property, amount)
 
         criteriaUpdate.set(root.get<A>(propertyName), increment)
 
