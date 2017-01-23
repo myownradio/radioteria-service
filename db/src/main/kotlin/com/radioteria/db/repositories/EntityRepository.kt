@@ -40,4 +40,9 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
      * Synchronize the persistence context to the underlying database.
      */
     fun flush()
+
+    /**
+     * Increment property value by amount.
+     */
+    fun <A : Number> increment(entity: E, propertyName: String, amount: A)
 }
