@@ -2,19 +2,19 @@ package com.radioteria.test.services.channel
 
 import com.radioteria.db.utils.generateUser
 import com.radioteria.services.channel.ChannelControlService
+import com.radioteria.services.channel.events.ChannelControlsEvent
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.channel.impl.ChannelControlServiceImpl
+import com.radioteria.services.util.TestEventPublisher
 import com.radioteria.services.util.TimeService
 import com.radioteria.services.util.impl.StaticTimeService
 import org.junit.Test
-import org.mockito.Mockito.*
 import org.springframework.context.ApplicationEvent
-import org.springframework.context.ApplicationEventPublisher
 import kotlin.test.*
 
 class ChannelControlServiceTest {
 
-    val eventPublisher: ApplicationEventPublisher = mock(ApplicationEventPublisher::class.java)
+    val eventPublisher: TestEventPublisher = TestEventPublisher()
 
     val timeService: TimeService = StaticTimeService(100L)
 
@@ -134,7 +134,7 @@ class ChannelControlServiceTest {
     }
 
     fun verifyThatEventIsPublished() {
-        verify(eventPublisher, atLeastOnce()).publishEvent(isA(ApplicationEvent::class.java))
+        assertTrue { eventPublisher.hasPublished(ChannelControlsEvent::class.java) }
     }
 
 }
