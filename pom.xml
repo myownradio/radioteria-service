@@ -39,6 +39,7 @@
         <mockito.version>1.9.5</mockito.version>
         <tomcat.version>8.0.28</tomcat.version>
         <spring.boot.version>1.4.3.RELEASE</spring.boot.version>
+        <spring.statemachine.version>1.2.1.RELEASE</spring.statemachine.version>
 
         <kotlin.version>1.0.6</kotlin.version>
 
@@ -102,6 +103,11 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.statemachine</groupId>
+                <artifactId>spring-statemachine-core</artifactId>
+                <version>${spring.statemachine.version}</version>
             </dependency>
 
             <!-- Persistence -->
