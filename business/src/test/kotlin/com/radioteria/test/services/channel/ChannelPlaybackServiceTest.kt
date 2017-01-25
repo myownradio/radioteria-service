@@ -2,10 +2,13 @@ package com.radioteria.test.services.channel
 
 import com.radioteria.db.utils.generateUser
 import com.radioteria.services.channel.ChannelPlaybackService
+import com.radioteria.services.channel.events.ChannelControlEvent
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
+import com.radioteria.services.util.TestEventPublisher
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
@@ -18,6 +21,9 @@ class ChannelPlaybackServiceTest {
 
     @Autowired
     lateinit var channelPlaybackService: ChannelPlaybackService
+
+    @Autowired
+    lateinit var eventPublisher: TestEventPublisher
 
     val user = generateUser(channelsAmount = 1, tracksPerChannel = 10)
 
@@ -149,7 +155,7 @@ class ChannelPlaybackServiceTest {
     }
 
     fun verifyThatEventIsPublished() {
-//        assertTrue { eventPublisher.hasPublished(ChannelControlEvent::class.java) }
+        assertTrue { eventPublisher.isEventPublished(ChannelControlEvent::class.java) }
     }
 
 }
