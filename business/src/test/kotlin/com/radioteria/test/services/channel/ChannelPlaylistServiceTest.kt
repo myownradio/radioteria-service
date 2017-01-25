@@ -25,7 +25,7 @@ class ChannelPlaylistServiceTest {
     @Resource
     lateinit var channelPlaylistService: ChannelPlaylistService
 
-    val channel: Channel = generateChannel(user = User(), tracksPerChannel = 10)
+    val channel: Channel = generateChannel(tracks = 10)
 
     @Test
     fun addTrackAfterCurrentTimePosition() {

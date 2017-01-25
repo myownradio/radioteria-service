@@ -23,15 +23,15 @@ fun generateUser(channelsAmount: Int = 10, tracksPerChannel: Int = 10): User {
 }
 
 fun generateListOfChannels(amount: Int, user: User, tracksPerChannel: Int = 10): List<Channel> =
-        (1..amount).map { generateChannel(user, tracksPerChannel = tracksPerChannel) }
+        (1..amount).map { generateChannel(user, tracks = tracksPerChannel) }
 
-fun generateChannel(user: User, tracksPerChannel: Int = 10): Channel {
+fun generateChannel(user: User = User(), tracks: Int = 10): Channel {
     val channel = Channel(user = user)
 
     channel.name = generateRandomString()
     channel.artworkFile = generateFile()
     channel.description = generateRandomString()
-    channel.tracks = generateListOfTracks(amount = tracksPerChannel, channel = channel)
+    channel.tracks = generateListOfTracks(amount = tracks, channel = channel)
 
     return channel
 }
