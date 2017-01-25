@@ -2,7 +2,7 @@ package com.radioteria.services.channel.impl
 
 import com.radioteria.db.entities.Channel
 import com.radioteria.db.entities.Track
-import com.radioteria.services.channel.ChannelControlService
+import com.radioteria.services.channel.ChannelPlaybackService
 import com.radioteria.services.channel.ChannelPlaylistService
 import com.radioteria.services.channel.events.TrackAddedEvent
 import com.radioteria.services.channel.events.TrackDeletedEvent
@@ -14,14 +14,12 @@ import org.springframework.stereotype.Service
 class ChannelPlaylistServiceImpl(
         val timeService: TimeService,
         val eventPublisher: ApplicationEventPublisher,
-        val channelControlService: ChannelControlService
+        val channelPlaybackService: ChannelPlaybackService
 ) : ChannelPlaylistService {
 
     override fun addTrackToChannel(track: Track, channel: Channel) {
-        if (channelControlService.isPlaying(channel)) {
-            val playedFullLaps = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
-            val timeCompensation = playedFullLaps * track.duration
-            channelControlService.scroll(-timeCompensation, channel)
+        if (channelPlaybackService.isPlaying(channel)) {
+            compensatePositionSlipBeforeAdd(channel, track)
         }
 
         channel.addTrack(track)
@@ -29,14 +27,20 @@ class ChannelPlaylistServiceImpl(
         eventPublisher.publishEvent(TrackAddedEvent(this, track, channel))
     }
 
+    private fun compensatePositionSlipBeforeAdd(channel: Channel, track: Track) {
+        val fullLapsPlayed = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
+        val slipMillis = fullLapsPlayed * track.duration
+        channelPlaybackService.scroll(slipMillis, channel)
+    }
+
     override fun removeTrackFromChannel(track: Track, channel: Channel) {
-        if (channelControlService.isPlaying(channel)) {
+        if (channelPlaybackService.isPlaying(channel)) {
             val playedFullLaps = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
             val timeCompensation = playedFullLaps * track.duration
-            if (channelControlService.getNowPlaying(channel).`is`(track)) {
-                channelControlService.playNext(channel)
+            if (channelPlaybackService.getNowPlaying(channel).`is`(track)) {
+                channelPlaybackService.playNext(channel)
             }
-            channelControlService.scroll(timeCompensation, channel)
+            channelPlaybackService.scroll(timeCompensation, channel)
         }
 
         channel.removeTrack(track)

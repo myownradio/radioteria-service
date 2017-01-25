@@ -65,7 +65,8 @@ class Channel(
         if (isControllable) {
             val oldStartPosition = startedAt!!
             val newStartPosition = oldStartPosition - amount
-            startedAt == newStartPosition
+
+            startedAt = newStartPosition
         }
     }
 
@@ -90,7 +91,7 @@ class Channel(
                 ?.makeNowPlayingAt(timePosition)
     }
 
-    internal fun getFullTimePositionAt(currentTimeMillis: Long): Long? {
+    fun getFullTimePositionAt(currentTimeMillis: Long): Long? {
         return if (isPlaying) { currentTimeMillis - startedAt!! } else { null }
     }
 

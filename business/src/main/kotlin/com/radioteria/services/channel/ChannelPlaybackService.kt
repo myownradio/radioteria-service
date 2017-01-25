@@ -3,7 +3,7 @@ package com.radioteria.services.channel
 import com.radioteria.db.entities.Channel
 import com.radioteria.db.entities.data.NowPlaying
 
-interface ChannelControlService {
+interface ChannelPlaybackService {
     fun playFromFirst(channel: Channel): Unit
     fun playByOrderId(orderId: Int, channel: Channel): Unit
     fun playByTrackId(trackId: Long, channel: Channel): Unit
@@ -17,4 +17,6 @@ interface ChannelControlService {
     fun isPlayable(channel: Channel): Boolean
 
     fun getNowPlaying(channel: Channel): NowPlaying
+    fun getTimePosition(channel: Channel): Long?
+    fun getChannelUptime(channel: Channel): Long?
 }
