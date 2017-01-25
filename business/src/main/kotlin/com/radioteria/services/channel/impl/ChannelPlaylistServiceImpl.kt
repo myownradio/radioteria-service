@@ -9,6 +9,7 @@ import com.radioteria.services.channel.events.TrackDeletedEvent
 import com.radioteria.services.util.TimeService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class ChannelPlaylistServiceImpl(
@@ -58,7 +59,37 @@ class ChannelPlaylistServiceImpl(
     }
 
     override fun shuffle(channel: Channel) {
-        throw UnsupportedOperationException("not implemented")
+        slipSafeAction(channel) {
+            val random = Random()
+
+            val newOrders = (1..channel.tracks.size)
+                    .sortedBy { random.nextInt(channel.tracks.size) }
+
+            channel.tracks.forEachIndexed { i, track -> track.orderId = newOrders[i] }
+            channel.tracks.sortBy { it.orderId }
+        }
+    }
+
+    private fun slipSafeAction(channel: Channel, block: () -> Unit) {
+        if (!channelPlaybackService.isPlaying(channel)) {
+            block.invoke()
+            return
+        }
+
+        val nowPlayingItem = channelPlaybackService
+                .getNowPlaying(channel)
+                .playlistItem
+
+        block.invoke()
+
+        val newPlayingItem = channel.tracksAsPlaylistItems.find { it.track == nowPlayingItem.track }
+
+        if (newPlayingItem != null) {
+            val slip = newPlayingItem.offset - nowPlayingItem.offset
+            channelPlaybackService.scroll(slip, channel)
+        }
+
+        channelPlaybackService.playByOrderId(nowPlayingItem.track.orderId, channel)
     }
 
 }

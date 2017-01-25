@@ -1,6 +1,8 @@
 package com.radioteria.test.services.channel
 
 import com.radioteria.db.entities.*
+import com.radioteria.db.entities.data.NowPlaying
+import com.radioteria.db.entities.data.PlaylistItem
 import com.radioteria.db.utils.generateChannel
 import com.radioteria.services.channel.ChannelPlaybackService
 import com.radioteria.services.channel.ChannelPlaylistService
@@ -56,18 +58,42 @@ class ChannelPlaylistServiceTest {
     }
 
     @Test
-    fun removePlayingTrackWithoutCompensation() {
+    fun removeCurrentTrackWithoutCompensation() {
         startChannelFromTheBeginning()
-        removeFirstTrackFromChannel()
+        removeCurrentTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
     }
 
     @Test
-    fun removePlayingTrackWithCompensation() {
+    fun removeCurrentTrackWithCompensation() {
         startChannelFromTheBeginning()
         moveTimePositionToNextLap()
-        removeFirstTrackFromChannel()
+        removeCurrentTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
+    }
+
+    @Test
+    fun shuffleOnFirstLap() {
+        startChannelFromTheBeginning()
+        verifyThatNoSlipOccurred {
+            shuffleTracksInChannel()
+        }
+    }
+
+    private fun verifyThatNoSlipOccurred(block: () -> Unit) {
+        val playingBefore = getNowPlaying()
+        block.invoke()
+        val playingAfter = getNowPlaying()
+
+        assertEquals(playingBefore, playingAfter)
+    }
+
+    private fun getNowPlaying(): NowPlaying {
+        return channelPlaybackService.getNowPlaying(channel)
+    }
+
+    private fun shuffleTracksInChannel() {
+        channelPlaylistService.shuffle(channel)
     }
 
     private fun addNewTrackToChannel() {
@@ -80,6 +106,14 @@ class ChannelPlaylistServiceTest {
         val firstTrack = channel.tracks.first()
 
         channelPlaylistService.removeTrackFromChannel(firstTrack, channel)
+    }
+
+    private fun removeCurrentTrackFromChannel() {
+        val currentTrack = channelPlaybackService
+                .getNowPlaying(channel)
+                .track
+
+        channelPlaylistService.removeTrackFromChannel(currentTrack, channel)
     }
 
     private fun removeLastTrackFromChannel() {
