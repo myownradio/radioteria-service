@@ -36,8 +36,7 @@ class ChannelPlaylistServiceTest {
 
     @Test
     fun addTrackBeforeCurrentTimePosition() {
-        startChannelFromTheBeginning()
-        rewindTimePositionToNextLap()
+        startChannelFromSecondLap()
         addNewTrackToChannel()
         verifyThatWeAreAtTheBeginning()
     }
@@ -51,8 +50,7 @@ class ChannelPlaylistServiceTest {
 
     @Test
     fun removeTrackWithCompensation() {
-        startChannelFromTheBeginning()
-        rewindTimePositionToNextLap()
+        startChannelFromSecondLap()
         removeLastTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
     }
@@ -66,8 +64,7 @@ class ChannelPlaylistServiceTest {
 
     @Test
     fun removeCurrentTrackWithCompensation() {
-        startChannelFromTheBeginning()
-        rewindTimePositionToNextLap()
+        startChannelFromSecondLap()
         removeCurrentTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
     }
@@ -92,12 +89,19 @@ class ChannelPlaylistServiceTest {
 
     @Test
     fun shuffleOnNextLap() {
-        startChannelFromTheBeginning()
-        rewindTimePositionToNextLap()
+        startChannelFromSecondLap()
         rewindToNextTrack()
         verifyThatNoSlipOccurred {
             shuffleTracksInChannel()
         }
+    }
+
+    private fun startChannelFromTheBeginning() {
+        channelPlaybackService.playFromStart(channel)
+    }
+
+    private fun startChannelFromSecondLap() {
+        channelPlaybackService.playFromTimePosition(channel.tracksDuration, channel)
     }
 
     private fun verifyThatNoSlipOccurred(block: () -> Unit) {
@@ -154,10 +158,6 @@ class ChannelPlaylistServiceTest {
 
     private fun rewindToPreviousTrack() {
         channelPlaybackService.playPrevious(channel)
-    }
-
-    private fun startChannelFromTheBeginning() {
-        channelPlaybackService.playFromFirst(channel)
     }
 
     private fun verifyThatWeAreAtTheBeginning() {

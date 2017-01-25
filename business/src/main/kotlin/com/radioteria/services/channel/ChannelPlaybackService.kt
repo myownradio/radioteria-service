@@ -4,9 +4,11 @@ import com.radioteria.db.entities.Channel
 import com.radioteria.db.entities.data.NowPlaying
 
 interface ChannelPlaybackService {
-    fun playFromFirst(channel: Channel): Unit
+    fun playFromTimePosition(timePosition: Long, channel: Channel)
+    fun playFromStart(channel: Channel): Unit
     fun playByOrderId(orderId: Int, channel: Channel): Unit
     fun playByTrackId(trackId: Long, channel: Channel): Unit
+
     fun stop(channel: Channel): Unit
     fun playNext(channel: Channel): Unit
     fun playPrevious(channel: Channel): Unit

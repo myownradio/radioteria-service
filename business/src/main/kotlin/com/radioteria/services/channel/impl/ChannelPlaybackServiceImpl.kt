@@ -1,6 +1,7 @@
 package com.radioteria.services.channel.impl
 
 import com.radioteria.services.exceptions.ServiceException
+
 import com.radioteria.db.entities.Channel
 import com.radioteria.db.entities.data.NowPlaying
 import com.radioteria.services.channel.ChannelPlaybackService
@@ -9,15 +10,23 @@ import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.util.TimeService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
-
 @Service
 class ChannelPlaybackServiceImpl(
         val timeService: TimeService,
         val eventPublisher: ApplicationEventPublisher
 ) : ChannelPlaybackService {
 
-    override fun playFromFirst(channel: Channel) {
+    override fun playFromStart(channel: Channel) {
         playFromTimePosition(0L, channel)
+    }
+
+    override fun playFromTimePosition(timePosition: Long, channel: Channel) {
+        if (!isPlayable(channel)) {
+            throw ServiceException("Channel could not be played.")
+        }
+        channel.startedAt = timeService.getTimeMillis() - timePosition
+
+        publishEvent(channel)
     }
 
     override fun playByOrderId(orderId: Int, channel: Channel) {
@@ -42,15 +51,6 @@ class ChannelPlaybackServiceImpl(
         val nowPlaying = getNowPlaying(channel)
 
         playByOrderId(nowPlaying.playlistItem.track.orderId, channel)
-    }
-
-    internal fun playFromTimePosition(timePosition: Long, channel: Channel) {
-        if (!isPlayable(channel)) {
-            throw ServiceException("Channel could not be played.")
-        }
-        channel.startedAt = timeService.getTimeMillis() - timePosition
-
-        publishEvent(channel)
     }
 
     override fun stop(channel: Channel) {

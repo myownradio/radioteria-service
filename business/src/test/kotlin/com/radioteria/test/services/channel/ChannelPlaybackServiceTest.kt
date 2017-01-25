@@ -26,7 +26,7 @@ class ChannelPlaybackServiceTest {
         val channel = user.channels.first()
         val firstTrack = channel.tracks.first()
 
-        channelPlaybackService.playFromFirst(channel)
+        channelPlaybackService.playFromStart(channel)
 
         assertEquals(firstTrack, channelPlaybackService.getNowPlaying(channel).track)
 
@@ -77,7 +77,7 @@ class ChannelPlaybackServiceTest {
         val channel = user.channels.first()
         val expectedTrack = channel.tracks[1]
 
-        channelPlaybackService.playFromFirst(channel)
+        channelPlaybackService.playFromStart(channel)
         channelPlaybackService.playNext(channel)
 
         assertEquals(expectedTrack, channelPlaybackService.getNowPlaying(channel).track)
@@ -140,7 +140,7 @@ class ChannelPlaybackServiceTest {
     @Test
     fun stop() {
         val channel = user.channels[0]
-        channelPlaybackService.playFromFirst(channel)
+        channelPlaybackService.playFromStart(channel)
         channelPlaybackService.stop(channel)
 
         assertFalse { channelPlaybackService.isPlaying(channel) }
