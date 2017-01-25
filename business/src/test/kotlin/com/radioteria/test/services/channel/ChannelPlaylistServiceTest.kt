@@ -30,29 +30,33 @@ class ChannelPlaylistServiceTest {
     @Test
     fun addTrackAfterCurrentTimePosition() {
         startChannelFromTheBeginning()
-        addNewTrackToChannel()
-        verifyThatWeAreAtTheBeginning()
+        doAndVerifyThatNoSlipOccurred {
+            addNewTrackToChannel()
+        }
     }
 
     @Test
     fun addTrackBeforeCurrentTimePosition() {
         startChannelFromSecondLap()
-        addNewTrackToChannel()
-        verifyThatWeAreAtTheBeginning()
+        doAndVerifyThatNoSlipOccurred {
+            addNewTrackToChannel()
+        }
     }
 
     @Test
     fun removeTrackAfterCurrentTimePosition() {
         startChannelFromTheBeginning()
-        removeLastTrackFromChannel()
-        verifyThatWeAreAtTheBeginning()
+        doAndVerifyThatNoSlipOccurred {
+            removeLastTrackFromChannel()
+        }
     }
 
     @Test
     fun removeTrackWithCompensation() {
         startChannelFromSecondLap()
-        removeLastTrackFromChannel()
-        verifyThatWeAreAtTheBeginning()
+        doAndVerifyThatNoSlipOccurred {
+            removeLastTrackFromChannel()
+        }
     }
 
     @Test
@@ -71,9 +75,8 @@ class ChannelPlaylistServiceTest {
 
     @Test
     fun removeTrackBeforeCurrentAtFirstLap() {
-        startChannelFromTheBeginning()
-        rewindToNextTrack()
-        verifyThatNoSlipOccurred {
+        startChannelFromSecondTrack()
+        doAndVerifyThatNoSlipOccurred {
             removeFirstTrackFromChannel()
         }
     }
@@ -81,8 +84,7 @@ class ChannelPlaylistServiceTest {
     @Test
     fun shuffleOnFirstLap() {
         startChannelFromTheBeginning()
-        rewindToNextTrack()
-        verifyThatNoSlipOccurred {
+        doAndVerifyThatNoSlipOccurred {
             shuffleTracksInChannel()
         }
     }
@@ -90,9 +92,24 @@ class ChannelPlaylistServiceTest {
     @Test
     fun shuffleOnNextLap() {
         startChannelFromSecondLap()
-        rewindToNextTrack()
-        verifyThatNoSlipOccurred {
+        doAndVerifyThatNoSlipOccurred {
             shuffleTracksInChannel()
+        }
+    }
+
+    @Test
+    fun trackMoveUp() {
+        startChannelFromSecondLap()
+        doAndVerifyThatNoSlipOccurred {
+            moveLastTrackToBegin()
+        }
+    }
+
+    @Test
+    fun trackMoveDown() {
+        startChannelFromSecondLap()
+        doAndVerifyThatNoSlipOccurred {
+            moveFirstTrackToEnd()
         }
     }
 
@@ -104,13 +121,21 @@ class ChannelPlaylistServiceTest {
         channelPlaybackService.playFromTimePosition(channel.tracksDuration, channel)
     }
 
-    private fun verifyThatNoSlipOccurred(block: () -> Unit) {
+    private fun startChannelFromSecondTrack() {
+        channelPlaybackService.playByOrderId(2, channel)
+    }
+
+    private fun doAndVerifyThatNoSlipOccurred(block: () -> Unit) {
         val playingBefore = getNowPlaying()
         block.invoke()
         val playingAfter = getNowPlaying()
 
         assertEquals(playingBefore.track, playingAfter.track)
         assertEquals(playingBefore.trackPosition, playingAfter.trackPosition)
+    }
+
+    private fun verifyThatWeAreAtTheBeginning() {
+        assertEquals(0, channelPlaybackService.getTimePosition(channel))
     }
 
     private fun getNowPlaying(): NowPlaying {
@@ -147,20 +172,11 @@ class ChannelPlaylistServiceTest {
         channelPlaylistService.removeTrackFromChannel(lastTrack, channel)
     }
 
-    private fun rewindTimePositionToNextLap() {
-        val tracksDuration = channel.tracksDuration
-        channelPlaybackService.scroll(tracksDuration, channel)
+    private fun moveFirstTrackToEnd() {
+        channelPlaylistService.moveTrack(channel.tracks.first(), 10, channel)
     }
 
-    private fun rewindToNextTrack() {
-        channelPlaybackService.playNext(channel)
-    }
-
-    private fun rewindToPreviousTrack() {
-        channelPlaybackService.playPrevious(channel)
-    }
-
-    private fun verifyThatWeAreAtTheBeginning() {
-        assertEquals(0, channelPlaybackService.getTimePosition(channel))
+    private fun moveLastTrackToBegin() {
+        channelPlaylistService.moveTrack(channel.tracks.last(), 1, channel)
     }
 }

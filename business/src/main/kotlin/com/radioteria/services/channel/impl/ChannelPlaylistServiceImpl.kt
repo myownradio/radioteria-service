@@ -8,8 +8,10 @@ import com.radioteria.services.channel.events.TrackAddedEvent
 import com.radioteria.services.channel.events.TrackDeletedEvent
 import com.radioteria.services.util.TimeService
 import com.radioteria.util.shuffled
+import com.radioteria.util.sortedUntil
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import java.util.concurrent.atomic.AtomicInteger
 
 @Service
 class ChannelPlaylistServiceImpl(
@@ -58,16 +60,31 @@ class ChannelPlaylistServiceImpl(
         channelPlaybackService.scroll(-slipMillis, channel)
     }
 
-    override fun moveTrack(track: Track, newOrderId: Int) {
-        throw UnsupportedOperationException("not implemented")
+    override fun moveTrack(track: Track, newOrderId: Int, channel: Channel) {
+        if (track.orderId == newOrderId) {
+            return
+        }
+
+        slipSafeAction(channel) {
+            val affectedRange = sortedUntil(track.orderId, newOrderId - 1)
+
+            channel.tracks
+                    .filter { it.orderId in affectedRange }
+                    .forEach { if (track.orderId > newOrderId) it.orderId ++ else it.orderId -- }
+
+            track.orderId = newOrderId
+
+            sortTracksByOrder(channel)
+        }
     }
 
     override fun shuffle(channel: Channel) {
         slipSafeAction(channel) {
-            val newOrders = (1..channel.tracks.size).shuffled()
+            val newOrderIds = (1..channel.tracks.size).shuffled()
 
-            channel.tracks.forEachIndexed { i, track -> track.orderId = newOrders[i] }
-            channel.tracks.sortBy { it.orderId }
+            channel.tracks.forEachIndexed { i, track -> track.orderId = newOrderIds[i] }
+
+            sortTracksByOrder(channel)
         }
     }
 
@@ -95,6 +112,15 @@ class ChannelPlaylistServiceImpl(
         val offsetSlip = foundPlayingItem.offset - nowPlayingItem.offset
 
         channelPlaybackService.scroll(offsetSlip, channel)
+    }
+
+    private fun sortTracksByOrder(channel: Channel) {
+        channel.tracks.sortBy { it.orderId }
+    }
+
+    private fun compactTrackOrderIds(channel: Channel) {
+        val initialOrder = AtomicInteger(1)
+        channel.tracks.forEach { it.orderId = initialOrder.getAndIncrement() }
     }
 
 }
