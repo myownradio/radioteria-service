@@ -27,25 +27,30 @@ class ChannelPlaylistServiceImpl(
         eventPublisher.publishEvent(TrackAddedEvent(this, track, channel))
     }
 
+    override fun removeTrackFromChannel(track: Track, channel: Channel) {
+        if (channelPlaybackService.isPlaying(channel)) {
+            if (channelPlaybackService.getNowPlaying(channel) eq track) {
+                channelPlaybackService.restartCurrent(channel)
+            }
+            compensatePositionSlipBeforeRemove(track, channel)
+        }
+
+        channel.removeTrack(track)
+
+        eventPublisher.publishEvent(TrackDeletedEvent(this, track, channel))
+    }
+
     private fun compensatePositionSlipBeforeAdd(channel: Channel, track: Track) {
         val fullLapsPlayed = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
         val slipMillis = fullLapsPlayed * track.duration
         channelPlaybackService.scroll(slipMillis, channel)
     }
 
-    override fun removeTrackFromChannel(track: Track, channel: Channel) {
-        if (channelPlaybackService.isPlaying(channel)) {
-            val playedFullLaps = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
-            val timeCompensation = playedFullLaps * track.duration
-            if (channelPlaybackService.getNowPlaying(channel).`is`(track)) {
-                channelPlaybackService.playNext(channel)
-            }
-            channelPlaybackService.scroll(timeCompensation, channel)
-        }
+    private fun compensatePositionSlipBeforeRemove(track: Track, channel: Channel) {
+        val fullLapsPlayed = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
+        val slipMillis = fullLapsPlayed * track.duration
 
-        channel.removeTrack(track)
-
-        eventPublisher.publishEvent(TrackDeletedEvent(this, track, channel))
+        channelPlaybackService.scroll(-slipMillis, channel)
     }
 
     override fun moveTrack(track: Track, newOrderId: Int) {

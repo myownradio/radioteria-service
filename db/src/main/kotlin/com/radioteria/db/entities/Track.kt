@@ -28,4 +28,8 @@ class Track(
         var orderId: Int = 0,
 
         id: Long? = null
-) : IdAwareEntity<Long>(id)
+) : IdAwareEntity<Long>(id) {
+    override fun toString(): String {
+        return "Track(title=${title}, orderId=${orderId})";
+    }
+}

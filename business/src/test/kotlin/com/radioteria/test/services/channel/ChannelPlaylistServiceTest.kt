@@ -23,47 +23,81 @@ class ChannelPlaylistServiceTest {
     @Resource
     lateinit var channelPlaylistService: ChannelPlaylistService
 
-    val channelToTest: Channel = generateChannel(user = User(), tracksPerChannel = 10)
+    val channel: Channel = generateChannel(user = User(), tracksPerChannel = 10)
 
     @Test
     fun addTrackWithoutTimeCompensation() {
-        startChannelFromBeginning()
-
-        val oldNowPlaying = channelPlaybackService.getNowPlaying(channelToTest)
-
+        startChannelFromTheBeginning()
         addNewTrackToChannel()
-
-        val newNowPlaying = channelPlaybackService.getNowPlaying(channelToTest)
-
-        assertEquals(oldNowPlaying, newNowPlaying)
+        verifyThatWeAreAtTheBeginning()
     }
 
     @Test
     fun addTrackWithCompensation() {
-        startChannelFromBeginning()
+        startChannelFromTheBeginning()
         moveTimePositionToNextLap()
-
-        val oldNowPlaying = channelPlaybackService.getNowPlaying(channelToTest)
-
         addNewTrackToChannel()
+        verifyThatWeAreAtTheBeginning()
+    }
 
-        val newNowPlaying = channelPlaybackService.getNowPlaying(channelToTest)
+    @Test
+    fun removeTrackWithoutCompensation() {
+        startChannelFromTheBeginning()
+        removeLastTrackFromChannel()
+        verifyThatWeAreAtTheBeginning()
+    }
 
-        assertEquals(oldNowPlaying, newNowPlaying)
+    @Test
+    fun removeTrackWithCompensation() {
+        startChannelFromTheBeginning()
+        moveTimePositionToNextLap()
+        removeLastTrackFromChannel()
+        verifyThatWeAreAtTheBeginning()
+    }
+
+    @Test
+    fun removePlayingTrackWithoutCompensation() {
+        startChannelFromTheBeginning()
+        removeFirstTrackFromChannel()
+        verifyThatWeAreAtTheBeginning()
+    }
+
+    @Test
+    fun removePlayingTrackWithCompensation() {
+        startChannelFromTheBeginning()
+        moveTimePositionToNextLap()
+        removeFirstTrackFromChannel()
+        verifyThatWeAreAtTheBeginning()
     }
 
     private fun addNewTrackToChannel() {
-        val trackToAdd = Track(duration = 500, channel = channelToTest, trackFile = File(Content()))
+        val trackToAdd = Track(duration = 500, channel = channel, trackFile = File(Content()))
 
-        channelPlaylistService.addTrackToChannel(trackToAdd, channelToTest)
+        channelPlaylistService.addTrackToChannel(trackToAdd, channel)
+    }
+
+    private fun removeFirstTrackFromChannel() {
+        val firstTrack = channel.tracks.first()
+
+        channelPlaylistService.removeTrackFromChannel(firstTrack, channel)
+    }
+
+    private fun removeLastTrackFromChannel() {
+        val lastTrack = channel.tracks.last()
+
+        channelPlaylistService.removeTrackFromChannel(lastTrack, channel)
     }
 
     private fun moveTimePositionToNextLap() {
-        val tracksDuration = channelToTest.tracksDuration
-        channelPlaybackService.scroll(tracksDuration, channelToTest)
+        val tracksDuration = channel.tracksDuration
+        channelPlaybackService.scroll(tracksDuration, channel)
     }
 
-    private fun startChannelFromBeginning() {
-        channelPlaybackService.playFromFirst(channelToTest)
+    private fun startChannelFromTheBeginning() {
+        channelPlaybackService.playFromFirst(channel)
+    }
+
+    private fun verifyThatWeAreAtTheBeginning() {
+        assertEquals(0, channelPlaybackService.getTimePosition(channel))
     }
 }

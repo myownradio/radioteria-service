@@ -11,6 +11,7 @@ interface ChannelPlaybackService {
     fun playNext(channel: Channel): Unit
     fun playPrevious(channel: Channel): Unit
     fun scroll(amountMillis: Long, channel: Channel): Unit
+    fun restartCurrent(channel: Channel): Unit
 
     fun isPlaying(channel: Channel): Boolean
     fun isControllable(channel: Channel): Boolean
@@ -18,5 +19,4 @@ interface ChannelPlaybackService {
 
     fun getNowPlaying(channel: Channel): NowPlaying
     fun getTimePosition(channel: Channel): Long?
-    fun getChannelUptime(channel: Channel): Long?
 }

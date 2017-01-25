@@ -36,6 +36,12 @@ class ChannelPlaybackServiceImpl(
         playFromTimePosition(playlistItem.offset, channel)
     }
 
+    override fun restartCurrent(channel: Channel) {
+        val nowPlaying = getNowPlaying(channel)
+
+        playByOrderId(nowPlaying.playlistItem.track.orderId, channel)
+    }
+
     internal fun playFromTimePosition(timePosition: Long, channel: Channel) {
         if (!isPlayable(channel)) {
             throw ServiceException("Channel could not be played.")
@@ -102,10 +108,6 @@ class ChannelPlaybackServiceImpl(
 
     override fun getTimePosition(channel: Channel): Long? {
         return channel.getTimePositionAt(timeService.getTimeMillis());
-    }
-
-    override fun getChannelUptime(channel: Channel): Long? {
-        return channel.getFullTimePositionAt(timeService.getTimeMillis())
     }
 
     internal fun publishEvent(channel: Channel) {

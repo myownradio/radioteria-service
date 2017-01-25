@@ -44,7 +44,7 @@ fun generateTrack(channel: Channel, orderId: Int = 1): Track {
 
     track.artist = generateRandomString()
     track.title = generateRandomString()
-    track.duration = generateRandomInt(1000).toLong()
+    track.duration = 1000 + generateRandomInt(100000).toLong()
     track.orderId = orderId
     track.channel = channel
     track.id = IdGenerator.newId
