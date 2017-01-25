@@ -4,5 +4,5 @@ import com.radioteria.db.entities.Track
 
 data class NowPlaying(val playlistItem: PlaylistItem, val trackPosition: Long) {
     val track: Track get() = playlistItem.track
-    infix fun eq(track: Track): Boolean = track.id == playlistItem.track.id
+    infix fun equalTo(track: Track): Boolean = track.id == playlistItem.track.id
 }

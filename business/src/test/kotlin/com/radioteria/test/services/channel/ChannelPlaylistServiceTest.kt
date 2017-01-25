@@ -28,22 +28,22 @@ class ChannelPlaylistServiceTest {
     val channel: Channel = generateChannel(user = User(), tracksPerChannel = 10)
 
     @Test
-    fun addTrackWithoutTimeCompensation() {
+    fun addTrackAfterCurrentTimePosition() {
         startChannelFromTheBeginning()
         addNewTrackToChannel()
         verifyThatWeAreAtTheBeginning()
     }
 
     @Test
-    fun addTrackWithCompensation() {
+    fun addTrackBeforeCurrentTimePosition() {
         startChannelFromTheBeginning()
-        moveTimePositionToNextLap()
+        rewindTimePositionToNextLap()
         addNewTrackToChannel()
         verifyThatWeAreAtTheBeginning()
     }
 
     @Test
-    fun removeTrackWithoutCompensation() {
+    fun removeTrackAfterCurrentTimePosition() {
         startChannelFromTheBeginning()
         removeLastTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
@@ -52,7 +52,7 @@ class ChannelPlaylistServiceTest {
     @Test
     fun removeTrackWithCompensation() {
         startChannelFromTheBeginning()
-        moveTimePositionToNextLap()
+        rewindTimePositionToNextLap()
         removeLastTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
     }
@@ -67,14 +67,34 @@ class ChannelPlaylistServiceTest {
     @Test
     fun removeCurrentTrackWithCompensation() {
         startChannelFromTheBeginning()
-        moveTimePositionToNextLap()
+        rewindTimePositionToNextLap()
         removeCurrentTrackFromChannel()
         verifyThatWeAreAtTheBeginning()
     }
 
     @Test
+    fun removeTrackBeforeCurrentAtFirstLap() {
+        startChannelFromTheBeginning()
+        rewindToNextTrack()
+        verifyThatNoSlipOccurred {
+            removeFirstTrackFromChannel()
+        }
+    }
+
+    @Test
     fun shuffleOnFirstLap() {
         startChannelFromTheBeginning()
+        rewindToNextTrack()
+        verifyThatNoSlipOccurred {
+            shuffleTracksInChannel()
+        }
+    }
+
+    @Test
+    fun shuffleOnNextLap() {
+        startChannelFromTheBeginning()
+        rewindTimePositionToNextLap()
+        rewindToNextTrack()
         verifyThatNoSlipOccurred {
             shuffleTracksInChannel()
         }
@@ -85,7 +105,8 @@ class ChannelPlaylistServiceTest {
         block.invoke()
         val playingAfter = getNowPlaying()
 
-        assertEquals(playingBefore, playingAfter)
+        assertEquals(playingBefore.track, playingAfter.track)
+        assertEquals(playingBefore.trackPosition, playingAfter.trackPosition)
     }
 
     private fun getNowPlaying(): NowPlaying {
@@ -122,9 +143,17 @@ class ChannelPlaylistServiceTest {
         channelPlaylistService.removeTrackFromChannel(lastTrack, channel)
     }
 
-    private fun moveTimePositionToNextLap() {
+    private fun rewindTimePositionToNextLap() {
         val tracksDuration = channel.tracksDuration
         channelPlaybackService.scroll(tracksDuration, channel)
+    }
+
+    private fun rewindToNextTrack() {
+        channelPlaybackService.playNext(channel)
+    }
+
+    private fun rewindToPreviousTrack() {
+        channelPlaybackService.playPrevious(channel)
     }
 
     private fun startChannelFromTheBeginning() {

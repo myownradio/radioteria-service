@@ -7,9 +7,9 @@ import com.radioteria.services.channel.ChannelPlaylistService
 import com.radioteria.services.channel.events.TrackAddedEvent
 import com.radioteria.services.channel.events.TrackDeletedEvent
 import com.radioteria.services.util.TimeService
+import com.radioteria.util.shuffled
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ChannelPlaylistServiceImpl(
@@ -20,7 +20,7 @@ class ChannelPlaylistServiceImpl(
 
     override fun addTrackToChannel(track: Track, channel: Channel) {
         if (channelPlaybackService.isPlaying(channel)) {
-            compensatePositionSlipBeforeAdd(channel, track)
+            compensatePositionSlipBeforeAdd(track, channel)
         }
 
         channel.addTrack(track)
@@ -28,9 +28,10 @@ class ChannelPlaylistServiceImpl(
         eventPublisher.publishEvent(TrackAddedEvent(this, track, channel))
     }
 
+
     override fun removeTrackFromChannel(track: Track, channel: Channel) {
         if (channelPlaybackService.isPlaying(channel)) {
-            if (channelPlaybackService.getNowPlaying(channel) eq track) {
+            if (channelPlaybackService.getNowPlaying(channel) equalTo track) {
                 channelPlaybackService.restartCurrent(channel)
             }
             compensatePositionSlipBeforeRemove(track, channel)
@@ -41,15 +42,18 @@ class ChannelPlaylistServiceImpl(
         eventPublisher.publishEvent(TrackDeletedEvent(this, track, channel))
     }
 
-    private fun compensatePositionSlipBeforeAdd(channel: Channel, track: Track) {
+    private fun compensatePositionSlipBeforeAdd(track: Track, channel: Channel) {
         val fullLapsPlayed = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
         val slipMillis = fullLapsPlayed * track.duration
         channelPlaybackService.scroll(slipMillis, channel)
     }
 
     private fun compensatePositionSlipBeforeRemove(track: Track, channel: Channel) {
+        val trackBeforeCurrent = channelPlaybackService.getNowPlaying(channel).track.orderId > track.orderId
         val fullLapsPlayed = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
-        val slipMillis = fullLapsPlayed * track.duration
+        val additionalLap = if (trackBeforeCurrent) 1 else 0
+
+        val slipMillis = (fullLapsPlayed + additionalLap) * track.duration
 
         channelPlaybackService.scroll(-slipMillis, channel)
     }
@@ -60,10 +64,7 @@ class ChannelPlaylistServiceImpl(
 
     override fun shuffle(channel: Channel) {
         slipSafeAction(channel) {
-            val random = Random()
-
-            val newOrders = (1..channel.tracks.size)
-                    .sortedBy { random.nextInt(channel.tracks.size) }
+            val newOrders = (1..channel.tracks.size).shuffled()
 
             channel.tracks.forEachIndexed { i, track -> track.orderId = newOrders[i] }
             channel.tracks.sortBy { it.orderId }
@@ -82,14 +83,18 @@ class ChannelPlaylistServiceImpl(
 
         block.invoke()
 
-        val newPlayingItem = channel.tracksAsPlaylistItems.find { it.track == nowPlayingItem.track }
+        val foundPlayingItem = channel
+                .tracksAsPlaylistItems
+                .find { it.track == nowPlayingItem.track }
 
-        if (newPlayingItem != null) {
-            val slip = newPlayingItem.offset - nowPlayingItem.offset
-            channelPlaybackService.scroll(slip, channel)
+        if (foundPlayingItem == null) {
+            channelPlaybackService.playByOrderId(nowPlayingItem.track.orderId, channel)
+            return
         }
 
-        channelPlaybackService.playByOrderId(nowPlayingItem.track.orderId, channel)
+        val offsetSlip = foundPlayingItem.offset - nowPlayingItem.offset
+
+        channelPlaybackService.scroll(offsetSlip, channel)
     }
 
 }
