@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service
 import java.util.concurrent.TimeUnit
 
 @Service
-class PasswordRecoveryServiceImpl(private val userDao: UserRepository,
+class PasswordRecoveryServiceImpl(private val userRepository: UserRepository,
                                   private val emailService: EmailService,
                                   private val templateService: TemplateService,
                                   private val userService: UserService,
@@ -86,7 +86,7 @@ class PasswordRecoveryServiceImpl(private val userDao: UserRepository,
     }
 
     private fun getUserFromRecoveryCode(recoveryCode: PasswordRecoveryCode): User {
-        return userDao.findByEmail(recoveryCode.userEmail)
+        return userRepository.findByEmail(recoveryCode.userEmail)
                 ?: throw UserServiceException("Specified code belongs to user that does not exist.")
     }
 

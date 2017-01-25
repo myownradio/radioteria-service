@@ -1,8 +1,7 @@
 package com.radioteria.db.entities
 
 import com.radioteria.db.entities.data.*
-import com.radioteria.db.entities.meta.ChannelMeta
-import com.radioteria.db.entities.meta.TrackMeta
+import com.radioteria.db.entities.meta.*
 import java.util.concurrent.atomic.AtomicLong
 import javax.persistence.*
 
@@ -87,7 +86,7 @@ class Channel(
 
     fun getTrackByTimePosition(timePosition: Long): NowPlaying? {
         return tracksAsPlaylistItems
-                .firstOrNull { it.isPlayingAt(timePosition) }
+                .find { it.isPlayingAt(timePosition) }
                 ?.makeNowPlayingAt(timePosition)
     }
 

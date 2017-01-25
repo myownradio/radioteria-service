@@ -20,8 +20,8 @@ class UserServiceImpl(private val userRepository: UserRepository,
                       private val eventPublisher: ApplicationEventPublisher
 ) : UserService {
 
-    @Value("\${registration.email.verify.enabled}")
-    var emailVerifyEnabled = true
+    @Value("\${registration.email.verify.enabled:false}")
+    var emailVerifyEnabled: Boolean = false
 
     override fun findByEmail(email: String): User? {
         return userRepository.findByEmail(email)

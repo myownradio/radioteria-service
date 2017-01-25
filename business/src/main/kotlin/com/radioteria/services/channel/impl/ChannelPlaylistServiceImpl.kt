@@ -33,7 +33,7 @@ class ChannelPlaylistServiceImpl(
         if (channelControlService.isPlaying(channel)) {
             val playedFullLaps = channel.getFullLapsPlayedAt(timeService.getTimeMillis())!!
             val timeCompensation = playedFullLaps * track.duration
-            if (channelControlService.nowPlaying(channel).`is`(track)) {
+            if (channelControlService.getNowPlaying(channel).`is`(track)) {
                 channelControlService.playNext(channel)
             }
             channelControlService.scroll(timeCompensation, channel)

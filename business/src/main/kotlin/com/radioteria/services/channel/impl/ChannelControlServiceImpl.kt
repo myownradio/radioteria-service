@@ -4,7 +4,7 @@ import com.radioteria.services.exceptions.ServiceException
 import com.radioteria.db.entities.Channel
 import com.radioteria.db.entities.data.NowPlaying
 import com.radioteria.services.channel.ChannelControlService
-import com.radioteria.services.channel.events.ChannelControlsEvent
+import com.radioteria.services.channel.events.ChannelControlEvent
 import com.radioteria.services.channel.exceptions.ChannelControlServiceException
 import com.radioteria.services.util.TimeService
 import org.springframework.context.ApplicationEventPublisher
@@ -23,7 +23,16 @@ class ChannelControlServiceImpl(
     override fun playByOrderId(orderId: Int, channel: Channel) {
         val playlistItem = channel.tracksAsPlaylistItems
                 .find { it.track.orderId == orderId }
-                ?: throw ChannelControlServiceException("No track at position $orderId exists.")
+                ?: throw ChannelControlServiceException("No track with order position $orderId exists on the channel.")
+
+        playFromTimePosition(playlistItem.offset, channel)
+    }
+
+    override fun playByTrackId(trackId: Long, channel: Channel) {
+        val playlistItem = channel.tracksAsPlaylistItems
+                .find { it.track.id == trackId }
+                ?: throw ChannelControlServiceException("No track with id $trackId exists on the channel.")
+
         playFromTimePosition(playlistItem.offset, channel)
     }
 
@@ -43,7 +52,7 @@ class ChannelControlServiceImpl(
     }
 
     override fun playNext(channel: Channel) {
-        val nowPlaying = nowPlaying(channel)
+        val nowPlaying = getNowPlaying(channel)
         val lastOrderId = channel.tracks.last().orderId
 
         if (nowPlaying.playlistItem.track.orderId == lastOrderId) {
@@ -54,7 +63,7 @@ class ChannelControlServiceImpl(
     }
 
     override fun playPrevious(channel: Channel) {
-        val nowPlaying = nowPlaying(channel)
+        val nowPlaying = getNowPlaying(channel)
         val lastOrderId = channel.tracks.last().orderId
 
         if (nowPlaying.playlistItem.track.orderId == 1) {
@@ -86,13 +95,13 @@ class ChannelControlServiceImpl(
         return channel.isPlayable
     }
 
-    override fun nowPlaying(channel: Channel): NowPlaying {
+    override fun getNowPlaying(channel: Channel): NowPlaying {
         return channel.getNowPlaying(timeService.getTimeMillis())
                 ?: throw ChannelControlServiceException("Channel is stopped.")
     }
 
     internal fun publishEvent(channel: Channel) {
-        eventPublisher.publishEvent(ChannelControlsEvent(this, channel))
+        eventPublisher.publishEvent(ChannelControlEvent(this, channel))
     }
 
 }

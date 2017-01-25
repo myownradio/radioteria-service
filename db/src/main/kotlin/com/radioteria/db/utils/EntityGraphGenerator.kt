@@ -4,33 +4,34 @@ import com.radioteria.db.entities.*
 import com.radioteria.db.enums.UserState
 import java.util.*
 
+object IdGenerator {
+    private var lastId: Long = 1
+    val newId: Long get() = lastId ++
+}
 
-fun generateListOfUsers(amount: Int): List<User> =
-        (1..amount).map { generateUser("User # $it") }
-
-fun generateUser(name: String = generateRandomString(), channelsAmount: Int = 10): User {
+fun generateUser(channelsAmount: Int = 10, tracksPerChannel: Int = 10): User {
     val user = User()
 
-    user.name = name
+    user.name = generateRandomString()
     user.email = generateRandomString()
     user.password = generateRandomString()
     user.state = UserState.ACTIVE
     user.avatarFile = generateFile()
-    user.channels = generateListOfChannels(amount = channelsAmount, user = user)
+    user.channels = generateListOfChannels(amount = channelsAmount, user = user, tracksPerChannel = tracksPerChannel)
 
     return user
 }
 
-fun generateListOfChannels(amount: Int, user: User): List<Channel> =
-        (1..amount).map { generateChannel(user) }
+fun generateListOfChannels(amount: Int, user: User, tracksPerChannel: Int = 10): List<Channel> =
+        (1..amount).map { generateChannel(user, tracksPerChannel = tracksPerChannel) }
 
-fun generateChannel(user: User): Channel {
+fun generateChannel(user: User, tracksPerChannel: Int = 10): Channel {
     val channel = Channel(user = user)
 
     channel.name = generateRandomString()
     channel.artworkFile = generateFile()
     channel.description = generateRandomString()
-    channel.tracks = generateListOfTracks(amount = 10, channel = channel)
+    channel.tracks = generateListOfTracks(amount = tracksPerChannel, channel = channel)
 
     return channel
 }
@@ -46,6 +47,7 @@ fun generateTrack(channel: Channel, orderId: Int = 1): Track {
     track.duration = generateRandomInt(1000).toLong()
     track.orderId = orderId
     track.channel = channel
+    track.id = IdGenerator.newId
 
     return track
 }
