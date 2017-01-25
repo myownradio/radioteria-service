@@ -4,4 +4,4 @@ import com.radioteria.db.entities.Channel
 import org.springframework.stereotype.Repository
 
 @Repository
-class JpaChannelRepository : JpaEntityRepository<Long, Channel>(Channel::class.java, Long::class.java), ChannelRepository
+open class JpaChannelRepository : JpaEntityRepository<Long, Channel>(Channel::class.java, Long::class.java), ChannelRepository

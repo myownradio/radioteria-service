@@ -127,7 +127,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.radioteria.Main</mainClass>
+                            <mainClass>com.radioteria.BootStrapConfiguration</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -160,7 +160,9 @@
                         <include>${project.build.directory}/${project.build.finalName}.jar</include>
                     </includes>
                     <processTypes>
-                        <web>java $JAVA_OPTS -Dserver.port=$PORT -cp target/dependency/*:target/${project.build.finalName}.jar com.radioteria.Main</web>
+                        <web>java $JAVA_OPTS -Dserver.port=$PORT -cp
+                            target/dependency/*:target/${project.build.finalName}.jar
+                            com.radioteria.BootStrapConfiguration</web>
                     </processTypes>
                 </configuration>
             </plugin>
@@ -176,7 +178,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.radioteria.Main</mainClass>
+                    <mainClass>com.radioteria.BootStrapConfiguration</mainClass>
                 </configuration>
             </plugin>
             <plugin>

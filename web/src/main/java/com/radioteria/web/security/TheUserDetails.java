@@ -1,5 +1,7 @@
 package com.radioteria.web.security;
 
+import com.radioteria.db.entities.User;
+import com.radioteria.db.enums.UserState;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +40,7 @@ public class TheUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return !user.isDeleted();
+        return user.getState() != UserState.DELETED;
     }
 
     @Override
@@ -48,6 +50,6 @@ public class TheUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isActive();
+        return user.getState() == UserState.ACTIVE;
     }
 }

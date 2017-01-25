@@ -5,7 +5,7 @@ import com.radioteria.db.entities.meta.UserMeta
 import org.springframework.stereotype.Repository
 
 @Repository
-class JpaUserRepository : JpaEntityRepository<Long, User>(User::class.java, Long::class.java), UserRepository {
+open class JpaUserRepository : JpaEntityRepository<Long, User>(User::class.java, Long::class.java), UserRepository {
 
     override fun findByEmail(email: String): User? {
         return findByQueryProvider {
