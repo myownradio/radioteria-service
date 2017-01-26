@@ -16,10 +16,10 @@ install:
 	mvn install
 
 start:
-	mvn install exec:java -pl web
+	mvn install exec:java
 
 test:
 	mvn test
 
 deploy:
-	mvn heroku:deploy -pl web
+	mvn heroku:deploy

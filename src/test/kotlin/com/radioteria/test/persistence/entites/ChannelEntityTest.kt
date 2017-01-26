@@ -1,4 +1,4 @@
-package com.radioteria.db.tests.entites
+package com.radioteria.test.persistence.entites
 
 import com.radioteria.db.entities.*
 import org.junit.Test

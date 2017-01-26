@@ -10,10 +10,10 @@ import javax.persistence.TypedQuery
 import javax.persistence.criteria.CriteriaQuery
 
 abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
-        val entityClass: Class<E>,
-        val idClass: Class<K>) : EntityRepository<K, E> {
+        open val entityClass: Class<E>,
+        open val idClass: Class<K>) : EntityRepository<K, E> {
 
-    @PersistenceContext lateinit var entityManager: EntityManager
+    @PersistenceContext open lateinit var entityManager: EntityManager
 
     override fun persist(entity: E) {
         entityManager.persist(entity)
@@ -27,7 +27,7 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         return entityManager.find(entityClass, id)
     }
 
-    internal fun findByQueryProvider(cqProvider: () -> CriteriaQuery<E>): E? {
+    open internal fun findByQueryProvider(cqProvider: () -> CriteriaQuery<E>): E? {
         return try { queryByProvider(cqProvider).singleResult } catch (e: NoResultException) { null }
     }
 
@@ -47,15 +47,15 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         return queryByPropertyValue(propertyName, propertyValue).resultList
     }
 
-    internal fun listByQueryProvider(cqProvider: () -> CriteriaQuery<E>): List<E> {
+    open internal fun listByQueryProvider(cqProvider: () -> CriteriaQuery<E>): List<E> {
         return queryByProvider(cqProvider).resultList
     }
 
-    internal fun queryByProvider(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E> {
+    open internal fun queryByProvider(cqProvider: () -> CriteriaQuery<E>): TypedQuery<E> {
         return entityManager.createQuery(cqProvider.invoke())
     }
 
-    internal fun <T> queryByPropertyValue(propertyName: String, propertyValue: T): TypedQuery<E> {
+    open internal fun <T> queryByPropertyValue(propertyName: String, propertyValue: T): TypedQuery<E> {
         val cb = entityManager.criteriaBuilder
         val criteriaQuery = cb.createQuery(entityClass)
         val root = criteriaQuery.from(entityClass)

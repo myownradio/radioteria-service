@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Service
 public class JadeTemplateService implements TemplateService {
 
     final private static String JADE_FILE_EXTENSION = ".jade";

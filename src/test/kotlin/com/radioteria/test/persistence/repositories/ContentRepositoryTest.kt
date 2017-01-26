@@ -1,4 +1,4 @@
-package com.radioteria.db.tests.repositories
+package com.radioteria.test.persistence.repositories
 
 import com.radioteria.db.entities.Content
 import com.radioteria.db.repositories.ContentRepository
