@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 @Service
 class EventEmailServiceImpl(val eventPublisher: ApplicationEventPublisher) : EmailService {
     override fun send(to: String?, subject: String?, body: String?) {
-        eventPublisher.publishEvent(SendEmailEvent(this, mapOf(
+        eventPublisher.publishEvent(EmailSentEvent(this, mapOf(
                 "to" to to,
                 "subject" to subject,
                 "body" to body

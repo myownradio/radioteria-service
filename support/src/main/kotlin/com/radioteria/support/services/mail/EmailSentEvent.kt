@@ -2,4 +2,4 @@ package com.radioteria.support.services.mail
 
 import org.springframework.context.ApplicationEvent
 
-class SendEmailEvent(source: Any?, val mailData: Map<String, String?>) : ApplicationEvent(source)
+class EmailSentEvent(source: Any?, val emailData: Map<String, String?>) : ApplicationEvent(source)

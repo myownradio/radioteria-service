@@ -2,7 +2,7 @@ package com.radioteria.test.services.user
 
 import com.radioteria.services.user.PasswordRecoveryService
 import com.radioteria.services.util.TestEventPublisher
-import com.radioteria.support.services.mail.SendEmailEvent
+import com.radioteria.support.services.mail.EmailSentEvent
 import org.junit.Ignore
 import org.junit.Test
 import org.springframework.transaction.annotation.Transactional
@@ -26,7 +26,7 @@ open class PasswordRecoveryTest : BaseUserServiceTest() {
 
         assertTrue {
             (eventPublisher as TestEventPublisher)
-                .isEventPublished(SendEmailEvent::class.java)
+                .isEventPublished(EmailSentEvent::class.java)
         }
     }
 }
