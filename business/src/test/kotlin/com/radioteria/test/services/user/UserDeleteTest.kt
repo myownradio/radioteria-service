@@ -13,7 +13,7 @@ open class UserDeleteTest : BaseUserServiceTest() {
         userService.register("foo@bar.com", "", "")
     }
 
-    @Test
+    @Test(expected = IllegalStateException::class)
     @Transactional
     open fun deleteExistentUser() {
 

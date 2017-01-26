@@ -24,13 +24,13 @@ class PasswordRecoveryServiceImpl(private val userRepository: UserRepository,
 
     companion object {
         val PASSWORD_RECOVERY_LETTER_SUBJECT = "Radioteria Password Recovery"
-        val PASSWORD_RECOVERY_LETTER_TEMPLATE = "email.password-recovery"
+        val PASSWORD_RECOVERY_LETTER_TEMPLATE = "email.remind-password"
         val PASSWORD_RECOVERY_CODE_TTL: Long = TimeUnit.MINUTES.toMillis(30)
     }
 
     override fun sendPasswordRecoveryLetter(user: User) {
         if (user.state == UserState.DEACTIVATED) {
-            throw UserServiceException("User is deleted.")
+            throw UserServiceException("User is deactivated.")
         }
 
         val recoveryCode = getEncodedRecoveryCode(user)

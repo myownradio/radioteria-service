@@ -32,8 +32,6 @@ class ChannelPlaybackServiceImpl(
     override fun playByOrderId(orderId: Int, channel: Channel) {
         val playlistItem = channel.tracksAsPlaylistItems
                 .find { it.track.orderId == orderId }
-                ?: channel.tracksAsPlaylistItems
-                .firstOrNull()
                 ?: throw ChannelControlServiceException("No track with order position $orderId exists on the channel.")
 
         playFromTimePosition(playlistItem.offset, channel)
