@@ -9,8 +9,7 @@
     <import resource="classpath:backing-context.xml"/>
     <import resource="classpath:fs-context.xml"/>
 
-    <!--<context:annotation-config/>-->
-    <context:component-scan base-package="com.radioteria.business.services"/>
+    <context:component-scan base-package="com.radioteria.services"/>
 
     <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 

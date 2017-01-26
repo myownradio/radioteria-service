@@ -8,7 +8,7 @@
     <context:component-scan base-package="com.radioteria.support.services"/>
 
     <bean id="templateService" class="com.radioteria.support.template.JadeTemplateService">
-        <constructor-arg value="classpath:mail/"/>
+        <constructor-arg value="classpath:templates/"/>
     </bean>
 
     <bean id="emailService" class="com.radioteria.support.services.mail.LoggingEmailService"/>

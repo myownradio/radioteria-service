@@ -15,6 +15,7 @@
 
     <properties>
         <project.dependencies.directory>${project.build.directory}/dependency</project.dependencies.directory>
+        <kotlin.version>1.0.6</kotlin.version>
     </properties>
 
     <dependencies>
@@ -96,6 +97,16 @@
             <artifactId>spring-jade4j</artifactId>
         </dependency>
 
+        <!-- Kotlin -->
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test-junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -116,7 +127,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.radioteria.Main</mainClass>
+                            <mainClass>com.radioteria.BootStrapConfiguration</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -149,7 +160,9 @@
                         <include>${project.build.directory}/${project.build.finalName}.jar</include>
                     </includes>
                     <processTypes>
-                        <web>java $JAVA_OPTS -Dserver.port=$PORT -cp target/dependency/*:target/${project.build.finalName}.jar com.radioteria.Main</web>
+                        <web>java $JAVA_OPTS -Dserver.port=$PORT -cp
+                            target/dependency/*:target/${project.build.finalName}.jar
+                            com.radioteria.BootStrapConfiguration</web>
                     </processTypes>
                 </configuration>
             </plugin>
@@ -165,8 +178,57 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>com.radioteria.Main</mainClass>
+                    <mainClass>com.radioteria.BootStrapConfiguration</mainClass>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <phase>none</phase>
+                    </execution>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
