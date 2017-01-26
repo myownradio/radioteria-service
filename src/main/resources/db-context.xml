@@ -54,7 +54,6 @@
     </beans>
     <beans profile="db-h2-local, default">
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="org.h2.Driver"/>
             <property name="url" value="jdbc:h2:${java.io.tmpdir}/radioteria/db"/>
         </bean>
     </beans>
@@ -73,10 +72,34 @@
             </constructor-arg>
         </bean>
         <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
-            <property name="driverClassName" value="${db.driver}"/>
             <property name="url" value="${db.url}"/>
             <property name="username" value="${db.username}"/>
             <property name="password" value="${db.password}"/>
+        </bean>
+    </beans>
+
+    <beans profile="db-heroku">
+        <bean id="jpaProperties" class="java.util.Properties">
+            <constructor-arg>
+                <props>
+                    <prop key="hibernate.id.new_generator_mappings">false</prop>
+                    <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</prop>
+                    <prop key="hibernate.show_sql">false</prop>
+                    <prop key="hibernate.hbm2ddl.auto">update</prop>
+                    <prop key="hibernate.connection.autocommit">false</prop>
+                    <prop key="hibernate.connection.release_mode">after_transaction</prop>
+                </props>
+            </constructor-arg>
+        </bean>
+
+        <bean class="java.net.URI" id="dbUrl">
+            <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
+        </bean>
+
+        <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+            <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
+            <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+            <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
         </bean>
     </beans>
 
