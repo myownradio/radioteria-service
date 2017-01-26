@@ -31,12 +31,16 @@ class UserServiceImpl(private val userRepository: UserRepository,
         return userRepository.findById(id)
     }
 
-    override fun isPasswordMatch(plainPassword: String, user: User): Boolean {
+    override fun passwordMatch(plainPassword: String, user: User): Boolean {
         return passwordEncoder.matches(plainPassword, user.password)
     }
 
     override fun isEmailAvailable(email: String): Boolean {
         return userRepository.isEmailAvailable(email)
+    }
+
+    override fun exists(email: String): Boolean {
+        return !userRepository.isEmailAvailable(email)
     }
 
     override fun register(email: String, plainPassword: String, name: String) {
@@ -69,7 +73,7 @@ class UserServiceImpl(private val userRepository: UserRepository,
     }
 
     override fun deactivate(user: User) {
-        user.state = UserState.DELETED
+        user.state = UserState.DEACTIVATED
 
         eventPublisher.publishEvent(UserDeletedEvent(this, user))
     }

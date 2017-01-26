@@ -40,7 +40,7 @@ public class TheUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return user.getState() != UserState.DELETED;
+        return user.getState() != UserState.DEACTIVATED;
     }
 
     @Override

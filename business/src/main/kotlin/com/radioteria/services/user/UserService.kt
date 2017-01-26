@@ -5,8 +5,9 @@ import com.radioteria.db.entities.User
 import java.util.Optional
 
 interface UserService {
-    fun isPasswordMatch(plainPassword: String, user: User): Boolean
+    fun passwordMatch(plainPassword: String, user: User): Boolean
     fun isEmailAvailable(email: String): Boolean
+    fun exists(email: String): Boolean
 
     fun register(email: String, plainPassword: String, name: String)
     fun activateByEmail(email: String)

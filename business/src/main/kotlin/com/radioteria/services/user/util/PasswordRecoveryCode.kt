@@ -7,7 +7,7 @@ import java.util.Base64
 
 data class PasswordRecoveryCode(val userEmail: String, val userDigest: String, val codeStaleTime: Long) {
 
-    constructor(user: User, codeStaleTime: Long) : this(user.email, generateUserDigest(user), codeStaleTime) {}
+    constructor(user: User, codeStaleTime: Long) : this(user.email, generateUserDigest(user), codeStaleTime)
 
     fun encode(): String {
         val encoder = Base64.getEncoder()

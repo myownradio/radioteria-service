@@ -29,7 +29,7 @@ class PasswordRecoveryServiceImpl(private val userRepository: UserRepository,
     }
 
     override fun sendPasswordRecoveryLetter(user: User) {
-        if (user.state == UserState.DELETED) {
+        if (user.state == UserState.DEACTIVATED) {
             throw UserServiceException("User is deleted.")
         }
 
@@ -91,7 +91,7 @@ class PasswordRecoveryServiceImpl(private val userRepository: UserRepository,
     }
 
     private fun failIfCodeNotCorrespondToTheUser(recoveryCode: PasswordRecoveryCode, user: User) {
-        if (user.state == UserState.DELETED) {
+        if (user.state == UserState.DEACTIVATED) {
             throw UserServiceException("Specified code belongs to user that was deleted.")
         }
         if (!recoveryCode.digestMatches(user)) {
