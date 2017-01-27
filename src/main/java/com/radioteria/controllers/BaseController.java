@@ -22,9 +22,6 @@ import java.io.IOException;
 public class BaseController {
 
     @Resource
-    private FileSystem fileSystem;
-
-    @Resource
     private UserService userService;
 
     @RequestMapping("/")
