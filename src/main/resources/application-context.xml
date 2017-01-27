@@ -12,7 +12,7 @@
 
     <!-- Context Configuration -->
     <context:annotation-config/>
-    <context:component-scan base-package="com.radioteria.controllers" />
+    <context:component-scan base-package="com.radioteria.web.rest.controllers;com.radioteria.web.controllers" />
 
     <!-- MVC Configuration -->
     <mvc:annotation-driven />
