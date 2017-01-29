@@ -7,25 +7,6 @@
 
     <packaging>jar</packaging>
 
-    <repositories>
-        <repository>
-            <id>kotlin-dev</id>
-            <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>kotlin-dev</id>
-            <url>http://dl.bintray.com/kotlin/kotlin-eap-1.1/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
     <groupId>com.radioteria</groupId>
     <artifactId>radioteria</artifactId>
     <version>1.0</version>
@@ -208,16 +189,6 @@
                 <version>${kotlin.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-plugin</artifactId>
-                <version>${kotlin.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jetbrains.kotlin</groupId>
-                <artifactId>kotlin-maven-noarg</artifactId>
-                <version>${kotlin.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
     <dependencies>
@@ -331,6 +302,7 @@
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
 
                 <configuration>
                     <compilerPlugins>
