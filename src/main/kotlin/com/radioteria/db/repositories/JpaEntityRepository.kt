@@ -1,7 +1,7 @@
 package com.radioteria.db.repositories
 
 import com.radioteria.db.entities.IdAwareEntity
-import org.omg.CORBA.Object
+import org.springframework.beans.PropertyAccessorFactory
 import java.io.Serializable
 import javax.persistence.EntityManager
 import javax.persistence.NoResultException
@@ -71,17 +71,30 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         entityManager.flush()
     }
 
-    override fun <A : Number> increment(entity: E, propertyName: String, by: A) {
+    override fun refresh(entity: E) {
+        entityManager.refresh(entity)
+    }
+
+    override fun refreshProperty(entity: E, propertyName: String) {
+        val entityId = entity.id ?: throw IllegalStateException()
+        findById(entityId)?.let {
+            val src = PropertyAccessorFactory.forBeanPropertyAccess(it)
+            val dst = PropertyAccessorFactory.forBeanPropertyAccess(entity)
+
+            dst.setPropertyValue(propertyName, src.getPropertyValue(propertyName))
+        }
+    }
+
+    override fun <A : Number> incrementAndRefresh(entity: E, propertyName: String, by: A) {
         val cb = entityManager.criteriaBuilder
         val criteriaUpdate = cb.createCriteriaUpdate(entityClass)
         val root = criteriaUpdate.from(entityClass)
-
         val property = root.get<A>(propertyName)
 
-        val increment = cb.sum(property, by)
+        criteriaUpdate.set(property, cb.sum(property, by))
 
-        criteriaUpdate.set(root.get<A>(propertyName), increment)
+        entityManager.createQuery(criteriaUpdate).executeUpdate()
 
-        entityManager.refresh(entity)
+        refreshProperty(entity, propertyName)
     }
 }

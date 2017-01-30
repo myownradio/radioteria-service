@@ -42,7 +42,19 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     fun flush()
 
     /**
+     * Refresh the state of the instance from the database,
+     * overwriting changes made to the entity, if any.
+     */
+    fun refresh(entity: E);
+
+    /**
+     * Refresh the state of the single property from the database,
+     * overwriting changes made to the entity, if any.
+     */
+    fun refreshProperty(entity: E, propertyName: String)
+
+    /**
      * Increment property value.
      */
-    fun <A : Number> increment(entity: E, propertyName: String, by: A)
+    fun <A : Number> incrementAndRefresh(entity: E, propertyName: String, by: A)
 }
