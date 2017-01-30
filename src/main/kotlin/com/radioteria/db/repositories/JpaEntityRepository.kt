@@ -71,14 +71,14 @@ abstract class JpaEntityRepository<K : Serializable, E : IdAwareEntity<K>>(
         entityManager.flush()
     }
 
-    override fun <A : Number> increment(entity: E, propertyName: String, amount: A) {
+    override fun <A : Number> increment(entity: E, propertyName: String, by: A) {
         val cb = entityManager.criteriaBuilder
         val criteriaUpdate = cb.createCriteriaUpdate(entityClass)
         val root = criteriaUpdate.from(entityClass)
 
         val property = root.get<A>(propertyName)
 
-        val increment = cb.sum(property, amount)
+        val increment = cb.sum(property, by)
 
         criteriaUpdate.set(root.get<A>(propertyName), increment)
 

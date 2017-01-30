@@ -42,7 +42,7 @@ interface EntityRepository<K : Serializable, E : IdAwareEntity<K>> {
     fun flush()
 
     /**
-     * Increment property value by amount.
+     * Increment property value.
      */
-    fun <A : Number> increment(entity: E, propertyName: String, amount: A)
+    fun <A : Number> increment(entity: E, propertyName: String, by: A)
 }
